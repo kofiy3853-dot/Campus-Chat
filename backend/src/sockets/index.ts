@@ -87,6 +87,19 @@ export const setupSockets = (io: Server) => {
         socket.broadcast.emit('poll_removed', { pollId: data.pollId });
       });
 
+      // New: Lost & Found events
+      socket.on('lost_found_posted', (data: { post: any }) => {
+        socket.broadcast.emit('new_lost_found', data.post);
+      });
+
+      socket.on('lost_found_resolved', (data: { postId: string, post: any }) => {
+        socket.broadcast.emit('lost_found_updated', { postId: data.postId, post: data.post });
+      });
+
+      socket.on('lost_found_deleted', (data: { postId: string }) => {
+        socket.broadcast.emit('lost_found_removed', { postId: data.postId });
+      });
+
       // Join notification room
       if (userId && userId !== 'null' && userId !== 'undefined') {
         socket.join(`notification:${userId}`);

@@ -28,6 +28,7 @@ import confessionRoutes from './routes/confessionRoutes';
 import eventRoutes from './routes/eventRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import pollRoutes from './routes/pollRoutes';
+import lostFoundRoutes from './routes/lostFoundRoutes';
 import { connectRedis } from './config/redis';
 import { generalRateLimiter } from './middleware/rateLimitMiddleware';
 
@@ -76,6 +77,7 @@ app.use('/api/confessions', confessionRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/polls', pollRoutes);
+app.use('/api/lost-found', lostFoundRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

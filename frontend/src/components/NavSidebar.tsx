@@ -10,7 +10,8 @@ import {
   Bell,
   Ghost,
   Calendar,
-  BarChart3
+  BarChart3,
+  Search
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
@@ -29,6 +30,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
     { icon: Ghost, label: 'Confessions', to: '/dashboard/confessions' },
     { icon: Calendar, label: 'Events', to: '/dashboard/events' },
     { icon: BarChart3, label: 'Polls', to: '/dashboard/polls' },
+    { icon: Search, label: 'Lost & Found', to: '/dashboard/lost-found' },
     { icon: Bell, label: 'Notifications', to: '/dashboard/notifications' },
   ];
 
