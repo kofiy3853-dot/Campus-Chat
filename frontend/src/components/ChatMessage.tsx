@@ -79,6 +79,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
             <textarea
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
+              placeholder="Edit your message..."
               className="flex-1 bg-slate-700 text-white rounded px-2 py-1 text-sm"
             />
             <button
@@ -214,48 +215,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
             ))}
           </div>
         )}
-      </div>
-
-      {isMe && (
-        <div className="w-8 h-8 rounded-full overflow-hidden ml-3 shrink-0 border border-slate-700 bg-slate-800 self-end mb-1 shadow-sm">
-          <img src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}`} alt={senderName} className="w-full h-full object-cover" />
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default ChatMessage;
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 text-xs underline opacity-80 py-1"
-              >
-                📎 Download attachment
-              </a>
-            )}
-          </div>
-        )}
-
-        {/* Footer info */}
-        <div className={clsx(
-          "flex items-center gap-1.5 mt-1.5 justify-end",
-          isMe ? "text-primary-100" : "text-slate-500"
-        )}>
-          <span className="text-[10px] font-medium">
-            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </span>
-          {isMe && (
-            <div className="flex">
-              {message.delivery_status === 'read' ? (
-                <CheckCheck className="w-3.5 h-3.5 text-blue-300" />
-              ) : (
-                <Check className="w-3.5 h-3.5" />
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Tail styling could go here if desired */}
       </div>
 
       {isMe && (
