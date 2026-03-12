@@ -36,6 +36,29 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.indigo.500') transparent;
+}
+
+/* Chrome, Safari, Edge */
+.overflow-y-auto::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: theme('colors.indigo.500');
+  border-radius: 20px;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
