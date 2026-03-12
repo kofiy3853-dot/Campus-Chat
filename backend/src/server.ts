@@ -30,14 +30,26 @@ import { connectRedis } from './config/redis';
 
 const app = express();
 const server = http.createServer(app);
+
+// Configure CORS for production
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL, // Vercel URL
+].filter(Boolean) as string[];
+
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
     methods: ['GET', 'POST'],
+    credentials: true,
   },
 });
 
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
+  credentials: true,
+}));
 app.use(express.json());
 
 const PORT = Number(process.env.PORT) || 5000;

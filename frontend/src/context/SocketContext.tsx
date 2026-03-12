@@ -19,11 +19,13 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     if (!userId) return;
 
-    const newSocket = io('/', {
+    const socketUrl = import.meta.env.VITE_API_URL || '/';
+    const newSocket = io(socketUrl, {
       query: { userId },
       path: '/socket.io',
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
+      transports: ['websocket', 'polling'], // Ensure websocket is preferred
     });
 
     newSocket.on('connect', () => {

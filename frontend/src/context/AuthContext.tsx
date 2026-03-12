@@ -28,6 +28,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Set base URL from environment variable
+    axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
+
     // Axios Interceptor for Authorization
     const requestInterceptor = axios.interceptors.request.use((config) => {
       const storedUser = localStorage.getItem('user');
