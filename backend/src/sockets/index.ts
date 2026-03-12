@@ -74,6 +74,19 @@ export const setupSockets = (io: Server) => {
         io.to(`notification:${data.userId}`).emit('notification', data.notification);
       });
 
+      // New: Poll events
+      socket.on('poll_created', (data: { poll: any }) => {
+        socket.broadcast.emit('new_poll', data.poll);
+      });
+
+      socket.on('poll_voted', (data: { pollId: string, poll: any }) => {
+        socket.broadcast.emit('poll_updated', { pollId: data.pollId, poll: data.poll });
+      });
+
+      socket.on('poll_deleted', (data: { pollId: string }) => {
+        socket.broadcast.emit('poll_removed', { pollId: data.pollId });
+      });
+
       // Join notification room
       if (userId && userId !== 'null' && userId !== 'undefined') {
         socket.join(`notification:${userId}`);
