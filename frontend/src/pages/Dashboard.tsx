@@ -7,6 +7,7 @@ import GroupWindow from '../components/GroupWindow';
 import AnnouncementList from '../components/AnnouncementList';
 import ProfileSettings from '../components/ProfileSettings';
 import ConfessionsPage from '../pages/ConfessionsPage';
+import EventsPage from '../pages/EventsPage';
 import { SocketProvider } from '../context/SocketContext';
 
 const Dashboard = () => {
@@ -25,6 +26,7 @@ const Dashboard = () => {
             <Route path="groups/:id" element={<GroupWindow />} />
             <Route path="announcements" element={<AnnouncementList />} />
             <Route path="confessions" element={<ConfessionsPage />} />
+            <Route path="events" element={<EventsPage />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="/" element={
               <div className="flex-1 flex flex-col items-center justify-center text-slate-500">
