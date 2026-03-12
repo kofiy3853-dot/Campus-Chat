@@ -15,6 +15,11 @@ export interface IUser extends Document {
   last_seen: Date;
   role: 'user' | 'admin';
   isBanned: boolean;
+  blocked_users: mongoose.Types.ObjectId[];
+  notification_preferences: {
+    email_notifications: boolean;
+    browser_notifications: boolean;
+  };
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -30,6 +35,11 @@ const UserSchema: Schema = new Schema({
   last_seen: { type: Date, default: Date.now },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   isBanned: { type: Boolean, default: false },
+  blocked_users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  notification_preferences: {
+    email_notifications: { type: Boolean, default: true },
+    browser_notifications: { type: Boolean, default: true }
+  },
 }, { timestamps: true });
 
 UserSchema.pre<IUser>('save', async function () {

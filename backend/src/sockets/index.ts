@@ -1,6 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import redisClient from '../config/redis';
 import User from '../models/User';
+import Notification from '../models/Notification';
 
 export const setupSockets = (io: Server) => {
   io.on('connection', async (socket: Socket) => {
@@ -46,6 +47,38 @@ export const setupSockets = (io: Server) => {
       socket.on('send_group_message', (data: any) => {
         if (data.roomId) socket.to(data.roomId).emit('receive_group_message', data);
       });
+
+      // New: Message reaction
+      socket.on('message_reaction', (data: { messageId: string, emoji: string, roomId: string }) => {
+        if (data.roomId) {
+          socket.to(data.roomId).emit('message_reaction', data);
+        }
+      });
+
+      // New: Message edit
+      socket.on('message_edited', (data: { messageId: string, message_text: string, roomId: string }) => {
+        if (data.roomId) {
+          socket.to(data.roomId).emit('message_edited', data);
+        }
+      });
+
+      // New: Message delete
+      socket.on('message_deleted', (data: { messageId: string, roomId: string }) => {
+        if (data.roomId) {
+          socket.to(data.roomId).emit('message_deleted', data);
+        }
+      });
+
+      // New: Notification broadcast
+      socket.on('new_notification', (data: { userId: string, notification: any }) => {
+        io.to(`notification:${data.userId}`).emit('notification', data.notification);
+      });
+
+      // Join notification room
+      if (userId && userId !== 'null' && userId !== 'undefined') {
+        socket.join(`notification:${userId}`);
+        console.log(`[Socket] User ${userId} joined notification room`);
+      }
 
       socket.on('disconnect', async () => {
         if (userId && userId !== 'null' && userId !== 'undefined') {

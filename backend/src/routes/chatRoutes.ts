@@ -2,8 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { getConversations, getMessages, sendMessage, createConversation } from '../controllers/chatController';
+import { getConversations, getMessages, sendMessage, createConversation, searchMessages, editMessage, deleteMessage, addMessageReaction, blockUser, getBlockedUsers } from '../controllers/chatController';
 import { protect } from '../middleware/authMiddleware';
+import { messageRateLimiter, searchRateLimiter } from '../middleware/rateLimitMiddleware';
 
 const router = express.Router();
 
@@ -42,7 +43,13 @@ router.post('/upload', protect, upload.single('file'), (req: any, res) => {
 router.get('/conversations', protect, getConversations);
 router.post('/conversations', protect, createConversation);
 router.get('/messages/:conversationId', protect, getMessages);
-router.post('/send', protect, sendMessage);
+router.post('/send', protect, messageRateLimiter, sendMessage);
+router.get('/search', protect, searchRateLimiter, searchMessages);
+router.put('/messages/:messageId', protect, editMessage);
+router.delete('/messages/:messageId', protect, deleteMessage);
+router.post('/messages/:messageId/reaction', protect, addMessageReaction);
+router.post('/block/:userId', protect, blockUser);
+router.get('/blocked-users', protect, getBlockedUsers);
 
 export default router;
 

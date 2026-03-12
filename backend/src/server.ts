@@ -26,7 +26,9 @@ import groupRoutes from './routes/groupRoutes';
 import announcementRoutes from './routes/announcementRoutes';
 import confessionRoutes from './routes/confessionRoutes';
 import eventRoutes from './routes/eventRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 import { connectRedis } from './config/redis';
+import { generalRateLimiter } from './middleware/rateLimitMiddleware';
 
 const app = express();
 const server = http.createServer(app);
@@ -53,6 +55,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+app.use(generalRateLimiter);
 
 const PORT = Number(process.env.PORT) || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/campus-chat';
@@ -70,6 +73,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/confessions', confessionRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
