@@ -3,7 +3,7 @@ import {
   Smile, ImageIcon, Mic, Send, Paperclip, X, StopCircle,
   FileText, Calendar, Contact, FolderOpen, ChevronUp,
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 
 interface ChatInputProps {
   onSend: (text: string, mediaUrl?: string, mediaType?: string) => void;
@@ -57,7 +57,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const { data } = await axios.post('/api/chat/upload', formData, {
+      const { data } = await api.post('/api/chat/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setPreviewFile({ url: data.url, type: data.type, name: file.name });

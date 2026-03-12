@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X, MessageSquare, User } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 interface UserSearchModalProps {
@@ -22,7 +22,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose }) =>
       }
       setLoading(true);
       try {
-        const { data } = await axios.get(`/api/auth/search?query=${query}`);
+        const { data } = await api.get(`/api/auth/search?query=${query}`);
         setResults(data);
       } catch (error) {
         console.error('Search error:', error);
@@ -37,7 +37,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose }) =>
 
   const startConversation = async (userId: string) => {
     try {
-      const { data } = await axios.post('/api/chat/conversations', { participantId: userId });
+      const { data } = await api.post('/api/chat/conversations', { participantId: userId });
       navigate(`/dashboard/chat/${data._id}`);
       onClose();
     } catch (error) {

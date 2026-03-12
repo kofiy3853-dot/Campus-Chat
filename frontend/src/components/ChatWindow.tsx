@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
-import axios from 'axios';
+import api from '../services/api';
 import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
@@ -23,8 +23,8 @@ const ChatWindow = () => {
       try {
         setLoading(true);
         const [msgRes, convRes] = await Promise.all([
-          axios.get(`/api/chat/messages/${id}`),
-          axios.get(`/api/chat/conversations`)
+          api.get(`/api/chat/messages/${id}`),
+          api.get(`/api/chat/conversations`)
         ]);
         setMessages(msgRes.data);
         const currentConv = convRes.data.find((c: any) => c._id === id);
@@ -85,7 +85,7 @@ const ChatWindow = () => {
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
     try {
       const otherParticipant = conversation?.participants.find((p: any) => p._id !== user?._id);
-      const { data } = await axios.post('/api/chat/send', {
+      const { data } = await api.post('/api/chat/send', {
         recipientId: otherParticipant._id,
         message_text: messageText,
         media_url: mediaUrl,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, Plus, Users, MessageSquare } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
 import Skeleton from './Skeleton';
@@ -24,7 +24,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       try {
         setLoading(true);
         const endpoint = activeTab === 'chats' ? '/api/chat/conversations' : '/api/groups';
-        const response = await axios.get(endpoint);
+        const response = await api.get(endpoint);
         setItems(response.data);
       } catch (err) {
         console.error('Failed to fetch chat list. This may be due to an expired session or network issue:', err);

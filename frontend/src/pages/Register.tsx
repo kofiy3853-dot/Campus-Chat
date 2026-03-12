@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, Contact, GraduationCap, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
@@ -24,7 +24,7 @@ const Register = () => {
     setError('');
     
     try {
-      const { data } = await axios.post('/api/auth/register', formData);
+      const { data } = await api.post('/api/auth/register', formData);
       login(data);
       navigate('/dashboard');
     } catch (err: any) {

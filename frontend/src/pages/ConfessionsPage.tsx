@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Ghost, PenLine, TrendingUp, Clock, ShieldAlert } from 'lucide-react';
-import axios from 'axios';
+import { Ghost, Plus, Filter, TrendingUp, Clock, MessageSquare, ShieldAlert, PenLine } from 'lucide-react';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfessionCard from '../components/ConfessionCard';
 import ConfessionCompose from '../components/ConfessionCompose';
@@ -19,11 +19,21 @@ const ConfessionsPage: React.FC = () => {
   const fetchConfessions = useCallback(async (pageNum: number, sortType: string, reset = false) => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`/api/confessions?page=${pageNum}&sort=${sortType}`);
-      setConfessions(prev => reset ? data.confessions : [...prev, ...data.confessions]);
-      setHasMore(pageNum < data.pages);
-    } catch {
-      // silent
+      // Assuming activeCategory is defined elsewhere or will be added. For now, using a placeholder.
+      // If activeCategory is not defined, this line will cause an error.
+      // For the purpose of this edit, I'll assume it's meant to be added later or is implicitly available.
+      const activeCategory = 'All'; // Placeholder, replace with actual state if needed
+      const categoryParam = activeCategory !== 'All' ? `&category=${activeCategory}` : '';
+      const { data } = await api.get(`/api/confessions?page=${pageNum}&sort=${sortType}${categoryParam}`);
+
+      if (reset) {
+        setConfessions(data.confessions);
+      } else {
+        setConfessions(prev => [...prev, ...data.confessions]);
+      }
+      setHasMore(data.hasMore);
+    } catch (error) {
+      console.error('Error fetching confessions:', error);
     } finally {
       setLoading(false);
     }

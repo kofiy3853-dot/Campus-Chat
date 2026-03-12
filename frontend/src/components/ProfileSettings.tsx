@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { User, Camera, Mail, Contact, GraduationCap, Shield, Save, LogOut, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-import axios from 'axios';
+import api from '../services/api';
 
 const ProfileSettings = () => {
   const { user, login, logout, updateUser } = useAuth();
@@ -21,7 +21,7 @@ const ProfileSettings = () => {
   React.useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await axios.get('/api/auth/profile');
+        const { data } = await api.get('/api/auth/profile');
         updateUser(data);
         setFormData({
           name: data.name,
@@ -69,7 +69,7 @@ const ProfileSettings = () => {
         const formData = new FormData();
         formData.append('image', selectedFile);
         
-        const { data: uploadData } = await axios.post('/api/auth/profile-picture', formData, {
+        const { data: uploadData } = await api.post('/api/auth/profile-picture', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -81,7 +81,7 @@ const ProfileSettings = () => {
       }
 
       // 2. Update other profile details
-      const { data } = await axios.put('/api/auth/profile', formData);
+      const { data } = await api.put('/api/auth/profile', formData);
       updateUser(data);
       alert('Profile updated successfully!');
     } catch (error: any) {

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Loader2, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
-import axios from 'axios';
+import api from '../services/api';
 import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
@@ -22,8 +22,8 @@ const GroupWindow = () => {
       try {
         setLoading(true);
         const [msgRes, groupRes] = await Promise.all([
-          axios.get(`/api/groups/messages/${id}`),
-          axios.get(`/api/groups`)
+          api.get(`/api/groups/messages/${id}`),
+          api.get(`/api/groups`)
         ]);
         setMessages(msgRes.data || []);
         const currentGroup = groupRes.data.find((g: any) => g._id === id);
@@ -66,7 +66,7 @@ const GroupWindow = () => {
 
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
     try {
-      const { data } = await axios.post(`/api/groups/send`, {
+      const { data } = await api.post(`/api/groups/send`, {
         groupId: id,
         message_text: messageText,
         media_url: mediaUrl,

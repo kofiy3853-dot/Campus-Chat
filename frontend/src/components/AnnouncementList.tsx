@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Megaphone, Heart, Bookmark, Share2, Loader2, Calendar, Award, ArrowRight } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import Skeleton from './Skeleton';
 
 const AnnouncementList = () => {
@@ -10,7 +10,7 @@ const AnnouncementList = () => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const { data } = await axios.get('/api/announcements');
+        const { data } = await api.get('/api/announcements');
         setAnnouncements(data);
       } catch (err) {
         console.error('Error fetching announcements:', err);

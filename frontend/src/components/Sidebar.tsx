@@ -13,7 +13,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../services/api';
 import { clsx } from 'clsx';
 
 interface SidebarProps {
@@ -32,8 +32,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
     const fetchData = async () => {
       try {
         const [convs, grps] = await Promise.all([
-          axios.get('/api/chat/conversations'),
-          axios.get('/api/groups')
+          api.get('/api/chat/conversations'),
+          api.get('/api/groups')
         ]);
         setConversations(convs.data);
         setGroups(grps.data);

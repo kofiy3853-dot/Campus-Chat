@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Calendar, Users, CheckCircle2, ChevronRight } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { clsx } from 'clsx';
 
 interface EventCardProps {
@@ -27,7 +27,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
     setLoading(true);
     try {
       const endpoint = `/api/events/${event._id}/${isJoined ? 'leave' : 'join'}`;
-      const { data } = await axios.post(endpoint);
+      const { data } = await api.post(endpoint);
       onUpdate({ ...event, isJoined: !isJoined, attendeesCount: data.attendeesCount });
     } catch (error) {
       console.error('Error toggling join status:', error);

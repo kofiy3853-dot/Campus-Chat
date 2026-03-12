@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Flag, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
-import axios from 'axios';
+import api from '../services/api';
 import ConfessionComments from './ConfessionComments';
 
 interface ConfessionCardProps {
@@ -30,7 +30,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
 
   const handleLike = async () => {
     try {
-      const { data } = await axios.post(`/api/confessions/${confession._id}/like`);
+      const { data } = await api.post(`/api/confessions/${confession._id}/like`);
       setLiked(data.liked);
       setLikes((prev: number) => data.liked ? prev + 1 : prev - 1);
     } catch {
@@ -43,7 +43,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
     if (!window.confirm('Report this confession for violating community rules?')) return;
     setReporting(true);
     try {
-      await axios.post(`/api/confessions/${confession._id}/report`);
+      await api.post(`/api/confessions/${confession._id}/report`);
       setReported(true);
     } catch {
       // silent
@@ -55,7 +55,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
   const handleDelete = async () => {
     if (!window.confirm('Delete this confession? This action cannot be undone.')) return;
     try {
-      await axios.delete(`/api/confessions/${confession._id}`);
+      await api.delete(`/api/confessions/${confession._id}`);
       onDelete(confession._id);
     } catch {
       // silent

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { Send } from 'lucide-react';
 
 interface ConfessionCommentsProps {
@@ -14,7 +14,7 @@ const ConfessionComments: React.FC<ConfessionCommentsProps> = ({ confessionId, o
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    axios.get(`/api/confessions/${confessionId}/comments`).then(r => setComments(r.data)).catch(() => {});
+    api.get(`/api/confessions/${confessionId}/comments`).then(r => setComments(r.data)).catch(() => {});
   }, [confessionId]);
 
   const submit = async (e: React.FormEvent) => {
@@ -22,7 +22,7 @@ const ConfessionComments: React.FC<ConfessionCommentsProps> = ({ confessionId, o
     if (!text.trim()) return;
     setSubmitting(true);
     try {
-      await axios.post(`/api/confessions/${confessionId}/comments`, { text });
+      await api.post(`/api/confessions/${confessionId}/comments`, { text });
       setComments(prev => [...prev, { text, createdAt: new Date().toISOString(), _id: Date.now() }]);
       setText('');
       onComment();

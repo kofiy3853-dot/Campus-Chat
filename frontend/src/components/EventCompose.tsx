@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar, MapPin, AlignLeft, Tag, Image as ImageIcon } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 
 interface EventComposeProps {
   onClose: () => void;
@@ -35,7 +35,7 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
     setSubmitting(true);
     setError('');
     try {
-      const { data } = await axios.post('/api/events', {
+      const { data } = await api.post('/api/events', {
         ...formData,
         maxAttendees: formData.maxAttendees ? parseInt(formData.maxAttendees) : undefined
       });

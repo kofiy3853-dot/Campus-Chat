@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Plus, Filter, TrendingUp, Clock, Search } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 import { clsx } from 'clsx';
 import EventCard from '../components/EventCard';
 import EventCompose from '../components/EventCompose';
@@ -21,7 +21,7 @@ const EventsPage: React.FC = () => {
     setLoading(true);
     try {
       const categoryParam = activeCategory !== 'All' ? `&category=${activeCategory}` : '';
-      const { data } = await axios.get(`/api/events?sort=${sort}${categoryParam}`);
+      const { data } = await api.get(`/api/events?sort=${sort}${categoryParam}`);
       setEvents(data);
     } catch (error) {
       console.error('Error fetching events:', error);

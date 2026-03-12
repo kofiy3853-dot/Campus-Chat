@@ -29,7 +29,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Set base URL from environment variable
-    axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (apiUrl) {
+      axios.defaults.baseURL = apiUrl;
+    } else if (import.meta.env.PROD) {
+      console.error('❌ CRITICAL: VITE_API_URL is not defined in production. API calls will fail with 405.');
+    }
 
     // Axios Interceptor for Authorization
     const requestInterceptor = axios.interceptors.request.use((config) => {

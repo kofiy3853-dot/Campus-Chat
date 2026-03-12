@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, AlertTriangle } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 
 interface ConfessionComposeProps {
   onClose: () => void;
@@ -28,7 +28,7 @@ const ConfessionCompose: React.FC<ConfessionComposeProps> = ({ onClose, onPosted
     setError('');
     setSubmitting(true);
     try {
-      const { data } = await axios.post('/api/confessions', { text: text.trim() });
+      const { data } = await api.post('/api/confessions', { text: text.trim() });
       onPosted(data);
       onClose();
     } catch (err: any) {
