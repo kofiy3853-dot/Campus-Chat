@@ -13,6 +13,8 @@ export interface IUser extends Document {
   password_hash: string;
   status: 'online' | 'offline';
   last_seen: Date;
+  role: 'user' | 'admin';
+  isBanned: boolean;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -26,6 +28,8 @@ const UserSchema: Schema = new Schema({
   password_hash: { type: String, required: true },
   status: { type: String, enum: ['online', 'offline'], default: 'offline' },
   last_seen: { type: Date, default: Date.now },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  isBanned: { type: Boolean, default: false },
 }, { timestamps: true });
 
 UserSchema.pre<IUser>('save', async function () {

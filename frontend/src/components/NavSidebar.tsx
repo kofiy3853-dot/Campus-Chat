@@ -7,7 +7,8 @@ import {
   Settings,
   LogOut,
   User as UserIcon,
-  Bell
+  Bell,
+  Ghost
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
@@ -23,6 +24,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
     { icon: MessageSquare, label: 'Chats', to: '/dashboard' },
     { icon: Users, label: 'Groups', to: '/dashboard/groups/null' },
     { icon: Megaphone, label: 'Announcements', to: '/dashboard/announcements' },
+    { icon: Ghost, label: 'Confessions', to: '/dashboard/confessions' },
     { icon: Bell, label: 'Notifications', to: '/dashboard/notifications' },
   ];
 

@@ -24,6 +24,7 @@ import authRoutes from './routes/authRoutes';
 import chatRoutes from './routes/chatRoutes';
 import groupRoutes from './routes/groupRoutes';
 import announcementRoutes from './routes/announcementRoutes';
+import confessionRoutes from './routes/confessionRoutes';
 import { connectRedis } from './config/redis';
 
 const app = express();
@@ -52,6 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/confessions', confessionRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
