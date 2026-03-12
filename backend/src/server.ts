@@ -35,7 +35,8 @@ const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  process.env.FRONTEND_URL, // Vercel URL
+  'https://campus-chat-fjxp.vercel.app',
+  process.env.FRONTEND_URL, // Vercel URL fallback
 ].filter(Boolean) as string[];
 
 const io = new Server(server, {
