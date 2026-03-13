@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import dns from 'dns';
-dns.setServers(['8.8.8.8', '1.1.1.1']);
-console.log('Node DNS Servers set to:', dns.getServers());
+// dns.setServers(['8.8.8.8', '1.1.1.1']);
+// console.log('Node DNS Servers set to:', dns.getServers());
 import path from 'path';
 import fs from 'fs';
 
