@@ -15,49 +15,57 @@ export const createRateLimiter = (config: RateLimitConfig) => {
     if (req.method === 'OPTIONS') {
       return next();
     }
+    const key = `rate_limit:${req.ip}:${req.path}`;
+    
     try {
-      const key = `rate_limit:${req.ip}:${req.path}`;
-      
       if (redisClient.isOpen) {
-        // Use Redis if available
-        const current = await redisClient.incr(key);
-        
-        if (current === 1) {
-          await redisClient.expire(key, Math.ceil(config.windowMs / 1000));
-        }
+        try {
+          // Use Redis if available
+          const current = await redisClient.incr(key);
+          
+          if (current === 1) {
+            await redisClient.expire(key, Math.ceil(config.windowMs / 1000));
+          }
 
-        if (current > config.maxRequests) {
-          return res.status(429).json({
-            message: 'Too many requests. Please try again later.',
-            retryAfter: config.windowMs / 1000
-          });
-        }
-      } else {
-        // Fallback to memory store
-        const now = Date.now();
-        const stored = memoryStore.get(key);
-
-        if (!stored || now > stored.resetTime) {
-          memoryStore.set(key, {
-            count: 1,
-            resetTime: now + config.windowMs
-          });
-        } else {
-          stored.count++;
-
-          if (stored.count > config.maxRequests) {
+          if (current > config.maxRequests) {
             return res.status(429).json({
               message: 'Too many requests. Please try again later.',
-              retryAfter: Math.ceil((stored.resetTime - now) / 1000)
+              retryAfter: config.windowMs / 1000
             });
           }
+          
+          // If we reached here, Redis worked and we are under limit
+          return next();
+        } catch (redisErr: any) {
+          console.error(`[RateLimit] Redis operation failed for ${key}, falling back to memory:`, redisErr.message);
+          // Continue to memory store fallback below
+        }
+      }
+
+      // Fallback to memory store (used if Redis is closed OR if a Redis operation fails)
+      const now = Date.now();
+      const stored = memoryStore.get(key);
+
+      if (!stored || now > stored.resetTime) {
+        memoryStore.set(key, {
+          count: 1,
+          resetTime: now + config.windowMs
+        });
+      } else {
+        stored.count++;
+
+        if (stored.count > config.maxRequests) {
+          return res.status(429).json({
+            message: 'Too many requests. Please try again later.',
+            retryAfter: Math.ceil((stored.resetTime - now) / 1000)
+          });
         }
       }
 
       next();
     } catch (error: any) {
-      console.error('Rate limit error:', error.message);
-      next();
+      console.error('[RateLimit] Critical error:', error.message, error.stack);
+      next(); // Fail open: let the request through if the rate limiter itself crashes
     }
   };
 };
