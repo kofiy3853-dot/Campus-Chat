@@ -161,15 +161,10 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
 
   try {
     const users = await User.find({
-      $and: [
-        { _id: { $ne: req.user.id } },
-        {
-          $or: [
-            { name: { $regex: query, $options: 'i' } },
-            { student_id: { $regex: query, $options: 'i' } },
-            { email: { $regex: query, $options: 'i' } },
-          ],
-        },
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { student_id: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
       ],
     })
       .select('-password_hash')
