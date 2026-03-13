@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -21,6 +21,16 @@ const ChatWindow = () => {
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const markAsRead = useCallback(async () => {
+    if (!id || id === 'null') return;
+    try {
+      await api.post(`/api/chat/conversations/${id}/read`);
+      socket?.emit('messages_read', { roomId: id, userId: user?._id });
+    } catch (err) {
+      console.error('Error marking messages as read:', err);
+    }
+  }, [id, socket, user?._id]);
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -34,6 +44,7 @@ const ChatWindow = () => {
         setMessages(msgRes.data);
         const currentConv = convRes.data.find((c: any) => c._id === id);
         setConversation(currentConv);
+        markAsRead();
       } catch (err) {
         console.error('Error fetching messages:', err);
       } finally {
@@ -42,41 +53,27 @@ const ChatWindow = () => {
     };
     if (id && id !== 'null') {
       fetchMessages();
-      markAsRead();
     }
-  }, [id]);
-
-  const markAsRead = async () => {
-    if (!id || id === 'null') return;
-    try {
-      await api.post(`/api/chat/conversations/${id}/read`);
-      socket?.emit('messages_read', { roomId: id, userId: user?._id });
-    } catch (err) {
-      console.error('Error marking messages as read:', err);
-    }
-  };
+  }, [id, markAsRead]);
 
   useEffect(() => {
     if (!socket || !id || id === 'null') return;
 
-    // Join room now, and re-join whenever the socket reconnects
     const joinRoom = () => socket.emit('join_room', id);
     joinRoom();
-    socket.on('connect', joinRoom); // handles backend restarts / reconnects
+    socket.on('connect', joinRoom);
 
     const messageHandler = (message: any) => {
+      const incomingId = String(message._id);
       setMessages(prev => {
-        // Deduplicate: sender already added this message optimistically
-        const incomingId = String(message._id);
         if (prev.some(m => String(m._id) === incomingId)) return prev;
-        
-        // If message is for this conversation and from someone else, mark as read
-        if (message.sender_id?._id !== user?._id && message.sender_id !== user?._id) {
-          markAsRead();
-        }
-        
         return [...prev, message];
       });
+
+      // Mark as read if from someone else
+      if (message.sender_id?._id !== user?._id && message.sender_id !== user?._id) {
+        markAsRead();
+      }
     };
 
     const typingHandler = (data: any) => {
@@ -94,8 +91,8 @@ const ChatWindow = () => {
       if (data.roomId === id) {
         setMessages(prev => prev.map(m => {
           if (m._id === data.messageId) {
-            const existing = m.reactions?.find((r: any) => (r.userId?._id || r.userId) === data.userId && r.emoji === data.emoji);
             const reactions = m.reactions || [];
+            const existing = reactions.find((r: any) => (r.userId?._id || r.userId) === data.userId && r.emoji === data.emoji);
             if (existing) {
               return { ...m, reactions: reactions.filter((r: any) => !((r.userId?._id || r.userId) === data.userId && r.emoji === data.emoji)) };
             } else {
@@ -126,7 +123,7 @@ const ChatWindow = () => {
     const messagesReadHandler = (data: any) => {
       if (data.roomId === id && data.userId !== user?._id) {
         setMessages(prev => prev.map(m => 
-          m.sender_id?._id === user?._id || m.sender_id === user?._id 
+          (m.sender_id?._id === user?._id || m.sender_id === user?._id) 
             ? { ...m, delivery_status: 'read' } 
             : m
         ));
@@ -151,7 +148,7 @@ const ChatWindow = () => {
       socket.off('message_deleted', deleteHandler);
       socket.off('messages_read', messagesReadHandler);
     };
-  }, [socket, id, user?._id]);
+  }, [socket, id, user?._id, markAsRead]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });

@@ -158,11 +158,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           <div className="flex gap-2">
             {isMe && (
               <div className="flex">
-                {message.delivery_status === 'read' ? (
-                  <CheckCheck className="w-3.5 h-3.5 text-blue-300" />
-                ) : (
-                  <Check className="w-3.5 h-3.5" />
-                )}
+                <CheckCheck className={clsx(
+                  "w-3.5 h-3.5",
+                  message.delivery_status === 'read' ? "text-blue-500" : "text-white/40"
+                )} strokeWidth={3} />
               </div>
             )}
           </div>

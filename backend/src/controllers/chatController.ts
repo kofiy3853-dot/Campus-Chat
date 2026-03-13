@@ -286,17 +286,18 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
   const { conversationId } = req.params;
 
   try {
-    await Message.updateMany(
+    const result = await Message.updateMany(
       {
-        conversation_id: conversationId,
-        sender_id: { $ne: req.user.id },
+        conversation_id: new Types.ObjectId(conversationId),
+        sender_id: { $ne: req.user._id },
         delivery_status: { $ne: 'read' },
       },
       { delivery_status: 'read' }
     );
 
-    res.json({ message: 'Messages marked as read' });
+    res.json({ message: 'Messages marked as read', modifiedCount: result.modifiedCount });
   } catch (error: any) {
+    console.error('Error in markMessagesAsRead:', error);
     res.status(500).json({ message: error.message });
   }
 };
