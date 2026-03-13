@@ -202,9 +202,8 @@ io.on('connection', async (socket) => {
   });
 });
 
+// CORS must be applied before routes and body parsing
 app.use(cors(corsOptions));
-// Handle preflight requests for all routes
-app.options('/:path*', cors(corsOptions));
 app.use(express.json());
 app.use(generalRateLimiter);
 
