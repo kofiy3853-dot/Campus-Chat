@@ -16,7 +16,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
 
-import NotificationCenter from './NotificationCenter';
+
 
 interface NavSidebarProps {
   className?: string;
@@ -33,13 +33,14 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
     { icon: Calendar, label: 'Events', to: '/dashboard/events' },
     { icon: BarChart3, label: 'Polls', to: '/dashboard/polls' },
     { icon: Search, label: 'Lost & Found', to: '/dashboard/lost-found' },
+    { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },
   ];
 
   return (
     <aside className={clsx(
-      "bg-slate-900 border-slate-800 z-50",
-      "fixed bottom-0 left-0 right-0 border-t flex flex-row items-center justify-around py-3 px-6 h-16",
-      "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start",
+      "bg-slate-900 border-slate-800 z-50 overflow-x-auto no-scrollbar",
+      "fixed bottom-0 left-0 right-0 border-t flex flex-row items-center py-3 px-2 h-16",
+      "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start md:overflow-x-visible",
       className
     )}>
       {/* Logo */}
@@ -48,7 +49,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
       </div>
 
       {/* Nav Items */}
-      <nav className="flex-1 flex flex-row md:flex-col items-center justify-around md:justify-start gap-2 md:gap-6 w-full">
+      <nav className="flex-1 flex flex-row md:flex-col items-center justify-start md:justify-start gap-1 md:gap-6 min-w-max md:min-w-0 w-full px-2 md:px-0">
         {navItems.map((item) => (
           <NavLink
             key={item.label}
@@ -68,11 +69,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
             </div>
           </NavLink>
         ))}
-        
-        {/* Notification Center */}
-        <div className="md:mt-0">
-          <NotificationCenter />
-        </div>
       </nav>
 
       {/* Bottom Actions */}

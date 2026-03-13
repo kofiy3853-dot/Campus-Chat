@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, Video, MoreVertical, Search, Users, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import NotificationCenter from './NotificationCenter';
 
 interface ChatHeaderProps {
   user: any;
@@ -50,6 +51,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
       </div>
 
       <div className="flex items-center gap-2">
+        <NotificationCenter />
         <button 
           aria-label="Search in chat" 
           onClick={onSearchToggle}
@@ -57,9 +59,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
         >
           <Search className="w-5 h-5" />
         </button>
-        <button aria-label="Voice call" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"><Phone className="w-5 h-5" /></button>
-        <button aria-label="Video call" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"><Video className="w-5 h-5" /></button>
-        <div className="w-px h-6 bg-slate-800 mx-2"></div>
+        <button aria-label="Voice call" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl hidden md:block"><Phone className="w-5 h-5" /></button>
+        <button aria-label="Video call" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl hidden md:block"><Video className="w-5 h-5" /></button>
+        <div className="w-px h-6 bg-slate-800 mx-2 hidden md:block"></div>
         <button aria-label="More options" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"><MoreVertical className="w-5 h-5" /></button>
       </div>
     </header>

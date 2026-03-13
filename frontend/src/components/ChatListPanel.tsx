@@ -6,6 +6,7 @@ import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
 import Skeleton from './Skeleton';
 import UserSearchModal from './UserSearchModal';
+import NotificationCenter from './NotificationCenter';
 
 interface ChatListPanelProps {
   className?: string;
@@ -71,7 +72,8 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       <div className="p-6 flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-white tracking-tight">Messages</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <NotificationCenter />
             <button 
               onClick={() => setIsSearchOpen(true)}
               title="New Chat" 

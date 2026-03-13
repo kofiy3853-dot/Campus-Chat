@@ -109,7 +109,7 @@ const NotificationCenter: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 hover:bg-slate-800 rounded-lg transition"
+        className="relative p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all"
         title="Notifications"
       >
         <Bell className="w-5 h-5 text-slate-400" />
@@ -121,19 +121,21 @@ const NotificationCenter: React.FC = () => {
       </button>
 
       {showDropdown && (
-        <div className="absolute right-0 mt-2 w-80 bg-slate-800 rounded-lg shadow-xl border border-slate-700 z-50 max-h-96 overflow-y-auto">
+        <div className="fixed md:absolute top-16 md:top-full right-4 md:right-0 mt-2 w-[calc(100vw-32px)] md:w-80 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl z-50 max-h-[70vh] md:max-h-96 overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="sticky top-0 bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center">
-            <h3 className="font-semibold text-white">Notifications</h3>
+          <div className="bg-slate-900 border-b border-slate-800 p-4 flex justify-between items-center shrink-0">
+            <h3 className="font-bold text-white tracking-tight">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-xs text-primary-400 hover:text-primary-300"
+                className="text-xs font-bold text-primary-400 hover:text-primary-300 transition-colors"
               >
                 Mark all as read
               </button>
             )}
           </div>
+
+          <div className="overflow-y-auto flex-1">
 
           {/* Notifications List */}
           {notifications.length === 0 ? (
@@ -194,6 +196,7 @@ const NotificationCenter: React.FC = () => {
               ))}
             </div>
           )}
+          </div>
         </div>
       )}
     </div>
