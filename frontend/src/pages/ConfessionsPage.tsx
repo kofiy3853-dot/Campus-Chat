@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Ghost, Plus, Filter, TrendingUp, Clock, MessageSquare, ShieldAlert, PenLine } from 'lucide-react';
+import { Ghost, Plus, Filter, TrendingUp, Clock, MessageSquare, ShieldAlert, PenLine, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfessionCard from '../components/ConfessionCard';
@@ -74,56 +74,63 @@ const ConfessionsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0A0F1D] min-h-full">
-      <div className="max-w-2xl mx-auto px-4 py-6">
+    <div className="flex-1 overflow-y-auto bg-white min-h-full transition-none">
+      <div className="max-w-2xl mx-auto px-3 py-4 md:py-6">
 
         {/* Page Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-2xl bg-violet-500/10 flex items-center justify-center border border-violet-500/20">
-              <Ghost className="w-5 h-5 text-violet-400" />
+        <div className="mb-4 md:mb-8">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <button 
+              onClick={() => window.history.back()}
+              className="md:hidden p-1.5 -ml-1 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
+              aria-label="Back"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-purple-50 flex items-center justify-center border border-purple-100 shrink-0">
+              <Ghost className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Campus Confessions</h1>
-              <p className="text-xs text-slate-500">Anonymous thoughts from your campus community</p>
+              <h1 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">Campus Confessions</h1>
+              <p className="text-[9px] md:text-[10px] text-gray-400 font-medium">Safe space for anonymous thoughts</p>
             </div>
           </div>
         </div>
 
         {/* Rules banner */}
-        <div className="mb-6 bg-amber-500/5 border border-amber-500/15 rounded-2xl px-4 py-3 flex items-start gap-3">
-          <ShieldAlert className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
-          <p className="text-[12px] text-amber-300/80 leading-relaxed">
-            <strong>Community Rules:</strong> No bullying, hate speech, personal attacks, or revealing identities.
-            Violations will be removed and users may be banned.
+        <div className="mb-4 bg-amber-50 border border-amber-100 rounded-xl md:rounded-2xl px-3 py-2 flex items-start gap-2.5 transition-none">
+          <ShieldAlert className="w-3.5 h-3.5 text-amber-500 mt-0.5 shrink-0" />
+          <p className="text-[9px] md:text-[10px] text-amber-600 leading-tight">
+            <strong>Community Rules:</strong> No bullying, personal attacks or hate speech. Violations lead to bans.
           </p>
         </div>
 
         {/* Sort + Compose */}
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex bg-slate-900 border border-slate-800 rounded-2xl p-1 gap-1">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex bg-gray-50 border border-gray-100 rounded-xl md:rounded-2xl p-0.5 md:p-1 gap-0.5">
             <button
               onClick={() => setSort('newest')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium ${sort === 'newest' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              className={`flex items-center gap-1 py-1.5 px-2.5 md:px-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-none ${sort === 'newest' ? 'bg-white text-sky-500 shadow-sm' : 'text-gray-400 hover:text-sky-500'}`}
             >
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3 h-3" />
               Newest
             </button>
             <button
               onClick={() => setSort('top')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium ${sort === 'top' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+              className={`flex items-center gap-1 py-1.5 px-2.5 md:px-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-none ${sort === 'top' ? 'bg-white text-sky-500 shadow-sm' : 'text-gray-400 hover:text-sky-500'}`}
             >
-              <TrendingUp className="w-3.5 h-3.5" />
+              <TrendingUp className="w-3 h-3" />
               Top
             </button>
           </div>
 
           <button
             onClick={() => setShowCompose(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold rounded-2xl shadow-lg shadow-violet-600/20"
+            className="flex items-center gap-1.5 px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white text-[10px] md:text-xs font-black uppercase tracking-wider rounded-xl shadow-sm transition-none"
           >
-            <PenLine className="w-4 h-4" />
-            Confess
+            <PenLine className="w-3 h-3 md:w-3.5 md:h-3.5" />
+            <span className="hidden xs:inline">Post Confession</span>
+            <span className="xs:hidden">Confess</span>
           </button>
         </div>
 
@@ -144,11 +151,11 @@ const ConfessionsPage: React.FC = () => {
 
           {!loading && confessions.length === 0 && (
             <div className="text-center py-16">
-              <div className="w-16 h-16 rounded-3xl bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-4">
-                <Ghost className="w-8 h-8 text-slate-700" />
+              <div className="w-16 h-16 rounded-3xl bg-gray-50 border border-gray-100 flex items-center justify-center mx-auto mb-4 transition-none">
+                <Ghost className="w-8 h-8 text-gray-200" />
               </div>
-              <p className="text-slate-500 font-medium">No confessions yet</p>
-              <p className="text-slate-700 text-sm mt-1">Be the first to share something anonymously.</p>
+              <p className="text-gray-400 font-medium">No confessions yet</p>
+              <p className="text-gray-300 text-sm mt-1">Be the first to share something anonymously.</p>
             </div>
           )}
 

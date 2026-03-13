@@ -10,7 +10,7 @@ const Skeleton: React.FC<SkeletonProps> = ({ className, variant = 'rect' }) => {
   return (
     <div 
       className={clsx(
-        "bg-slate-800/50",
+        "bg-gray-100",
         variant === 'circle' ? "rounded-full" : "rounded-xl",
         className
       )}

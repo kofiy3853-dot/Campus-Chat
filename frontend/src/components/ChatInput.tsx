@@ -126,21 +126,20 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
   };
 
   return (
-    <footer className="p-4 md:p-6 bg-[#0A0F1D]/80 backdrop-blur-xl border-t border-slate-800/50">
-
+    <footer className="p-2.5 md:p-6 bg-white/90 backdrop-blur-xl border-t border-gray-100">
       {/* File preview bar */}
       {previewFile && (
-        <div className="max-w-6xl mx-auto mb-3 flex items-center gap-3 px-4 py-2.5 bg-slate-800 rounded-2xl border border-slate-700">
+        <div className="max-w-6xl mx-auto mb-3 flex items-center gap-3 px-3 md:px-4 py-2 md:py-2.5 bg-gray-50 rounded-xl md:rounded-2xl border border-gray-100">
           {previewFile.type === 'image' && (
-            <img src={previewFile.url} alt="preview" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+            <img src={previewFile.url} alt="preview" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shrink-0" />
           )}
           {previewFile.type === 'audio' && (
-            <audio controls src={previewFile.url} className="h-10 flex-1" />
+            <audio controls src={previewFile.url} className="h-9 md:h-10 flex-1" />
           )}
-          {(previewFile.type === 'file' || !['image','audio'].includes(previewFile.type)) && previewFile.type !== 'audio' && previewFile.type !== 'image' && (
+          {(previewFile.type === 'file' || !['image','audio'].includes(previewFile.type)) && (
             <div className="flex items-center gap-2 flex-1 min-w-0">
-              <Paperclip className="w-4 h-4 text-primary-400 shrink-0" />
-              <span className="text-sm text-slate-300 truncate">{previewFile.name}</span>
+              <Paperclip className="w-3.5 h-3.5 md:w-4 md:h-4 text-sky-400 shrink-0" />
+              <span className="text-xs md:text-sm text-gray-700 truncate">{previewFile.name}</span>
             </div>
           )}
           <button
@@ -158,14 +157,14 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
       {showEmoji && (
         <div
           ref={emojiRef}
-          className="max-w-6xl mx-auto mb-3 p-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl grid grid-cols-10 gap-1"
+          className="max-w-6xl mx-auto mb-3 p-2 md:p-3 bg-white border border-gray-100 rounded-xl md:rounded-2xl shadow-xl grid grid-cols-8 md:grid-cols-10 gap-1"
         >
           {EMOJIS.map(e => (
             <button
               key={e}
               type="button"
               onClick={() => insertEmoji(e)}
-              className="text-xl p-1 hover:bg-slate-800 rounded-lg"
+              className="text-lg md:text-xl p-1.5 md:p-1 hover:bg-gray-50 rounded-lg transition-none"
             >
               {e}
             </button>
@@ -177,12 +176,12 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
       {showAttach && (
         <div
           ref={attachRef}
-          className="max-w-6xl mx-auto mb-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden"
+          className="max-w-6xl mx-auto mb-3 bg-white border border-gray-100 rounded-xl md:rounded-2xl shadow-xl overflow-hidden"
         >
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4 pt-3 pb-1">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-4 pt-3 pb-1">
             Attach
           </p>
-          <div className="grid grid-cols-4 gap-0 divide-x divide-slate-800/50">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-y md:divide-y-0 divide-gray-100">
             {ATTACH_OPTIONS.map(opt => {
               const Icon = opt.icon;
               return (
@@ -190,13 +189,15 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
                   key={opt.id}
                   type="button"
                   onClick={() => openAttachOption(opt.accept)}
-                  className="flex flex-col items-center gap-2 py-4 px-2 hover:bg-slate-800 text-center"
+                  className="flex flex-row md:flex-col items-center gap-3 md:gap-2 py-3 md:py-4 px-4 hover:bg-gray-50 text-left md:text-center transition-none"
                 >
-                  <div className="w-10 h-10 rounded-2xl bg-primary-500/10 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-primary-400" />
+                  <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-sky-50 flex items-center justify-center shrink-0">
+                    <Icon className="w-4.5 h-4.5 md:w-5 md:h-5 text-sky-400" />
                   </div>
-                  <span className="text-xs font-semibold text-slate-300">{opt.label}</span>
-                  <span className="text-[10px] text-slate-600 leading-snug">{opt.desc}</span>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-semibold text-gray-700">{opt.label}</span>
+                    <span className="text-[9px] md:text-[10px] text-gray-400 leading-snug">{opt.desc}</span>
+                  </div>
                 </button>
               );
             })}
@@ -223,9 +224,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
 
       <form
         onSubmit={handleSend}
-        className="flex items-center gap-3 max-w-6xl mx-auto ring-1 ring-slate-800/80 p-2.5 rounded-[1.5rem] bg-slate-900 shadow-2xl focus-within:ring-primary-500/50"
+        className="flex items-center gap-1.5 md:gap-3 max-w-6xl mx-auto ring-1 ring-gray-100 p-1.5 md:p-2.5 rounded-2xl md:rounded-[1.5rem] bg-gray-50 shadow-sm focus-within:ring-sky-500/20 transition-none"
       >
-        <div className="flex items-center gap-1 px-1">
+        <div className="flex items-center gap-0.5 md:gap-1 px-0.5">
           {/* Attachment toggle */}
           <button
             type="button"
@@ -233,9 +234,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
             title="Attachments"
             disabled={uploading}
             onClick={() => { setShowAttach(v => !v); setShowEmoji(false); }}
-            className={`p-2.5 hover:bg-slate-800 rounded-xl disabled:opacity-40 ${showAttach ? 'text-primary-400' : 'text-slate-500 hover:text-primary-400'}`}
+            className={`p-2 md:p-2.5 hover:bg-gray-100 rounded-xl disabled:opacity-40 transition-none ${showAttach ? 'text-sky-500 bg-gray-100' : 'text-gray-400 hover:text-sky-500'}`}
           >
-            {showAttach ? <ChevronUp className="w-5 h-5" /> : <Paperclip className="w-5 h-5" />}
+            {showAttach ? <ChevronUp className="w-4.5 h-4.5 md:w-5 md:h-5" /> : <Paperclip className="w-4.5 h-4.5 md:w-5 md:h-5" />}
           </button>
 
           {/* Emoji */}
@@ -244,22 +245,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
             aria-label="Insert emoji"
             title="Emoji"
             onClick={() => { setShowEmoji(v => !v); setShowAttach(false); }}
-            className={`p-2.5 hover:bg-slate-800 rounded-xl hidden sm:flex ${showEmoji ? 'text-primary-400' : 'text-slate-500 hover:text-primary-400'}`}
+            className={`p-2 md:p-2.5 hover:bg-gray-100 rounded-xl hidden sm:flex transition-none ${showEmoji ? 'text-sky-500 bg-gray-100' : 'text-gray-400 hover:text-sky-500'}`}
           >
-            <Smile className="w-5 h-5" />
+            <Smile className="w-4.5 h-4.5 md:w-5 md:h-5" />
           </button>
         </div>
 
         <input
           type="text"
-          placeholder={uploading ? 'Uploading…' : isRecording ? 'Recording…' : 'Type your message…'}
-          className="flex-1 bg-transparent border-none outline-none text-slate-200 py-2.5 px-2 text-[15px] placeholder:text-slate-600"
+          placeholder={uploading ? 'Uploading…' : isRecording ? 'Recording…' : 'Type message…'}
+          className="flex-1 bg-transparent border-none outline-none text-gray-800 py-2 md:py-2.5 px-1 md:px-2 text-sm md:text-[15px] placeholder:text-gray-400 min-w-0"
           value={text}
           onChange={e => { setText(e.target.value); onTyping(); }}
           disabled={uploading || isRecording}
         />
 
-        <div className="flex items-center gap-1 px-1">
+        <div className="flex items-center gap-0.5 md:gap-1 px-0.5">
           {/* Image quick-pick */}
           <button
             type="button"
@@ -267,9 +268,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
             title="Send image"
             disabled={uploading}
             onClick={() => imageInputRef.current?.click()}
-            className="p-2.5 text-slate-500 hover:text-primary-400 hover:bg-slate-800 rounded-xl hidden sm:flex disabled:opacity-40"
+            className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-100 rounded-xl hidden sm:flex disabled:opacity-40 transition-none"
           >
-            <ImageIcon className="w-5 h-5" />
+            <ImageIcon className="w-4.5 h-4.5 md:w-5 md:h-5" />
           </button>
 
           {/* Mic / Stop */}
@@ -279,9 +280,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
               aria-label="Stop recording"
               title="Stop recording"
               onClick={stopRecording}
-              className="p-2.5 text-red-400 hover:bg-red-500/10 rounded-xl"
+              className="p-2 md:p-2.5 text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
             >
-              <StopCircle className="w-5 h-5" />
+              <StopCircle className="w-4.5 h-4.5 md:w-5 md:h-5" />
             </button>
           ) : (
             <button
@@ -290,9 +291,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
               title="Voice message"
               disabled={uploading}
               onClick={startRecording}
-              className="p-2.5 text-slate-500 hover:text-primary-400 hover:bg-slate-800 rounded-xl disabled:opacity-40"
+              className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-100 rounded-xl disabled:opacity-40 transition-none"
             >
-              <Mic className="w-5 h-5" />
+              <Mic className="w-4.5 h-4.5 md:w-5 md:h-5" />
             </button>
           )}
 
@@ -301,9 +302,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
             type="submit"
             disabled={!text.trim() && !previewFile}
             aria-label="Send message"
-            className="p-3 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:hover:bg-primary-600 text-white rounded-2xl shadow-lg shadow-primary-600/30 ml-2"
+            className="p-2 md:p-3 bg-sky-400 hover:bg-sky-500 disabled:opacity-50 disabled:hover:bg-sky-400 text-white rounded-xl md:rounded-2xl shadow-sm ml-1 md:ml-2 transition-none shrink-0"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4.5 h-4.5 md:w-5 md:h-5" />
           </button>
         </div>
       </form>

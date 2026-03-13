@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Plus, Filter, TrendingUp, Clock, Search } from 'lucide-react';
+import { Calendar, Plus, Filter, TrendingUp, Clock, Search, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import EventCard from '../components/EventCard';
@@ -54,57 +54,65 @@ const EventsPage: React.FC = () => {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#0A0F1D] custom-scrollbar">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 md:py-12">
+    <div className="flex-1 overflow-y-auto bg-white custom-scrollbar transition-none">
+      <div className="max-w-7xl mx-auto px-3 md:px-8 py-5 md:py-12">
         
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary-600/10 flex items-center justify-center border border-primary-600/20">
-                <Calendar className="w-6 h-6 text-primary-500" />
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 md:gap-6 mb-8 md:mb-12">
+          <div className="space-y-2.5 md:space-y-3">
+            <div className="flex items-center gap-2.5 md:gap-3">
+              <button 
+                onClick={() => window.history.back()}
+                className="md:hidden p-1.5 -ml-1 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
+                aria-label="Back"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100 shrink-0">
+                <Calendar className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               </div>
-              <h1 className="text-3xl font-black text-white tracking-tight">Campus Events</h1>
+              <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">Campus Events</h1>
             </div>
-            <p className="text-slate-400 max-w-md">Discover what's happening around campus. Meet new people, learn new skills, and have fun.</p>
+            <p className="text-gray-400 text-xs md:text-base max-w-md leading-relaxed">Discover what's happening around campus. Meet, learn, and have fun.</p>
           </div>
 
           <button
             onClick={() => setShowCompose(true)}
-            className="flex items-center justify-center gap-2 px-6 py-4 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl shadow-xl shadow-primary-900/40 transition-all hover:-translate-y-1 active:scale-95 whitespace-nowrap"
+            className="flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-4 bg-sky-400 hover:bg-sky-500 text-white text-xs md:text-base font-bold rounded-xl md:rounded-2xl shadow-sm transition-none whitespace-nowrap"
           >
-            <Plus className="w-5 h-5" />
-            Post New Event
+            <Plus className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden xs:inline">Post New Event</span>
+            <span className="xs:hidden">New Event</span>
           </button>
         </div>
 
         {/* Filters & Tools */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-10 pb-8 border-b border-slate-800/50">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 pb-6 border-b border-gray-100 transition-none">
           
           {/* Search */}
-          <div className="relative w-full sm:w-80 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary-400 transition-colors" />
+          <div className="relative w-full sm:w-80 group transition-none">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-sky-400 transition-none" />
             <input 
               type="text" 
               placeholder="Search events..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl pl-11 pr-4 py-3 text-sm text-slate-300 outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5 transition-all"
+              className="w-full bg-gray-50 border border-gray-100 rounded-xl md:rounded-2xl pl-11 pr-4 py-2.5 md:py-3 text-xs md:text-sm text-gray-700 outline-none focus:border-sky-400/50 focus:ring-4 focus:ring-sky-500/5 transition-none"
             />
           </div>
 
-          <div className="flex items-center gap-4 w-full sm:w-auto">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             {/* Category Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 transition-none">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={clsx(
-                    "px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all",
+                    "px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold whitespace-nowrap transition-none",
                     activeCategory === cat 
-                      ? "bg-primary-600 text-white shadow-lg shadow-primary-900/20" 
-                      : "bg-slate-900/50 text-slate-500 border border-slate-800 hover:text-slate-300 hover:border-slate-700"
+                      ? "bg-sky-400 text-white shadow-sm" 
+                      : "bg-gray-50 text-gray-400 border border-gray-100 hover:text-sky-500 hover:border-sky-200"
                   )}
                 >
                   {cat}
@@ -112,23 +120,23 @@ const EventsPage: React.FC = () => {
               ))}
             </div>
 
-            <div className="h-6 w-px bg-slate-800 hidden sm:block"></div>
+            <div className="h-6 w-px bg-gray-100 hidden sm:block"></div>
 
             {/* Sort Toggle */}
-            <div className="flex bg-slate-950 border border-slate-800 rounded-xl p-1 shrink-0">
+            <div className="flex bg-gray-50 border border-gray-100 rounded-xl p-1 shrink-0 transition-none">
                <button 
                  onClick={() => setSort('upcoming')}
-                 className={clsx("p-2 rounded-lg transition-all", sort === 'upcoming' ? "bg-slate-800 text-primary-400 shadow-sm" : "text-slate-600 hover:text-slate-400")}
+                 className={clsx("p-1.5 md:p-2 rounded-lg transition-none", sort === 'upcoming' ? "bg-white text-sky-500 shadow-sm" : "text-gray-400 hover:text-sky-500")}
                  title="Upcoming"
                >
-                 <Clock className="w-4 h-4" />
+                 <Clock className="w-3.5 h-3.5 md:w-4 md:h-4" />
                </button>
                <button 
                  onClick={() => setSort('popular')}
-                 className={clsx("p-2 rounded-lg transition-all", sort === 'popular' ? "bg-slate-800 text-primary-400 shadow-sm" : "text-slate-600 hover:text-slate-400")}
+                 className={clsx("p-1.5 md:p-2 rounded-lg transition-none", sort === 'popular' ? "bg-white text-sky-500 shadow-sm" : "text-gray-400 hover:text-sky-500")}
                  title="Popular"
                >
-                 <TrendingUp className="w-4 h-4" />
+                 <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4" />
                </button>
             </div>
           </div>
@@ -136,24 +144,24 @@ const EventsPage: React.FC = () => {
 
         {/* Events Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 transition-none">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-96 rounded-3xl bg-slate-900/20 animate-pulse border border-slate-800/50"></div>
+              <div key={i} className="h-96 rounded-3xl bg-gray-50 border border-gray-100 transition-none"></div>
             ))}
           </div>
         ) : filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {filteredEvents.map((event: any) => (
               <EventCard key={event._id} event={event} onUpdate={handleUpdateEvent} />
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-20 h-20 rounded-[2rem] bg-slate-900 flex items-center justify-center mb-6 border border-slate-800 shadow-xl">
-              <Calendar className="w-8 h-8 text-slate-700" />
+          <div className="flex flex-col items-center justify-center py-20 text-center transition-none">
+            <div className="w-20 h-20 rounded-[2rem] bg-gray-50 flex items-center justify-center mb-6 border border-gray-100 shadow-sm">
+              <Calendar className="w-8 h-8 text-gray-200" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No events found</h3>
-            <p className="text-slate-500 max-w-xs">Try adjusting your filters or search to find what you're looking for.</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">No events found</h3>
+            <p className="text-gray-400 max-w-xs">Try adjusting your filters or search to find what you're looking for.</p>
           </div>
         )}
       </div>

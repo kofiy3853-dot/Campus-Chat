@@ -63,16 +63,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
       )}
     >
       {!isMe && (
-        <div className="w-8 h-8 rounded-full overflow-hidden mr-3 shrink-0 border border-slate-700 bg-slate-800 self-end mb-1 shadow-sm">
+        <div className="w-8 h-8 rounded-full overflow-hidden mr-3 shrink-0 border border-gray-100 bg-gray-50 self-end mb-1 shadow-sm">
           <img src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}`} alt={senderName} className="w-full h-full object-cover" />
         </div>
       )}
       
       <div className={clsx(
-        "max-w-[70%] px-4 py-3 rounded-2xl relative shadow-lg group",
+        "max-w-[85%] md:max-w-[70%] px-4 py-3 rounded-2xl relative shadow-sm group",
         isMe 
-          ? "bg-primary-600 text-white rounded-br-sm selection:bg-white/20" 
-          : "bg-slate-800/80 text-slate-200 rounded-bl-sm border border-slate-700/30 backdrop-blur-sm"
+          ? "bg-sky-400 text-white rounded-br-sm selection:bg-white/20" 
+          : "bg-gray-100 text-gray-800 rounded-bl-sm border border-gray-200/50"
       )}>
         {/* Message Content */}
         {isEditing && isMe ? (
@@ -81,17 +81,17 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               placeholder="Edit your message..."
-              className="flex-1 bg-slate-700 text-white rounded px-2 py-1 text-sm"
+              className="flex-1 bg-white/10 text-white rounded px-2 py-1 text-sm outline-none border border-white/20"
             />
             <button
               onClick={handleEdit}
-              className="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs"
+              className="bg-sky-400 hover:bg-sky-500 px-2 py-1 rounded text-xs font-bold transition-none"
             >
               Save
             </button>
             <button
               onClick={() => setIsEditing(false)}
-              className="bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded text-xs"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-500 px-2 py-1 rounded text-xs font-bold transition-none"
             >
               Cancel
             </button>
@@ -118,7 +118,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                 <img 
                   src={getMediaUrl(message.media_thumbnail || message.media_url)} 
                   alt="Shared media" 
-                  className="max-h-60 object-cover w-full rounded-xl hover:opacity-80 transition"
+                  className="max-h-60 object-cover w-full rounded-xl transition-none"
                 />
               </a>
             ) : message.message_type === 'audio' || message.media_url?.match(/\.(mp3|ogg|wav|webm|m4a)$/i) ? (
@@ -140,7 +140,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         {message.reactions && message.reactions.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {message.reactions.map((reaction: any, idx: number) => (
-              <span key={idx} className="bg-slate-700 px-2 py-0.5 rounded-full text-xs">
+              <span key={idx} className={clsx("px-2 py-0.5 rounded-full text-xs", isMe ? "bg-white/20" : "bg-gray-200")}>
                 {reaction.emoji}
               </span>
             ))}
@@ -150,7 +150,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         {/* Footer info */}
         <div className={clsx(
           "flex items-center gap-1.5 mt-1.5 justify-between",
-          isMe ? "text-primary-100" : "text-slate-500"
+          isMe ? "text-sky-50" : "text-gray-400"
         )}>
           <span className="text-[10px] font-medium">
             {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -171,12 +171,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         {/* Message Actions (visible on hover) */}
         {!message.is_deleted && (
           <div className={clsx(
-            "absolute -top-8 right-0 flex gap-1 bg-slate-700 rounded-lg p-1 transition opacity-0 group-hover:opacity-100",
+            "absolute -top-8 right-0 flex gap-1 bg-white border border-gray-100 shadow-sm rounded-lg p-1 transition-none opacity-0 group-hover:opacity-100",
             isMe ? "group-hover:block" : "group-hover:block"
           )}>
             <button
               onClick={() => setShowReactions(!showReactions)}
-              className="p-1.5 hover:bg-slate-600 rounded text-white"
+              className="p-1.5 hover:bg-gray-50 rounded text-gray-500"
               title="React"
             >
               <Smile className="w-4 h-4" />
@@ -185,7 +185,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
               <>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="p-1.5 hover:bg-slate-600 rounded text-white"
+                  className="p-1.5 hover:bg-gray-50 rounded text-gray-500"
                   title="Edit"
                 >
                   <Edit2 className="w-4 h-4" />
@@ -204,12 +204,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
         {/* Reaction Picker */}
         {showReactions && (
-          <div className="absolute -top-12 left-0 bg-slate-700 rounded-lg p-2 flex gap-1 flex-wrap w-48">
+          <div className="absolute -top-12 left-0 bg-white border border-gray-100 shadow-md rounded-lg p-2 flex gap-1 flex-wrap w-48 z-10">
             {reactionEmojis.map((emoji) => (
               <button
                 key={emoji}
                 onClick={() => handleReaction(emoji)}
-                className="text-xl hover:scale-125 transition"
+                className="text-xl hover:scale-125 transition-none"
               >
                 {emoji}
               </button>
@@ -219,7 +219,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
       </div>
 
       {isMe && (
-        <div className="w-8 h-8 rounded-full overflow-hidden ml-3 shrink-0 border border-slate-700 bg-slate-800 self-end mb-1 shadow-sm">
+        <div className="w-8 h-8 rounded-full overflow-hidden ml-3 shrink-0 border border-gray-100 bg-gray-50 self-end mb-1 shadow-sm">
           <img src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}`} alt={senderName} className="w-full h-full object-cover" />
         </div>
       )}

@@ -85,23 +85,23 @@ const GroupWindow = () => {
   };
 
   if (!id || id === 'null') return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-[#0A0F1D] text-slate-500">
-        <Users className="w-16 h-16 mb-4 opacity-20" />
-        <h3 className="text-xl font-bold text-white mb-2">No Group Selected</h3>
+    <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
+        <Users className="w-16 h-16 mb-4 opacity-10" />
+        <h3 className="text-xl font-bold text-gray-800 mb-2">No Group Selected</h3>
         <p className="max-w-xs text-center">Select a group from the sidebar to start collaborating.</p>
     </div>
   );
 
   if (loading) return (
-    <div className="flex-1 flex items-center justify-center bg-[#0A0F1D]">
-        <div className="flex flex-col items-center gap-4 text-slate-500 font-medium">
+    <div className="flex-1 flex items-center justify-center bg-white">
+        <div className="flex flex-col items-center gap-4 text-gray-400 font-medium">
             Loading...
         </div>
     </div>
   );
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0A0F1D] relative overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-white relative overflow-hidden">
       {/* Reusing ChatHeader with Group data */}
       <ChatHeader 
         user={{
@@ -115,13 +115,13 @@ const GroupWindow = () => {
       />
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-2 scrollbar-hide bg-[url('/grid.svg')] bg-center bg-fixed">
+      <div className="flex-1 overflow-y-auto p-8 space-y-2 scrollbar-hide bg-white">
         <div className="flex flex-col justify-end min-h-full">
-            <div className="flex-1 flex flex-col items-center justify-center text-slate-600 mb-10">
-                <div className="w-20 h-20 rounded-[2rem] bg-slate-900 flex items-center justify-center mb-4 border border-slate-800 text-3xl font-bold text-primary-500 shadow-xl shadow-primary-500/5">
+            <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
+                <div className="w-20 h-20 rounded-[2rem] bg-gray-50 flex items-center justify-center mb-4 border border-gray-100 text-3xl font-bold text-sky-400 shadow-xl shadow-sky-400/5">
                     {group?.group_name?.[0] || '?'}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-1">{group?.group_name || 'Group Hub'}</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-1">{group?.group_name || 'Group Hub'}</h3>
                 <p className="text-sm font-medium opacity-60">This is the beginning of the {group?.group_name || 'shared'} story.</p>
             </div>
             

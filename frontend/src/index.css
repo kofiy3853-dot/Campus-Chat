@@ -7,9 +7,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0f172a;
+  color-scheme: light;
+  color: #333333;
+  background-color: #FFFFFF;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,12 +17,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  transition: none !important;
+  animation: none !important;
+}
+
 body {
   margin: 0;
   display: flex;
   place-content: center;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 #root {
@@ -30,16 +36,18 @@ body {
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.7);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* For Firefox */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: theme('colors.indigo.500') transparent;
+@supports (scrollbar-width: thin) {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.sky.400') transparent;
+  }
 }
 
 /* Chrome, Safari, Edge */
@@ -55,7 +63,7 @@ body {
 
 .overflow-y-auto::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: theme('colors.indigo.500');
+  background-color: theme('colors.sky.400');
   border-radius: 20px;
 }
 
@@ -66,5 +74,7 @@ body {
 .scrollbar-hide {
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;
-  scrollbar-width: none;
+  @supports (scrollbar-width: none) {
+    scrollbar-width: none;
+  }
 }

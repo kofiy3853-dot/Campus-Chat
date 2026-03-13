@@ -109,10 +109,10 @@ const NotificationCenter: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all"
+        className="relative p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
         title="Notifications"
       >
-        <Bell className="w-5 h-5 text-slate-400" />
+        <Bell className="w-5 h-5 text-gray-400" />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -121,14 +121,14 @@ const NotificationCenter: React.FC = () => {
       </button>
 
       {showDropdown && (
-        <div className="fixed md:absolute top-16 md:top-full right-4 md:right-0 mt-2 w-[calc(100vw-32px)] md:w-80 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl z-50 max-h-[70vh] md:max-h-96 overflow-hidden flex flex-col">
+        <div className="fixed md:absolute top-16 md:top-full right-4 md:right-0 mt-2 w-[calc(100vw-32px)] md:w-80 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 max-h-[70vh] md:max-h-96 overflow-hidden flex flex-col transition-none">
           {/* Header */}
-          <div className="bg-slate-900 border-b border-slate-800 p-4 flex justify-between items-center shrink-0">
-            <h3 className="font-bold text-white tracking-tight">Notifications</h3>
+          <div className="bg-white border-b border-gray-50 p-4 flex justify-between items-center shrink-0">
+            <h3 className="font-bold text-gray-800 tracking-tight">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="text-xs font-bold text-primary-400 hover:text-primary-300 transition-colors"
+                className="text-xs font-bold text-sky-500 hover:text-sky-600 transition-none"
               >
                 Mark all as read
               </button>
@@ -139,7 +139,7 @@ const NotificationCenter: React.FC = () => {
 
           {/* Notifications List */}
           {notifications.length === 0 ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-gray-400">
               <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-sm">No notifications yet</p>
             </div>
@@ -149,8 +149,8 @@ const NotificationCenter: React.FC = () => {
                 <div
                   key={notification._id}
                   className={clsx(
-                    'p-4 border-b border-slate-700 hover:bg-slate-700/50 transition cursor-pointer',
-                    !notification.read && 'bg-slate-700/30'
+                    'p-4 border-b border-gray-50 hover:bg-gray-50 transition-none cursor-pointer',
+                    !notification.read && 'bg-sky-50/50'
                   )}
                 >
                   <div className="flex items-start gap-3">
@@ -161,30 +161,30 @@ const NotificationCenter: React.FC = () => {
                       <div className="flex justify-between items-start">
                         <p className={clsx(
                           'font-semibold',
-                          !notification.read && 'text-white'
+                          !notification.read ? 'text-gray-900' : 'text-gray-600'
                         )}>
                           {notification.title}
                         </p>
                         <button
                           onClick={() => deleteNotification(notification._id)}
-                          className="text-slate-500 hover:text-slate-300 p-1"
+                          className="text-gray-400 hover:text-red-500 p-1 transition-none"
                           title="Delete notification"
                           aria-label="Delete notification"
                         >
                           <X className="w-4 h-4" />
                         </button>
                       </div>
-                      <p className="text-sm text-slate-400 mt-1">
+                      <p className="text-sm text-gray-500 mt-1">
                         {notification.body}
                       </p>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-gray-400">
                           {new Date(notification.created_at).toLocaleString()}
                         </span>
                         {!notification.read && (
                           <button
                             onClick={() => markAsRead(notification._id)}
-                            className="text-xs text-primary-400 hover:text-primary-300"
+                            className="text-xs text-sky-500 hover:text-sky-600 transition-none"
                           >
                             Mark as read
                           </button>

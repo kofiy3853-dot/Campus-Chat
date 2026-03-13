@@ -63,15 +63,15 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
   };
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800/60 rounded-2xl p-5 hover:border-slate-700/60 w-full">
+    <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-sky-100 w-full transition-none">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-sm font-bold text-white shrink-0">
           👤
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-slate-300">Anonymous</p>
-          <p className="text-[11px] text-slate-600">{timeAgo(confession.createdAt)}</p>
+          <p className="text-sm font-semibold text-gray-800">Anonymous</p>
+          <p className="text-[11px] text-gray-400">{timeAgo(confession.createdAt)}</p>
         </div>
         {isAdmin && (
           <span className="text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full">
@@ -81,18 +81,18 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
       </div>
 
       {/* Text */}
-      <p className="text-slate-200 text-[15px] leading-relaxed whitespace-pre-wrap mb-5">
+      <p className="text-gray-700 text-[15px] leading-relaxed whitespace-pre-wrap mb-5">
         {confession.text}
       </p>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 pt-3 border-t border-slate-800/60">
+      <div className="flex items-center gap-1 pt-3 border-t border-gray-50 transition-none">
         {/* Like */}
         <button
           onClick={handleLike}
           className={clsx(
-            'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium',
-            liked ? 'text-red-400 bg-red-400/10' : 'text-slate-500 hover:text-red-400 hover:bg-slate-800'
+            'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium transition-none',
+            liked ? 'text-red-500 bg-red-50' : 'text-gray-400 hover:text-red-500 hover:bg-gray-50'
           )}
         >
           <Heart className={clsx('w-4 h-4', liked && 'fill-current')} />
@@ -102,7 +102,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
         {/* Comment */}
         <button
           onClick={() => setShowComments(v => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-slate-500 hover:text-primary-400 hover:bg-slate-800"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-gray-400 hover:text-sky-500 hover:bg-gray-50 transition-none"
         >
           <MessageCircle className="w-4 h-4" />
           <span>{confession.commentsCount}</span>
@@ -117,8 +117,8 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
           disabled={reported || reporting}
           title={reported ? 'Already reported' : 'Report'}
           className={clsx(
-            'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm',
-            reported ? 'text-slate-600 cursor-not-allowed' : 'text-slate-600 hover:text-amber-400 hover:bg-slate-800'
+            'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm transition-none',
+            reported ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-amber-500 hover:bg-amber-50'
           )}
         >
           <Flag className="w-4 h-4" />

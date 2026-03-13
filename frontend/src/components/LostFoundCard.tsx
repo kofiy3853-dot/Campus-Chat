@@ -21,15 +21,15 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
 
   const isCreator = user?._id === post.creator?._id;
   const categoryColors: any = {
-    electronics: 'bg-blue-500/20 text-blue-300',
-    stationery: 'bg-purple-500/20 text-purple-300',
-    personal: 'bg-pink-500/20 text-pink-300',
-    miscellaneous: 'bg-gray-500/20 text-gray-300',
+    electronics: 'bg-blue-50 text-sky-500',
+    stationery: 'bg-purple-50 text-purple-500',
+    personal: 'bg-pink-50 text-pink-500',
+    miscellaneous: 'bg-gray-50 text-gray-500',
   };
 
   const statusColors: any = {
-    lost: 'bg-red-500/20 text-red-300',
-    found: 'bg-green-500/20 text-green-300',
+    lost: 'bg-red-50 text-red-500',
+    found: 'bg-green-50 text-green-500',
   };
 
   const handleResolve = async () => {
@@ -96,23 +96,23 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
 
   return (
     <div className={clsx(
-      'bg-slate-800/80 border border-slate-700/30 rounded-2xl overflow-hidden shadow-lg backdrop-blur-sm mb-4 transition',
-      post.is_resolved && 'opacity-75'
+      'bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm mb-4 transition-none',
+      post.is_resolved && 'opacity-60'
     )}>
       {/* Image and Status */}
-      <div className="relative h-48 bg-slate-700 overflow-hidden">
+      <div className="relative h-48 bg-gray-50 overflow-hidden transition-none">
         {post.image_url ? (
           <>
             <img
               src={getMediaUrl(post.image_thumbnail || post.image_url)}
               alt={post.title}
-              className="w-full h-full object-cover cursor-pointer hover:scale-105 transition"
+              className="w-full h-full object-cover cursor-pointer transition-none"
               onClick={() => setShowImage(true)}
             />
-            <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition" />
+            <div className="absolute inset-0 bg-black/0 hover:bg-black/5 transition-none" />
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-500">
+          <div className="w-full h-full flex items-center justify-center text-gray-200">
             <span className="text-4xl">📦</span>
           </div>
         )}
@@ -126,7 +126,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
 
         {/* Resolved Badge */}
         {post.is_resolved && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-full text-xs font-semibold">
+          <div className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-semibold shadow-sm transition-none">
             <CheckCircle className="w-3.5 h-3.5" /> Resolved
           </div>
         )}
@@ -142,11 +142,11 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
       {/* Content */}
       <div className="p-5">
         {/* Header */}
-        <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start justify-between mb-3 transition-none">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-white">{post.title}</h3>
-            <p className="text-sm text-slate-400 mt-1">
-              Posted by <span className="font-medium text-slate-300">{post.creator?.name}</span>
+            <h3 className="text-lg font-bold text-gray-800">{post.title}</h3>
+            <p className="text-sm text-gray-400 mt-1">
+              Posted by <span className="font-bold text-sky-500">{post.creator?.name}</span>
             </p>
           </div>
 
@@ -154,7 +154,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="p-2 hover:bg-red-500/20 rounded-lg text-red-400 transition disabled:opacity-50"
+              className="p-2 hover:bg-red-50 rounded-lg text-red-500 transition-none disabled:opacity-50"
               title="Delete post"
             >
               <Trash2 className="w-5 h-5" />
@@ -163,38 +163,37 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
         </div>
 
         {/* Description */}
-        <p className="text-slate-300 text-sm mb-4 line-clamp-2">{post.description}</p>
-
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{post.description}</p>
+ 
         {/* Location and Date */}
-        <div className="space-y-2 mb-4 p-3 bg-slate-700/50 rounded-lg border border-slate-600/30">
+        <div className="space-y-2 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
           <div className="flex items-start gap-2">
-            <span className="text-slate-400 text-sm font-medium min-w-fit">📍 Location:</span>
-            <span className="text-slate-300 text-sm">
+            <span className="text-gray-400 text-sm font-bold min-w-fit">📍 Location:</span>
+            <span className="text-gray-600 text-sm">
               {post.location.building}
               {post.location.room && ` - ${post.location.room}`}
             </span>
           </div>
           <div className="flex items-start gap-2">
-            <Clock className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
-            <span className="text-slate-300 text-sm">
+            <Clock className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+            <span className="text-gray-600 text-sm font-medium">
               {new Date(post.date).toLocaleDateString()} {new Date(post.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-xs text-slate-400 mb-4">
+        <div className="flex items-center gap-4 text-xs text-gray-400 mb-4 transition-none">
           <span>👁️ {post.contact_count} contact{post.contact_count !== 1 ? 's' : ''}</span>
           <span>📅 {new Date(post.created_at).toLocaleDateString()}</span>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 transition-none">
           {!post.is_resolved && (
             <button
               onClick={handleContact}
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white font-medium rounded-lg transition text-sm"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-sky-400 hover:bg-sky-500 disabled:opacity-50 text-white font-bold rounded-lg transition-none text-sm shadow-sm"
             >
               <MessageSquare className="w-4 h-4" /> Contact Poster
             </button>
@@ -204,7 +203,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
             <button
               onClick={handleResolve}
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-medium rounded-lg transition text-sm"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-500 hover:bg-green-600 disabled:opacity-50 text-white font-bold rounded-lg transition-none text-sm shadow-sm"
             >
               <CheckCircle className="w-4 h-4" /> Mark Resolved
             </button>
@@ -213,7 +212,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
           {!isCreator && (
             <button
               onClick={() => setShowReport(!showReport)}
-              className="p-2 hover:bg-red-500/20 rounded-lg text-red-400 transition"
+              className="p-2 hover:bg-red-50 rounded-lg text-red-500 transition-none"
               title="Report post"
             >
               <Flag className="w-5 h-5" />
@@ -223,13 +222,13 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
 
         {/* Report Modal */}
         {showReport && (
-          <div className="mt-4 p-4 bg-slate-700/50 rounded-lg border border-red-500/30">
-            <label className="block text-sm font-medium text-white mb-2">Report Reason</label>
+          <div className="mt-4 p-4 bg-red-50 rounded-lg border border-red-100 transition-none">
+            <label className="block text-sm font-bold text-red-800 mb-2">Report Reason</label>
             <select
               value={reportReason}
               onChange={(e) => setReportReason(e.target.value)}
               aria-label="Report reason"
-              className="w-full mb-3 bg-slate-800 border border-slate-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-primary-500"
+              className="w-full mb-3 bg-white border border-red-200 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-red-400 transition-none"
             >
               <option value="">Select a reason...</option>
               <option value="spam">Spam</option>
@@ -239,11 +238,11 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
               <option value="other">Other</option>
             </select>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 transition-none">
               <button
                 onClick={handleReport}
                 disabled={!reportReason || loading}
-                className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 px-3 py-2 rounded font-medium text-white text-sm transition"
+                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 px-3 py-2 rounded font-bold text-white text-sm transition-none"
               >
                 Report
               </button>
@@ -252,7 +251,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
                   setShowReport(false);
                   setReportReason('');
                 }}
-                className="flex-1 bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded font-medium text-white text-sm transition"
+                className="flex-1 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded font-bold text-gray-600 text-sm transition-none"
               >
                 Cancel
               </button>

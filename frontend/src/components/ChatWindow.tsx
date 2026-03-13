@@ -179,18 +179,18 @@ const ChatWindow = () => {
   };
 
   if (!id || id === 'null') return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-[#0A0F1D] text-slate-500">
-        <div className="w-20 h-20 rounded-full bg-slate-900 flex items-center justify-center mb-4 border border-slate-800">
+    <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
+        <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
             <span className="text-3xl opacity-20">👋</span>
         </div>
-        <h3 className="text-xl font-bold text-white mb-2">Select a Conversation</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">Select a Conversation</h3>
         <p className="max-w-xs text-center">Pick a friend or start a new chat to begin messaging.</p>
     </div>
   );
 
   if (loading) return (
-    <div className="flex-1 flex items-center justify-center bg-[#0A0F1D]">
-      <div className="flex flex-col items-center gap-4 text-slate-500 font-medium">
+    <div className="flex-1 flex items-center justify-center bg-white">
+      <div className="flex flex-col items-center gap-4 text-gray-400 font-medium">
         Loading...
       </div>
     </div>
@@ -201,7 +201,7 @@ const ChatWindow = () => {
   const displayMessages = searchResults || messages;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0A0F1D] relative overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-white relative overflow-hidden">
       {/* Header component */}
       <ChatHeader 
         user={otherUser} 
@@ -222,14 +222,14 @@ const ChatWindow = () => {
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-2 scrollbar-hide bg-[url('/grid.svg')] bg-center bg-fixed">
+      <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-2 scrollbar-hide bg-white">
         <div className="flex flex-col justify-end min-h-full">
           {displayMessages.length === 0 && (
-               <div className="flex-1 flex flex-col items-center justify-center text-slate-600 mb-10">
-                   <div className="w-20 h-20 rounded-full bg-slate-900 flex items-center justify-center mb-4 border border-slate-800">
+               <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
+                   <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
                        <span className="text-3xl">👋</span>
                    </div>
-                   <p className="text-sm font-medium uppercase tracking-widest bg-slate-900 px-4 py-1.5 rounded-full border border-slate-800">
+                   <p className="text-sm font-medium uppercase tracking-widest bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100">
                      {searchResults ? 'No search results found' : `Start of your conversation with ${otherUser?.name || 'Friend'}`}
                    </p>
                </div>
