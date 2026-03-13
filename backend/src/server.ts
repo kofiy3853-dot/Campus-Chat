@@ -3,6 +3,22 @@ import dns from 'dns';
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 console.log('Node DNS Servers set to:', dns.getServers());
 import path from 'path';
+import fs from 'fs';
+
+const logErrorToFile = (context: string, error: any) => {
+  const logPath = path.resolve(__dirname, '../error_diagnostics.log');
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] [${context}]
+Message: ${error.message}
+Stack: ${error.stack}
+--------------------------------------------------\n`;
+  try {
+    fs.appendFileSync(logPath, logMessage);
+    console.log(`[Diagnostic] Error logged to ${logPath}`);
+  } catch (err) {
+    console.error('[Diagnostic] Failed to write to log file:', err);
+  }
+};
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
@@ -90,6 +106,9 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   console.error('Stack:', err.stack);
   console.error('Path:', req.path);
   console.error('-----------------------------');
+  
+  logErrorToFile(`GLOBAL_ERROR: ${req.method} ${req.path}`, err);
+
   res.status(500).json({ 
     message: err.message || 'Internal Server Error',
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
@@ -112,6 +131,7 @@ const startServer = async () => {
         console.log('[Server] Redis connection task finished');
     }).catch(err => {
         console.error('[Server] Redis connection task failed:', err.message);
+        logErrorToFile('REDIS_STARTUP', err);
     });
 
     console.log('[Server] Connecting to MongoDB...');
@@ -122,6 +142,7 @@ const startServer = async () => {
         console.log('[Server] MongoDB connected');
     }).catch(err => {
         console.error('[Server] MongoDB connection failed:', err.message);
+        logErrorToFile('MONGODB_STARTUP', err);
     });
   } catch (err: any) {
     console.error('[Server] Fatal Startup Error:', err.message);
