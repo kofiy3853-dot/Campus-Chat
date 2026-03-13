@@ -3,12 +3,14 @@ import { User, Camera, Mail, Contact, GraduationCap, Shield, Save, LogOut, Lock 
 import { useAuth } from '../context/AuthContext';
 
 import api from '../services/api';
+import BlockList from './BlockList';
 
 const ProfileSettings = () => {
   const { user, login, logout, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isBlockListOpen, setIsBlockListOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
@@ -203,7 +205,24 @@ const ProfileSettings = () => {
                 <p className="text-[10px] text-slate-500">Update your account password</p>
               </div>
             </button>
+
+            <button 
+              onClick={() => setIsBlockListOpen(true)}
+              className="flex items-center gap-3 w-full p-4 rounded-xl hover:bg-slate-800 text-left group mt-2"
+            >
+              <div className="p-2 bg-slate-900 rounded-lg group-hover:bg-primary-500/10">
+                <Shield className="w-5 h-5 text-slate-500 group-hover:text-primary-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-slate-200">Blocked Users</p>
+                <p className="text-[10px] text-slate-500">Manage your blocked contacts</p>
+              </div>
+            </button>
           </section>
+
+          {isBlockListOpen && (
+            <BlockList onClose={() => setIsBlockListOpen(false)} />
+          )}
 
           <div className="flex items-center gap-4 pt-4">
             <button 

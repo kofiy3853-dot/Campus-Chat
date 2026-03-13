@@ -113,7 +113,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
         {/* Header */}
         <div className="sticky top-0 bg-slate-900 border-b border-slate-700 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">Post Lost or Found Item</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-lg transition">
+          <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-lg transition" title="Close dialog" aria-label="Close dialog">
             <X className="w-6 h-6 text-slate-400" />
           </button>
         </div>
@@ -133,6 +133,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
+                title="Select item status"
                 className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
               >
                 <option value="lost">🔍 Lost Item</option>
@@ -145,6 +146,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
+                title="Select item category"
                 className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
               >
                 <option value="electronics">💻 Electronics</option>
@@ -215,6 +217,8 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
               type="datetime-local"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              title="Select date and time"
+              placeholder="Select date and time"
               className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
             />
           </div>
@@ -249,6 +253,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
                     onChange={handleImageUpload}
                     disabled={uploading}
                     className="hidden"
+                    title="Upload image file"
                   />
                 </label>
               )}

@@ -95,7 +95,7 @@ const PollCompose: React.FC<PollComposeProps> = ({ isOpen, onClose, onPollCreate
         {/* Header */}
         <div className="sticky top-0 bg-slate-900 border-b border-slate-700 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">Create a Poll</h2>
-          <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-lg transition">
+          <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-lg transition" title="Close">
             <X className="w-6 h-6 text-slate-400" />
           </button>
         </div>
@@ -141,6 +141,7 @@ const PollCompose: React.FC<PollComposeProps> = ({ isOpen, onClose, onPollCreate
                       type="button"
                       onClick={() => handleRemoveOption(idx)}
                       className="p-2 hover:bg-red-500/20 rounded-lg text-red-400 transition"
+                      title="Remove option"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -189,6 +190,8 @@ const PollCompose: React.FC<PollComposeProps> = ({ isOpen, onClose, onPollCreate
                 value={expiresAt}
                 onChange={(e) => setExpiresAt(e.target.value)}
                 className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary-500"
+                placeholder="Select expiration date and time"
+                title="Expiration date and time"
               />
             </div>
           </div>

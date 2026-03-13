@@ -170,6 +170,7 @@ const LostFoundPage: React.FC = () => {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              aria-label="Filter by category"
               className="px-3 py-1 bg-slate-800 text-slate-400 rounded-full text-sm border border-slate-600 focus:outline-none focus:border-primary-500"
             >
               <option value="">All Categories</option>

@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 interface ChatHeaderProps {
   user: any;
   isTyping: boolean;
+  onSearchToggle?: () => void;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle }) => {
   const navigate = useNavigate();
 
   return (
@@ -49,7 +50,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <button aria-label="Search in chat" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"><Search className="w-5 h-5" /></button>
+        <button 
+          aria-label="Search in chat" 
+          onClick={onSearchToggle}
+          className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"
+        >
+          <Search className="w-5 h-5" />
+        </button>
         <button aria-label="Voice call" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"><Phone className="w-5 h-5" /></button>
         <button aria-label="Video call" className="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"><Video className="w-5 h-5" /></button>
         <div className="w-px h-6 bg-slate-800 mx-2"></div>

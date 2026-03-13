@@ -16,6 +16,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
 
+import NotificationCenter from './NotificationCenter';
+
 interface NavSidebarProps {
   className?: string;
 }
@@ -31,7 +33,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
     { icon: Calendar, label: 'Events', to: '/dashboard/events' },
     { icon: BarChart3, label: 'Polls', to: '/dashboard/polls' },
     { icon: Search, label: 'Lost & Found', to: '/dashboard/lost-found' },
-    { icon: Bell, label: 'Notifications', to: '/dashboard/notifications' },
   ];
 
   return (
@@ -67,6 +68,11 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
             </div>
           </NavLink>
         ))}
+        
+        {/* Notification Center */}
+        <div className="md:mt-0">
+          <NotificationCenter />
+        </div>
       </nav>
 
       {/* Bottom Actions */}
