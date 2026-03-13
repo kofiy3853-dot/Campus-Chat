@@ -36,10 +36,9 @@ import http from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { createAdapter } from '@socket.io/redis-adapter';
 import User from './models/User';
-import redisClient from './config/redis';
-// Removed modular setupSockets import
+import { connectRedis } from './config/redis';
+// Socket.IO uses default in-memory adapter (Upstash HTTP doesn't support pub/sub)
 import authRoutes from './routes/authRoutes';
 import chatRoutes from './routes/chatRoutes';
 import groupRoutes from './routes/groupRoutes';
@@ -49,7 +48,6 @@ import eventRoutes from './routes/eventRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import pollRoutes from './routes/pollRoutes';
 import lostFoundRoutes from './routes/lostFoundRoutes';
-import { connectRedis } from './config/redis';
 import { generalRateLimiter } from './middleware/rateLimitMiddleware';
 
 const app = express();
@@ -82,18 +80,7 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 
-// Redis Adapter for scaling
-const pubClient = redisClient.duplicate();
-const subClient = redisClient.duplicate();
-
-Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
-  io.adapter(createAdapter(pubClient, subClient));
-  console.log('[Socket] Redis Adapter enabled');
-}).catch(err => {
-  console.error('[Socket] Redis Adapter failed:', err.message);
-});
-
-// Presence tracking
+// Presence tracking (in-memory — Upstash HTTP doesn't support TCP pub/sub)
 const onlineUsers = new Map<string, Set<string>>();
 
 io.on('connection', async (socket) => {

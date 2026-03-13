@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import redisClient from '../config/redis';
+import { isRedisReady, redisIncr, redisExpire } from '../config/redis';
 
 interface RateLimitConfig {
   windowMs: number; // Time window in milliseconds
@@ -18,13 +18,13 @@ export const createRateLimiter = (config: RateLimitConfig) => {
     const key = `rate_limit:${req.ip}:${req.path}`;
     
     try {
-      if (redisClient.isOpen) {
+      if (isRedisReady()) {
         try {
           // Use Redis if available
-          const current = await redisClient.incr(key);
+          const current = await redisIncr(key);
           
           if (current === 1) {
-            await redisClient.expire(key, Math.ceil(config.windowMs / 1000));
+            await redisExpire(key, Math.ceil(config.windowMs / 1000));
           }
 
           if (current > config.maxRequests) {
