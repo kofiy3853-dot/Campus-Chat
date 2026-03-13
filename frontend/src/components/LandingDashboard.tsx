@@ -82,25 +82,8 @@ const LandingDashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white text-[#333333]">
-      {/* Top Nav */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 px-4 flex items-center justify-between z-50">
-        <h1 className="text-xl font-black text-sky-400 tracking-tight">Campus Chat</h1>
-        <div className="flex items-center gap-4">
-          <button title="Search" className="p-2 text-gray-400 hover:text-sky-500">
-            <Search className="w-6 h-6" />
-          </button>
-          <button title="Notifications" className="p-2 text-gray-400 hover:text-sky-500 relative">
-            <Bell className="w-6 h-6" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-          </button>
-          <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="w-8 h-8 rounded-full overflow-hidden border border-gray-200">
-            <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="Profile" className="w-full h-full object-cover" />
-          </button>
-        </div>
-      </header>
-
       {/* Main Content */}
-      <main className="flex-1 pt-20 pb-24 px-4 overflow-y-auto">
+      <main className="flex-1 pb-24 px-4 overflow-y-auto pt-8">
         {/* Feature Grid */}
         <section className="mb-8">
           <div className="grid grid-cols-2 gap-4">
@@ -200,22 +183,6 @@ const LandingDashboard: React.FC = () => {
           </div>
         </section>
       </main>
-
-      {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t border-gray-100 flex items-center justify-around px-2 z-50">
-        <button title="Home" onClick={() => navigate('/dashboard')} className="flex flex-col items-center gap-1 text-sky-500">
-          <Home className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Home</span>
-        </button>
-        <button title="Chats" onClick={() => navigate('/dashboard/chats')} className="flex flex-col items-center gap-1 text-gray-400 hover:text-sky-500">
-          <MessageSquare className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Chats</span>
-        </button>
-        <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="flex flex-col items-center gap-1 text-gray-400 hover:text-sky-500">
-          <User className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Profile</span>
-        </button>
-      </nav>
     </div>
   );
 };

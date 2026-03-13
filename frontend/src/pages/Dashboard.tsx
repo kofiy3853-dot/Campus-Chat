@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import NavSidebar from '../components/NavSidebar';
+import Navbar from '../components/Navbar';
 import ChatListPanel from '../components/ChatListPanel';
 import ChatWindow from '../components/ChatWindow';
 import GroupWindow from '../components/GroupWindow';
@@ -22,10 +22,10 @@ const Dashboard = () => {
   return (
     <SocketProvider>
       <div className="flex h-[100dvh] overflow-hidden bg-white font-sans selection:bg-sky-500/30">
-        {!isLanding && <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />}
-        {!isLanding && <ChatListPanel className={isListView ? "flex w-full md:w-80" : "hidden md:flex md:w-80"} />}
+        <Navbar className={isConversation ? "hidden lg:flex" : "flex"} />
+        <ChatListPanel className={isListView ? "flex w-full lg:w-80" : "hidden lg:flex lg:w-80"} />
         
-        <main className={`flex-1 flex flex-col h-full overflow-hidden bg-white ${isListView && !isLanding ? 'hidden md:flex' : 'flex w-full'} ${!isLanding ? 'md:pt-0' : ''}`}>
+        <main className={`flex-1 flex flex-col h-full overflow-hidden bg-white ${isListView ? 'hidden lg:flex' : 'flex w-full'}`}>
           <Routes>
             <Route path="chat/:id" element={<ChatWindow />} />
             <Route path="groups/:id" element={<GroupWindow />} />
