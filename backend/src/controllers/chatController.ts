@@ -281,3 +281,22 @@ export const getBlockedUsers = async (req: any, res: Response) => {
 };
 
 
+// Mark messages as read
+export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
+  const { conversationId } = req.params;
+
+  try {
+    await Message.updateMany(
+      {
+        conversation_id: conversationId,
+        sender_id: { $ne: req.user.id },
+        delivery_status: { $ne: 'read' },
+      },
+      { delivery_status: 'read' }
+    );
+
+    res.json({ message: 'Messages marked as read' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

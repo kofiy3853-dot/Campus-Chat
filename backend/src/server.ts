@@ -136,6 +136,10 @@ io.on('connection', async (socket) => {
     if (data.roomId) socket.to(data.roomId).emit('message_edited', data);
   });
 
+  socket.on('messages_read', (data: { roomId: string, userId: string }) => {
+    if (data.roomId) socket.to(data.roomId).emit('messages_read', data);
+  });
+
   socket.on('message_deleted', (data: { messageId: string, roomId: string }) => {
     if (data.roomId) socket.to(data.roomId).emit('message_deleted', data);
   });

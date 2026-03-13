@@ -40,8 +40,21 @@ const ChatWindow = () => {
         setLoading(false);
       }
     };
-    if (id && id !== 'null') fetchMessages();
+    if (id && id !== 'null') {
+      fetchMessages();
+      markAsRead();
+    }
   }, [id]);
+
+  const markAsRead = async () => {
+    if (!id || id === 'null') return;
+    try {
+      await api.post(`/api/chat/conversations/${id}/read`);
+      socket?.emit('messages_read', { roomId: id, userId: user?._id });
+    } catch (err) {
+      console.error('Error marking messages as read:', err);
+    }
+  };
 
   useEffect(() => {
     if (!socket || !id || id === 'null') return;
@@ -56,6 +69,12 @@ const ChatWindow = () => {
         // Deduplicate: sender already added this message optimistically
         const incomingId = String(message._id);
         if (prev.some(m => String(m._id) === incomingId)) return prev;
+        
+        // If message is for this conversation and from someone else, mark as read
+        if (message.sender_id?._id !== user?._id && message.sender_id !== user?._id) {
+          markAsRead();
+        }
+        
         return [...prev, message];
       });
     };
@@ -104,12 +123,23 @@ const ChatWindow = () => {
       }
     };
 
+    const messagesReadHandler = (data: any) => {
+      if (data.roomId === id && data.userId !== user?._id) {
+        setMessages(prev => prev.map(m => 
+          m.sender_id?._id === user?._id || m.sender_id === user?._id 
+            ? { ...m, delivery_status: 'read' } 
+            : m
+        ));
+      }
+    };
+
     socket.on('receive_message', messageHandler);
     socket.on('typing_start', typingHandler);
     socket.on('typing_stop', typingStopHandler);
     socket.on('message_reaction', reactionHandler);
     socket.on('message_edited', editHandler);
     socket.on('message_deleted', deleteHandler);
+    socket.on('messages_read', messagesReadHandler);
 
     return () => {
       socket.off('connect', joinRoom);
@@ -119,6 +149,7 @@ const ChatWindow = () => {
       socket.off('message_reaction', reactionHandler);
       socket.off('message_edited', editHandler);
       socket.off('message_deleted', deleteHandler);
+      socket.off('messages_read', messagesReadHandler);
     };
   }, [socket, id, user?._id]);
 
