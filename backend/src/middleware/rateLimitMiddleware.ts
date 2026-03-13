@@ -11,6 +11,10 @@ const memoryStore = new Map<string, { count: number; resetTime: number }>();
 
 export const createRateLimiter = (config: RateLimitConfig) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    // Skip rate limiting for preflight requests
+    if (req.method === 'OPTIONS') {
+      return next();
+    }
     try {
       const key = `rate_limit:${req.ip}:${req.path}`;
       

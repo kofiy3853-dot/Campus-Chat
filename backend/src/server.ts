@@ -58,21 +58,30 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://campus-chat-fjxp.vercel.app',
   'https://campus-chat-fjxp-dbqj1blko-kofiy3853-dots-projects.vercel.app',
-  process.env.FRONTEND_URL, // Vercel URL fallback
-].filter(Boolean) as string[];
+].filter(Boolean);
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Check if origin is in allowedOrigins or if it's a vercel.app subdomain
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  credentials: true,
+  optionsSuccessStatus: 200, // For legacy browser support
+};
 
 const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
+  cors: corsOptions,
 });
 
-app.use(cors({
-  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
-  credentials: true,
-}));
+app.use(cors(corsOptions));
+// Handle preflight requests for all routes
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(generalRateLimiter);
 
