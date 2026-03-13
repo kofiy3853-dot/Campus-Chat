@@ -36,7 +36,10 @@ import http from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { setupSockets } from './sockets';
+import { createAdapter } from '@socket.io/redis-adapter';
+import User from './models/User';
+import redisClient from './config/redis';
+// Removed modular setupSockets import
 import authRoutes from './routes/authRoutes';
 import chatRoutes from './routes/chatRoutes';
 import groupRoutes from './routes/groupRoutes';
@@ -77,6 +80,126 @@ const corsOptions: cors.CorsOptions = {
 
 const io = new Server(server, {
   cors: corsOptions,
+});
+
+// Redis Adapter for scaling
+const pubClient = redisClient.duplicate();
+const subClient = redisClient.duplicate();
+
+Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+  io.adapter(createAdapter(pubClient, subClient));
+  console.log('[Socket] Redis Adapter enabled');
+}).catch(err => {
+  console.error('[Socket] Redis Adapter failed:', err.message);
+});
+
+// Presence tracking
+const onlineUsers = new Map<string, Set<string>>();
+
+io.on('connection', async (socket) => {
+  const userId = socket.handshake.query.userId as string;
+
+  if (userId && userId !== 'null' && userId !== 'undefined') {
+    if (!onlineUsers.has(userId)) {
+      onlineUsers.set(userId, new Set());
+    }
+    onlineUsers.get(userId)?.add(socket.id);
+    
+    console.log(`[Socket] User ${userId} connected (${socket.id}). Active tabs: ${onlineUsers.get(userId)?.size}`);
+    
+    // Broadcast updated online list
+    io.emit('onlineUsers', Array.from(onlineUsers.keys()));
+    
+    // Join notification room
+    socket.join(`notification:${userId}`);
+
+    // Update DB
+    User.findByIdAndUpdate(userId, { status: 'online', last_seen: new Date() }).catch(e => {
+        console.error('[Socket] User status update error:', e.message);
+    });
+  }
+
+  // --- Real-time Events ---
+  socket.on('join_room', (roomId: string) => {
+    if (!roomId || roomId === 'null') return;
+    socket.join(roomId);
+  });
+
+  socket.on('typing_start', (data: { roomId: string, userId: string }) => {
+    if (data.roomId) socket.to(data.roomId).emit('typing_start', data);
+  });
+
+  socket.on('typing_stop', (data: { roomId: string, userId: string }) => {
+    if (data.roomId) socket.to(data.roomId).emit('typing_stop', data);
+  });
+
+  socket.on('send_message', (data: any) => {
+    if (data.roomId) socket.to(data.roomId).emit('receive_message', data);
+  });
+
+  socket.on('send_group_message', (data: any) => {
+    if (data.roomId) socket.to(data.roomId).emit('receive_group_message', data);
+  });
+
+  socket.on('message_reaction', (data: { messageId: string, emoji: string, roomId: string }) => {
+    if (data.roomId) socket.to(data.roomId).emit('message_reaction', data);
+  });
+
+  socket.on('message_edited', (data: { messageId: string, message_text: string, roomId: string }) => {
+    if (data.roomId) socket.to(data.roomId).emit('message_edited', data);
+  });
+
+  socket.on('message_deleted', (data: { messageId: string, roomId: string }) => {
+    if (data.roomId) socket.to(data.roomId).emit('message_deleted', data);
+  });
+
+  socket.on('new_notification', (data: { userId: string, notification: any }) => {
+    io.to(`notification:${data.userId}`).emit('notification', data.notification);
+  });
+
+  socket.on('poll_created', (data: { poll: any }) => {
+    socket.broadcast.emit('new_poll', data.poll);
+  });
+
+  socket.on('poll_voted', (data: { pollId: string, poll: any }) => {
+    socket.broadcast.emit('poll_updated', { pollId: data.pollId, poll: data.poll });
+  });
+
+  socket.on('poll_deleted', (data: { pollId: string }) => {
+    socket.broadcast.emit('poll_removed', { pollId: data.pollId });
+  });
+
+  socket.on('lost_found_posted', (data: { post: any }) => {
+    socket.broadcast.emit('new_lost_found', data.post);
+  });
+
+  socket.on('lost_found_resolved', (data: { postId: string, post: any }) => {
+    socket.broadcast.emit('lost_found_updated', { postId: data.postId, post: data.post });
+  });
+
+  socket.on('lost_found_deleted', (data: { postId: string }) => {
+    socket.broadcast.emit('lost_found_removed', { postId: data.postId });
+  });
+
+  socket.on('disconnect', async () => {
+    if (userId && userId !== 'null' && userId !== 'undefined') {
+      const userSockets = onlineUsers.get(userId);
+      if (userSockets) {
+        userSockets.delete(socket.id);
+        if (userSockets.size === 0) {
+          onlineUsers.delete(userId);
+          
+          // Mark offline in DB
+          User.findByIdAndUpdate(userId, { status: 'offline', last_seen: new Date() }).catch(() => {});
+          
+          console.log(`[Socket] User ${userId} is now fully offline`);
+        }
+      }
+      
+      // Update everyone
+      io.emit('onlineUsers', Array.from(onlineUsers.keys()));
+    }
+  });
 });
 
 app.use(cors(corsOptions));
@@ -124,8 +247,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// Setup sockets
-setupSockets(io);
+// Removed setupSockets call
 
 console.log('--- Server Starting ---');
 
