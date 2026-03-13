@@ -85,7 +85,6 @@ const pollSchema = new Schema<IPoll>(
 // Index for faster queries
 pollSchema.index({ creator: 1, created_at: -1 });
 pollSchema.index({ created_at: -1 });
-pollSchema.index({ expires_at: 1 });
 
 // TTL index to auto-delete expired polls after 90 days
 pollSchema.index(
