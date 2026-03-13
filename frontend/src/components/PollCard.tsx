@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { ThumbsUp, Flag, Trash2, ChevronDown } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface PollCardProps {
   poll: any;
@@ -81,7 +82,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete, onReport })
         <div className="flex items-center gap-3 flex-1">
           {creatorAvatar && (
             <img
-              src={creatorAvatar}
+              src={getMediaUrl(creatorAvatar)}
               alt={creatorName}
               className="w-10 h-10 rounded-full object-cover border border-slate-700"
             />

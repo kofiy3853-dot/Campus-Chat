@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Lock, Unlock, X } from 'lucide-react';
 import api from '../services/api';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface BlockListProps {
   onClose: () => void;
@@ -69,7 +70,7 @@ const BlockList: React.FC<BlockListProps> = ({ onClose }) => {
                   <div className="flex items-center gap-3 flex-1">
                     <img
                       src={
-                        user.profile_picture ||
+                        getMediaUrl(user.profile_picture) ||
                         `https://ui-avatars.com/api/?name=${user.name}`
                       }
                       alt={user.name}

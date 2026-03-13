@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Megaphone, Heart, Bookmark, Share2, Loader2, Calendar, Award, ArrowRight } from 'lucide-react';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { getMediaUrl } from '../utils/imageUrl';
 import Skeleton from './Skeleton';
 
 const AnnouncementList = () => {
@@ -74,9 +76,9 @@ const AnnouncementList = () => {
                 <p className="text-lg font-medium">No announcements yet. Check back soon!</p>
              </div>
           ) : (
-            announcements.map((ann: any, idx) => (
+            announcements.map((announcement: any) => (
               <div 
-                key={ann._id}
+                key={announcement._id}
                 className="bg-slate-900/40 backdrop-blur-sm p-8 rounded-[2.5rem] border border-slate-800/50 group relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-[60px] translate-x-1/2 -translate-y-1/2"></div>
@@ -84,13 +86,17 @@ const AnnouncementList = () => {
                 <div className="flex items-center justify-between mb-8 relative z-10">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl border-2 border-slate-800 p-0.5">
-                      <img className="w-full h-full object-cover rounded-[0.8rem]" src={ann.posted_by.profile_picture || `https://ui-avatars.com/api/?name=${ann.posted_by.name}`} alt="" />
+                        <img 
+                          src={getMediaUrl(announcement.posted_by?.profile_picture) || `https://ui-avatars.com/api/?name=${announcement.posted_by?.name}`} 
+                          alt={announcement.posted_by?.name} 
+                          className="w-full h-full object-cover" 
+                        />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-100 tracking-tight">{ann.posted_by.name}</h4>
+                      <h4 className="font-bold text-slate-100 tracking-tight">{announcement.posted_by?.name}</h4>
                       <div className="flex items-center gap-2 text-[11px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">
                         <Calendar className="w-3.5 h-3.5" />
-                        {new Date(ann.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {new Date(announcement.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </div>
                     </div>
                   </div>
@@ -101,15 +107,15 @@ const AnnouncementList = () => {
                 </div>
 
                 <div className="relative z-10">
-                    <h3 className="text-2xl font-black text-white mb-4 leading-tight uppercase tracking-tight">{ann.title}</h3>
-                    <p className="text-slate-400 leading-[1.8] text-[16px] mb-8 font-medium whitespace-pre-wrap selection:bg-amber-500/20 capitalize">{ann.content}</p>
+                    <h3 className="text-2xl font-black text-white mb-4 leading-tight uppercase tracking-tight">{announcement.title}</h3>
+                    <p className="text-slate-400 leading-[1.8] text-[16px] mb-8 font-medium whitespace-pre-wrap selection:bg-amber-500/20 capitalize">{announcement.content}</p>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-slate-800/50 pt-6 relative z-10">
                   <div className="flex items-center gap-6">
                     <button aria-label="Like" className="flex items-center gap-2.5 text-slate-500 hover:text-red-400">
                       <Heart className="w-6 h-6" />
-                      <span className="text-sm font-bold">{ann.reactions?.length || 0}</span>
+                      <span className="text-sm font-bold">{announcement.reactions?.length || 0}</span>
                     </button>
                     <button aria-label="Bookmark" className="text-slate-500 hover:text-primary-400">
                       <Bookmark className="w-6 h-6" />

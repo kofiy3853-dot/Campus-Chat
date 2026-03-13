@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 import api from '../services/api';
 import BlockList from './BlockList';
+import { getMediaUrl } from '../utils/imageUrl';
 
 const ProfileSettings = () => {
   const { user, login, logout, updateUser } = useAuth();
@@ -78,13 +79,19 @@ const ProfileSettings = () => {
         });
         
         updateUser(uploadData);
-        setFormData(prev => ({ ...prev, profile_picture: uploadData.profile_picture }));
-        setSelectedFile(null); // Clear selected file after successful upload
+        // CRITICAL: Update local variable to avoid race condition with state
+        const updatedProfilePicture = uploadData.profile_picture;
+        setFormData(prev => ({ ...prev, profile_picture: updatedProfilePicture }));
+        
+        // Use updated image URL directly for the next API call
+        const { data } = await api.put('/api/auth/profile', { ...formData, profile_picture: updatedProfilePicture });
+        updateUser(data);
+        setSelectedFile(null);
+      } else {
+        // 2. Update other profile details
+        const { data } = await api.put('/api/auth/profile', formData);
+        updateUser(data);
       }
-
-      // 2. Update other profile details
-      const { data } = await api.put('/api/auth/profile', formData);
-      updateUser(data);
       alert('Profile updated successfully!');
     } catch (error: any) {
       console.error('Error updating profile:', error);
@@ -101,7 +108,7 @@ const ProfileSettings = () => {
           <div className="relative inline-block group mb-6">
             <div className="w-32 h-32 rounded-3xl overflow-hidden border-4 border-slate-900 shadow-2xl relative">
               <img 
-                src={previewUrl || user?.profile_picture || `https://ui-avatars.com/api/?name=${user?.name}`} 
+                src={previewUrl || getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} 
                 className="w-full h-full object-cover" 
                 alt="Profile Preview" 
               />

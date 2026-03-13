@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, X, MessageSquare, User } from 'lucide-react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface UserSearchModalProps {
   isOpen: boolean;
@@ -88,7 +89,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({ isOpen, onClose }) =>
                       className="w-full flex items-center gap-4 p-4 hover:bg-slate-800/50 rounded-2xl group"
                     >
                       <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-800 group-hover:border-primary-500/50">
-                        <img src={user.profile_picture || `https://ui-avatars.com/api/?name=${user.name}`} alt="" />
+                        <img src={getMediaUrl(user.profile_picture) || `https://ui-avatars.com/api/?name=${user.name}`} alt="" />
                       </div>
                       <div className="flex-1 text-left">
                         <h4 className="font-bold text-white group-hover:text-primary-400">{user.name}</h4>

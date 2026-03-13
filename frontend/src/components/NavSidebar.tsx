@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
+import { getMediaUrl } from '../utils/imageUrl';
 
 
 
@@ -93,7 +94,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
             isActive ? "border-primary-500 shadow-lg shadow-primary-500/20" : "border-slate-700 hover:border-slate-500"
           )}
         >
-          <img src={user?.profile_picture || `https://ui-avatars.com/api/?name=${user?.name}`} alt="User Profile" className="w-full h-full object-cover" />
+          <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="User Profile" className="w-full h-full object-cover" />
         </NavLink>
 
         <button

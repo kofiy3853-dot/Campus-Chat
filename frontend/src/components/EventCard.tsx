@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Calendar, Users, CheckCircle2, ChevronRight } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface EventCardProps {
   event: any;
@@ -41,7 +42,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
       {/* Banner / Image */}
       <div className="relative h-48 bg-slate-800">
         <img 
-          src={event.image || '/default-event.jpg'} 
+          src={getMediaUrl(event.image) || '/default-event.jpg'} 
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -80,7 +81,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
           </div>
           <div className="flex items-center gap-3 text-slate-500">
             <div className="w-4 h-4 rounded-full bg-slate-800 border border-slate-700 overflow-hidden">
-               <img src={event.organizerId?.profile_picture || `https://ui-avatars.com/api/?name=${event.organizerId?.name}`} alt="" />
+               <img src={getMediaUrl(event.organizerId?.profile_picture) || `https://ui-avatars.com/api/?name=${event.organizerId?.name}`} alt="" />
             </div>
             <span className="text-xs text-slate-600">By {event.organizerId?.name}</span>
           </div>

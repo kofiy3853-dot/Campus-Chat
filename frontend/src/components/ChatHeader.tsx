@@ -2,6 +2,7 @@ import React from 'react';
 import { Phone, Video, MoreVertical, Search, Users, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import NotificationCenter from './NotificationCenter';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface ChatHeaderProps {
   user: any;
@@ -27,7 +28,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
             {user?.isGroup ? (
                 <Users className="w-6 h-6 text-primary-400" />
             ) : (
-                <img src={user?.profile_picture || `https://ui-avatars.com/api/?name=${user?.name || 'User'}`} alt="" />
+                <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name || 'User'}`} alt="" />
             )}
           </div>
           {user?.status === 'online' && (

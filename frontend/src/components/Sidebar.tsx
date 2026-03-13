@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { clsx } from 'clsx';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -125,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
               >
                 <div className="relative">
                   <div className="w-12 h-12 rounded-full bg-slate-800 border-2 border-slate-700 overflow-hidden">
-                    <img src={conv.participants[0].profile_picture || `https://ui-avatars.com/api/?name=${conv.participants[0].name}`} alt="" />
+                    <img src={getMediaUrl(conv.participants[0].profile_picture) || `https://ui-avatars.com/api/?name=${conv.participants[0].name}`} alt="" />
                   </div>
                   {conv.participants[0].status === 'online' && (
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900"></div>
@@ -185,7 +186,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
           {isOpen ? (
             <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800 cursor-pointer flex-1 group" onClick={() => navigate('/dashboard/profile')}>
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-500/30">
-                <img src={user?.profile_picture || `https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
+                <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold truncate text-slate-200">{user?.name}</p>
@@ -207,7 +208,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
                 role="button"
                 aria-label="View Profile"
               >
-                <img src={user?.profile_picture || `https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
+                <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
               </div>
               <button 
                 onClick={handleLogout} 

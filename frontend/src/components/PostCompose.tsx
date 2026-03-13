@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Upload, Loader2 } from 'lucide-react';
 import api from '../services/api';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface PostComposeProps {
   isOpen: boolean;
@@ -229,7 +230,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
             <div className="border-2 border-dashed border-slate-600 rounded-lg p-4">
               {imageUrl ? (
                 <div className="space-y-3">
-                  <img src={imageUrl} alt="Preview" className="max-h-40 rounded-lg" />
+                  <img src={getMediaUrl(imageUrl)} alt="Preview" className="max-h-40 rounded-lg" />
                   <button
                     type="button"
                     onClick={() => {

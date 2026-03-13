@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { Flag, Trash2, MessageSquare, CheckCircle, Clock } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface LostFoundCardProps {
   post: any;
@@ -103,7 +104,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
         {post.image_url ? (
           <>
             <img
-              src={post.image_thumbnail || post.image_url}
+              src={getMediaUrl(post.image_thumbnail || post.image_url)}
               alt={post.title}
               className="w-full h-full object-cover cursor-pointer hover:scale-105 transition"
               onClick={() => setShowImage(true)}
@@ -266,7 +267,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
           className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
           onClick={() => setShowImage(false)}
         >
-          <img src={post.image_url} alt={post.title} className="max-w-full max-h-[90vh] object-contain rounded-lg" />
+          <img src={getMediaUrl(post.image_url)} alt={post.title} className="max-w-full max-h-[90vh] object-contain rounded-lg" />
         </div>
       )}
     </div>

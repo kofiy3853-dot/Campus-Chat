@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface ChatMessageProps {
   message: any;
@@ -20,7 +21,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   const [showMenu, setShowMenu] = useState(false);
   
   const senderName = isMe ? user?.name : message.sender_id?.name || 'User';
-  const avatarUrl = isMe ? user?.profile_picture : message.sender_id?.profile_picture;
+  const avatarUrl = isMe ? getMediaUrl(user?.profile_picture) : getMediaUrl(message.sender_id?.profile_picture);
 
   const handleReaction = async (emoji: string) => {
     try {
@@ -113,18 +114,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         {message.media_url && !message.is_deleted && (
           <div className="mt-2 rounded-xl overflow-hidden">
             {(message.message_type === 'image' || (!message.message_type && message.media_url?.match(/\.(jpg|jpeg|png|gif|webp)$/i))) ? (
-              <a href={message.media_url} target="_blank" rel="noreferrer">
+              <a href={getMediaUrl(message.media_url)} target="_blank" rel="noreferrer">
                 <img 
-                  src={message.media_thumbnail || message.media_url} 
+                  src={getMediaUrl(message.media_thumbnail || message.media_url)} 
                   alt="Shared media" 
                   className="max-h-60 object-cover w-full rounded-xl hover:opacity-80 transition"
                 />
               </a>
             ) : message.message_type === 'audio' || message.media_url?.match(/\.(mp3|ogg|wav|webm|m4a)$/i) ? (
-              <audio controls src={message.media_url} className="w-full mt-1" />
+              <audio controls src={getMediaUrl(message.media_url)} className="w-full mt-1" />
             ) : (
               <a
-                href={message.media_url}
+                href={getMediaUrl(message.media_url)}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-xs underline opacity-80 py-1"

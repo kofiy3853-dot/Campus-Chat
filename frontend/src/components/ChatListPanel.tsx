@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import Skeleton from './Skeleton';
 import UserSearchModal from './UserSearchModal';
 import NotificationCenter from './NotificationCenter';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface ChatListPanelProps {
   className?: string;
@@ -152,7 +153,11 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                   </div>
                 ) : (
                   <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-800 group-hover:border-slate-700 bg-slate-800">
-                    <img src={avatar || `https://ui-avatars.com/api/?name=${name || 'User'}`} alt={name || 'User'} />
+                      <img 
+                        src={getMediaUrl(otherParticipant?.profile_picture) || `https://ui-avatars.com/api/?name=${otherParticipant?.name}`} 
+                        alt={otherParticipant?.name} 
+                        className="w-full h-full object-cover" 
+                      />
                   </div>
                 )}
                 {status === 'online' && (
