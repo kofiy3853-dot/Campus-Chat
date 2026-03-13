@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthRequest } from '../types/express';
 import Group from '../models/Group';
 import Message from '../models/Message';
 import GroupMessage from '../models/GroupMessage';
 
-export const createGroup = async (req: any, res: Response) => {
+export const createGroup = async (req: AuthRequest, res: Response) => {
   const { group_name, description, members } = req.body;
 
   try {
@@ -21,7 +22,7 @@ export const createGroup = async (req: any, res: Response) => {
   }
 };
 
-export const getGroups = async (req: any, res: Response) => {
+export const getGroups = async (req: AuthRequest, res: Response) => {
   try {
     const groups = await Group.find({
       members: req.user.id,
@@ -33,7 +34,7 @@ export const getGroups = async (req: any, res: Response) => {
   }
 };
 
-export const joinGroup = async (req: any, res: Response) => {
+export const joinGroup = async (req: AuthRequest, res: Response) => {
   const { groupId } = req.body;
 
   try {
@@ -54,7 +55,7 @@ export const joinGroup = async (req: any, res: Response) => {
   }
 };
 
-export const getGroupMessages = async (req: any, res: Response) => {
+export const getGroupMessages = async (req: AuthRequest, res: Response) => {
   const { groupId } = req.params;
   try {
     // Security check: Verify the user is a member of the group

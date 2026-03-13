@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../types/express';
 import Announcement from '../models/Announcement';
 
-export const createAnnouncement = async (req: any, res: Response) => {
+export const createAnnouncement = async (req: AuthRequest, res: Response) => {
   const { title, content } = req.body;
 
   try {
@@ -28,3 +29,4 @@ export const getAnnouncements = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+

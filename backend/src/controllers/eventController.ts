@@ -1,9 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { Types } from 'mongoose';
+import { AuthRequest } from '../types/express';
 import Event from '../models/Event';
 import EventAttendee from '../models/EventAttendee';
 
 // GET /api/events
-export const getEvents = async (req: any, res: Response) => {
+export const getEvents = async (req: AuthRequest, res: Response) => {
   try {
     const { category, sort } = req.query;
     let query: any = {};
@@ -34,7 +36,7 @@ export const getEvents = async (req: any, res: Response) => {
 };
 
 // POST /api/events
-export const createEvent = async (req: any, res: Response) => {
+export const createEvent = async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, location, dateTime, category, image, maxAttendees } = req.body;
     
@@ -59,22 +61,22 @@ export const createEvent = async (req: any, res: Response) => {
 };
 
 // POST /api/events/:id/join
-export const joinEvent = async (req: any, res: Response) => {
+export const joinEvent = async (req: AuthRequest, res: Response) => {
   try {
     const eventId = req.params.id;
     const userId = req.user._id;
 
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(eventId as any);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
     if (event.maxAttendees && event.attendeesCount >= event.maxAttendees) {
       return res.status(400).json({ message: 'Event is full' });
     }
 
-    const alreadyJoined = await EventAttendee.findOne({ eventId, userId });
+    const alreadyJoined = await EventAttendee.findOne({ eventId: eventId as any, userId });
     if (alreadyJoined) return res.status(400).json({ message: 'Already joined this event' });
 
-    await EventAttendee.create({ eventId, userId });
+    await EventAttendee.create({ eventId: eventId as any, userId });
     event.attendeesCount += 1;
     await event.save();
 
@@ -90,10 +92,10 @@ export const leaveEvent = async (req: any, res: Response) => {
     const eventId = req.params.id;
     const userId = req.user._id;
 
-    const result = await EventAttendee.findOneAndDelete({ eventId, userId });
+    const result = await EventAttendee.findOneAndDelete({ eventId: eventId as any, userId });
     if (!result) return res.status(400).json({ message: 'Not joined this event' });
 
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(eventId as any);
     if (event) {
       event.attendeesCount = Math.max(0, event.attendeesCount - 1);
       await event.save();
@@ -105,3 +107,6 @@ export const leaveEvent = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+

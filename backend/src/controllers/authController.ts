@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../types/express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import path from 'path';
@@ -111,7 +112,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const getProfile = async (req: any, res: Response) => {
+export const getProfile = async (req: AuthRequest, res: Response) => {
   const user = await User.findById(req.user.id).select('-password_hash');
 
   if (user) {
@@ -121,7 +122,7 @@ export const getProfile = async (req: any, res: Response) => {
   }
 };
 
-export const updateProfile = async (req: any, res: Response) => {
+export const updateProfile = async (req: AuthRequest, res: Response) => {
   const { name, department, level, profile_picture } = req.body;
 
   try {
@@ -151,7 +152,7 @@ export const updateProfile = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
-export const searchUsers = async (req: any, res: Response) => {
+export const searchUsers = async (req: AuthRequest, res: Response) => {
   const query = req.query.query as string;
 
   if (!query) {

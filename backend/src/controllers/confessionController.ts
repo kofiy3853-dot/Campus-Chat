@@ -1,11 +1,13 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { Types } from 'mongoose';
+import { AuthRequest } from '../types/express';
 import Confession from '../models/Confession';
 import ConfessionComment from '../models/ConfessionComment';
 import ConfessionReaction from '../models/ConfessionReaction';
 import User from '../models/User';
 
 // GET /api/confessions?page=1&sort=newest|top
-export const getConfessions = async (req: any, res: Response) => {
+export const getConfessions = async (req: AuthRequest, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = 10;
@@ -40,7 +42,7 @@ export const getConfessions = async (req: any, res: Response) => {
 };
 
 // POST /api/confessions
-export const postConfession = async (req: any, res: Response) => {
+export const postConfession = async (req: AuthRequest, res: Response) => {
   const { text } = req.body;
   if (!text || text.trim().length < 5) {
     return res.status(400).json({ message: 'Confession must be at least 5 characters.' });
@@ -60,20 +62,20 @@ export const postConfession = async (req: any, res: Response) => {
 };
 
 // POST /api/confessions/:id/like  (toggle)
-export const toggleLike = async (req: any, res: Response) => {
+export const toggleLike = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const userId = req.user._id;
 
-    const existing = await ConfessionReaction.findOne({ confessionId: id, userId, type: 'like' });
+    const existing = await ConfessionReaction.findOne({ confessionId: id as any, userId, type: 'like' });
 
     if (existing) {
       await existing.deleteOne();
-      await Confession.findByIdAndUpdate(id, { $inc: { likesCount: -1 } });
+      await Confession.findByIdAndUpdate(id as any, { $inc: { likesCount: -1 } });
       return res.json({ liked: false });
     } else {
-      await ConfessionReaction.create({ confessionId: id, userId, type: 'like' });
-      await Confession.findByIdAndUpdate(id, { $inc: { likesCount: 1 } });
+      await ConfessionReaction.create({ confessionId: id as any, userId, type: 'like' });
+      await Confession.findByIdAndUpdate(id as any, { $inc: { likesCount: 1 } });
       return res.json({ liked: true });
     }
   } catch (err: any) {
@@ -82,17 +84,17 @@ export const toggleLike = async (req: any, res: Response) => {
 };
 
 // POST /api/confessions/:id/report
-export const reportConfession = async (req: any, res: Response) => {
+export const reportConfession = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const userId = req.user._id;
 
-    const existing = await ConfessionReaction.findOne({ confessionId: id, userId, type: 'report' });
+    const existing = await ConfessionReaction.findOne({ confessionId: id as any, userId, type: 'report' });
     if (existing) return res.status(400).json({ message: 'You have already reported this.' });
 
-    await ConfessionReaction.create({ confessionId: id, userId, type: 'report' });
+    await ConfessionReaction.create({ confessionId: id as any, userId, type: 'report' });
     const confession = await Confession.findByIdAndUpdate(
-      id,
+      id as any,
       { $inc: { reportCount: 1 } },
       { new: true }
     );
@@ -109,9 +111,9 @@ export const reportConfession = async (req: any, res: Response) => {
 };
 
 // GET /api/confessions/:id/comments
-export const getComments = async (req: any, res: Response) => {
+export const getComments = async (req: AuthRequest, res: Response) => {
   try {
-    const comments = await ConfessionComment.find({ confessionId: req.params.id })
+    const comments = await ConfessionComment.find({ confessionId: req.params.id as any })
       .sort({ createdAt: 1 })
       .lean();
 
@@ -124,14 +126,14 @@ export const getComments = async (req: any, res: Response) => {
 };
 
 // POST /api/confessions/:id/comments
-export const addComment = async (req: any, res: Response) => {
+export const addComment = async (req: AuthRequest, res: Response) => {
   const { text } = req.body;
   if (!text || text.trim().length < 1) return res.status(400).json({ message: 'Comment cannot be empty.' });
   if (text.length > 300) return res.status(400).json({ message: 'Comment must be 300 characters or less.' });
 
   try {
-    await ConfessionComment.create({ confessionId: req.params.id, userId: req.user._id, text: text.trim() });
-    await Confession.findByIdAndUpdate(req.params.id, { $inc: { commentsCount: 1 } });
+    await ConfessionComment.create({ confessionId: req.params.id as any, userId: req.user._id, text: text.trim() });
+    await Confession.findByIdAndUpdate(req.params.id as any, { $inc: { commentsCount: 1 } });
     res.status(201).json({ message: 'Comment added.' });
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -139,7 +141,7 @@ export const addComment = async (req: any, res: Response) => {
 };
 
 // DELETE /api/confessions/:id — admin only
-export const deleteConfession = async (req: any, res: Response) => {
+export const deleteConfession = async (req: AuthRequest, res: Response) => {
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin only.' });
   try {
     await Confession.findByIdAndUpdate(req.params.id, { isDeleted: true });
@@ -164,3 +166,5 @@ export const banUser = async (req: any, res: Response) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+

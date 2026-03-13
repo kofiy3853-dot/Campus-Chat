@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { Response } from 'express';
+import { AuthRequest } from '../types/express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -63,7 +64,7 @@ router.delete('/:postId', deletePost); // Delete post
 
 // Interaction endpoints
 router.post('/:postId/contact', messageRateLimiter, incrementContactCount); // Record contact
-router.post('/:postId/resolve', resolvePost); // Mark as resolved
+router.post('/:postId/resolve', protect, (req: AuthRequest, res: Response) => resolvePost(req, res));
 router.post('/:postId/report', messageRateLimiter, reportPost); // Report post
 
 export default router;

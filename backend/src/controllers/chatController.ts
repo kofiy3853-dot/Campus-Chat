@@ -1,10 +1,12 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { Types } from 'mongoose';
+import { AuthRequest } from '../types/express';
 import Conversation from '../models/Conversation';
 import Message from '../models/Message';
 import User from '../models/User';
 import Notification from '../models/Notification';
 
-export const getConversations = async (req: any, res: Response) => {
+export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
     const conversations = await Conversation.find({
       participants: req.user.id,
@@ -20,7 +22,7 @@ export const getConversations = async (req: any, res: Response) => {
   }
 };
 
-export const getMessages = async (req: any, res: Response) => {
+export const getMessages = async (req: AuthRequest, res: Response) => {
   const { conversationId } = req.params;
 
   try {
@@ -45,7 +47,7 @@ export const getMessages = async (req: any, res: Response) => {
   }
 };
 
-export const sendMessage = async (req: any, res: Response) => {
+export const sendMessage = async (req: AuthRequest, res: Response) => {
   const { recipientId, message_text, message_type, media_url } = req.body;
 
   try {
@@ -79,7 +81,7 @@ export const sendMessage = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
-export const createConversation = async (req: any, res: Response) => {
+export const createConversation = async (req: AuthRequest, res: Response) => {
   const { participantId } = req.body;
 
   try {
@@ -106,7 +108,7 @@ export const createConversation = async (req: any, res: Response) => {
 };
 
 // Search messages in a conversation
-export const searchMessages = async (req: any, res: Response) => {
+export const searchMessages = async (req: AuthRequest, res: Response) => {
   const { conversationId, query, messageType } = req.query;
 
   try {
@@ -144,7 +146,7 @@ export const searchMessages = async (req: any, res: Response) => {
 };
 
 // Edit message
-export const editMessage = async (req: any, res: Response) => {
+export const editMessage = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
   const { message_text } = req.body;
 
@@ -155,7 +157,7 @@ export const editMessage = async (req: any, res: Response) => {
       return res.status(404).json({ message: 'Message not found' });
     }
 
-    if (message.sender_id.toString() !== req.user.id) {
+    if ((message.sender_id as any).toString() !== req.user.id) {
       return res.status(403).json({ message: 'You can only edit your own messages' });
     }
 
@@ -170,7 +172,7 @@ export const editMessage = async (req: any, res: Response) => {
 };
 
 // Delete message (soft delete)
-export const deleteMessage = async (req: any, res: Response) => {
+export const deleteMessage = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
 
   try {
@@ -180,7 +182,7 @@ export const deleteMessage = async (req: any, res: Response) => {
       return res.status(404).json({ message: 'Message not found' });
     }
 
-    if (message.sender_id.toString() !== req.user.id) {
+    if ((message.sender_id as any).toString() !== req.user.id) {
       return res.status(403).json({ message: 'You can only delete your own messages' });
     }
 
@@ -195,7 +197,7 @@ export const deleteMessage = async (req: any, res: Response) => {
 };
 
 // Add reaction to message
-export const addMessageReaction = async (req: any, res: Response) => {
+export const addMessageReaction = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
   const { emoji } = req.body;
 
@@ -207,13 +209,13 @@ export const addMessageReaction = async (req: any, res: Response) => {
     }
 
     const existingReaction = message.reactions.find(
-      r => r.userId.toString() === req.user.id && r.emoji === emoji
+      (r: any) => r.userId.toString() === (req.user.id as any) && r.emoji === emoji
     );
 
     if (existingReaction) {
       // Remove reaction if already exists
       message.reactions = message.reactions.filter(
-        r => !(r.userId.toString() === req.user.id && r.emoji === emoji)
+        (r: any) => !(r.userId.toString() === (req.user.id as any) && r.emoji === emoji)
       );
     } else {
       // Add new reaction
@@ -233,7 +235,7 @@ export const addMessageReaction = async (req: any, res: Response) => {
 };
 
 // Block/Unblock user
-export const blockUser = async (req: any, res: Response) => {
+export const blockUser = async (req: AuthRequest, res: Response) => {
   const { userId } = req.params;
 
   try {
@@ -243,12 +245,12 @@ export const blockUser = async (req: any, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const isBlocked = user.blocked_users.includes(userId);
+    const isBlocked = user.blocked_users.some(id => id.toString() === userId);
 
     if (isBlocked) {
       user.blocked_users = user.blocked_users.filter(id => id.toString() !== userId);
     } else {
-      user.blocked_users.push(userId);
+      user.blocked_users.push(new Types.ObjectId(userId as string) as any);
     }
 
     await user.save();
@@ -277,3 +279,5 @@ export const getBlockedUsers = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+

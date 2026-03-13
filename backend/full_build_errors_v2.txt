@@ -1,0 +1,74 @@
+﻿src/controllers/chatController.ts(253,50): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(74,61): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(77,74): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(78,61): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(95,72): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(97,26): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(135,71): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/confessionController.ts(136,59): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/eventController.ts(79,62): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/lostFoundController.ts(264,32): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'string | string[]' is not assignable to parameter of type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+      Type 'string[]' is not assignable to type 'string | Uint8Array<ArrayBufferLike> | ObjectId | ObjectIdLike | undefined'.
+        Type 'string[]' is missing the following properties from type 'Uint8Array<ArrayBufferLike>': BYTES_PER_ELEMENT, buffer, byteLength, byteOffset, and 3 more.
+src/controllers/pollController.ts(58,28): error TS2345: Argument of type 'string | 1 | ParsedQs | (string | ParsedQs)[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/controllers/pollController.ts(58,50): error TS2345: Argument of type 'string | 10 | ParsedQs | (string | ParsedQs)[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/controllers/pollController.ts(78,23): error TS2345: Argument of type 'string | 10 | ParsedQs | (string | ParsedQs)[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/controllers/pollController.ts(98,32): error TS2345: Argument of type 'string | 1 | ParsedQs | (string | ParsedQs)[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/controllers/pollController.ts(99,49): error TS2345: Argument of type 'string | 10 | ParsedQs | (string | ParsedQs)[]' is not assignable to parameter of type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/controllers/pollController.ts(191,7): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Type 'string | string[]' is not assignable to type 'ObjectIdQueryTypeCasting | undefined'.
+      Type 'string[]' is not assignable to type 'ObjectIdQueryTypeCasting | undefined'.
+        Type 'string[]' is missing the following properties from type 'ObjectId': _bsontype, id, toHexString, toJSON, and 5 more.
+src/controllers/pollController.ts(277,7): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Type 'string | string[]' is not assignable to type 'ObjectIdQueryTypeCasting | undefined'.
+      Type 'string[]' is not assignable to type 'ObjectIdQueryTypeCasting | undefined'.
+        Type 'string[]' is missing the following properties from type 'ObjectId': _bsontype, id, toHexString, toJSON, and 5 more.
+src/routes/announcementRoutes.ts(8,17): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type '(req: Request, res: Response) => Promise<void>' is not assignable to parameter of type 'Application<Record<string, any>>'.
+      Type '(req: Request, res: Response<any, Record<string, any>>) => Promise<void>' is missing the following properties from type 'Application<Record<string, any>>': init, defaultConfiguration, engine, set, and 63 more.

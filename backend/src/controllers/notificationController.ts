@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AuthRequest } from '../types/express';
 import Notification from '../models/Notification';
 import User from '../models/User';
 import DeviceToken from '../models/DeviceToken';
 
 // Get user notifications
-export const getNotifications = async (req: any, res: Response) => {
+export const getNotifications = async (req: AuthRequest, res: Response) => {
   try {
     const notifications = await Notification.find({
       user_id: req.user.id,
@@ -20,7 +21,7 @@ export const getNotifications = async (req: any, res: Response) => {
 };
 
 // Mark notification as read
-export const markNotificationAsRead = async (req: any, res: Response) => {
+export const markNotificationAsRead = async (req: AuthRequest, res: Response) => {
   const { notificationId } = req.params;
 
   try {
@@ -41,7 +42,7 @@ export const markNotificationAsRead = async (req: any, res: Response) => {
 };
 
 // Mark all notifications as read
-export const markAllNotificationsAsRead = async (req: any, res: Response) => {
+export const markAllNotificationsAsRead = async (req: AuthRequest, res: Response) => {
   try {
     await Notification.updateMany(
       { user_id: req.user.id, read: false },
@@ -55,7 +56,7 @@ export const markAllNotificationsAsRead = async (req: any, res: Response) => {
 };
 
 // Delete notification
-export const deleteNotification = async (req: any, res: Response) => {
+export const deleteNotification = async (req: AuthRequest, res: Response) => {
   const { notificationId } = req.params;
 
   try {
@@ -67,7 +68,7 @@ export const deleteNotification = async (req: any, res: Response) => {
 };
 
 // Get unread notification count
-export const getUnreadCount = async (req: any, res: Response) => {
+export const getUnreadCount = async (req: AuthRequest, res: Response) => {
   try {
     const count = await Notification.countDocuments({
       user_id: req.user.id,
@@ -81,7 +82,7 @@ export const getUnreadCount = async (req: any, res: Response) => {
 };
 
 // Register device token for push notifications
-export const registerDeviceToken = async (req: any, res: Response) => {
+export const registerDeviceToken = async (req: AuthRequest, res: Response) => {
   const { token, device_type } = req.body;
 
   try {

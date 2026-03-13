@@ -1,0 +1,113 @@
+﻿src/controllers/confessionController.ts(26,41): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(26,62): error TS1005: ',' expected.
+src/controllers/confessionController.ts(26,90): error TS1005: ',' expected.
+src/controllers/confessionController.ts(26,99): error TS1005: ',' expected.
+src/controllers/confessionController.ts(26,100): error TS1472: 'catch' or 'finally' expected.
+src/controllers/confessionController.ts(26,101): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(27,7): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(28,56): error TS1003: Identifier expected.
+src/controllers/confessionController.ts(39,3): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(39,5): error TS1005: 'try' expected.
+src/controllers/confessionController.ts(42,1): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(70,57): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(70,78): error TS1005: ',' expected.
+src/controllers/confessionController.ts(70,96): error TS1005: ',' expected.
+src/controllers/confessionController.ts(70,105): error TS1005: ',' expected.
+src/controllers/confessionController.ts(70,106): error TS1472: 'catch' or 'finally' expected.
+src/controllers/confessionController.ts(77,41): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(77,62): error TS1005: ',' expected.
+src/controllers/confessionController.ts(77,100): error TS1005: ',' expected.
+src/controllers/confessionController.ts(77,109): error TS1005: ',' expected.
+src/controllers/confessionController.ts(77,110): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(81,3): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(81,5): error TS1005: 'try' expected.
+src/controllers/confessionController.ts(84,1): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(92,57): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(92,78): error TS1005: ',' expected.
+src/controllers/confessionController.ts(92,96): error TS1005: ',' expected.
+src/controllers/confessionController.ts(92,107): error TS1005: ',' expected.
+src/controllers/confessionController.ts(92,108): error TS1472: 'catch' or 'finally' expected.
+src/controllers/confessionController.ts(95,39): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(95,60): error TS1005: ',' expected.
+src/controllers/confessionController.ts(95,98): error TS1005: ',' expected.
+src/controllers/confessionController.ts(95,109): error TS1005: ',' expected.
+src/controllers/confessionController.ts(95,110): error TS1005: ',' expected.
+src/controllers/confessionController.ts(108,3): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(108,5): error TS1005: 'try' expected.
+src/controllers/confessionController.ts(111,1): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(116,53): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(116,74): error TS1005: ',' expected.
+src/controllers/confessionController.ts(116,90): error TS1005: ',' expected.
+src/controllers/confessionController.ts(116,91): error TS1472: 'catch' or 'finally' expected.
+src/controllers/confessionController.ts(117,7): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(123,3): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(123,5): error TS1005: 'try' expected.
+src/controllers/confessionController.ts(126,1): error TS1128: Declaration or statement expected.
+src/controllers/confessionController.ts(135,38): error TS1136: Property assignment expected.
+src/controllers/confessionController.ts(135,59): error TS1005: ',' expected.
+src/controllers/confessionController.ts(135,102): error TS1005: ',' expected.
+src/controllers/confessionController.ts(135,122): error TS1005: ',' expected.
+src/controllers/confessionController.ts(135,136): error TS1005: ',' expected.
+src/controllers/confessionController.ts(135,137): error TS1472: 'catch' or 'finally' expected.
+src/controllers/confessionController.ts(138,5): error TS1005: ',' expected.
+src/controllers/confessionController.ts(141,1): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(21,11): error TS1134: Variable declaration expected.
+src/controllers/eventController.ts(21,27): error TS1005: ';' expected.
+src/controllers/eventController.ts(23,36): error TS1136: Property assignment expected.
+src/controllers/eventController.ts(23,52): error TS1005: ',' expected.
+src/controllers/eventController.ts(23,77): error TS1005: ',' expected.
+src/controllers/eventController.ts(23,89): error TS1005: ',' expected.
+src/controllers/eventController.ts(23,90): error TS1472: 'catch' or 'finally' expected.
+src/controllers/eventController.ts(23,91): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(24,7): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(25,50): error TS1003: Identifier expected.
+src/controllers/eventController.ts(33,3): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(33,5): error TS1005: 'try' expected.
+src/controllers/eventController.ts(36,1): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(66,11): error TS1134: Variable declaration expected.
+src/controllers/eventController.ts(76,57): error TS1136: Property assignment expected.
+src/controllers/eventController.ts(76,82): error TS1005: ',' expected.
+src/controllers/eventController.ts(76,83): error TS1472: 'catch' or 'finally' expected.
+src/controllers/eventController.ts(79,34): error TS1136: Property assignment expected.
+src/controllers/eventController.ts(79,50): error TS1005: ',' expected.
+src/controllers/eventController.ts(79,97): error TS1005: ',' expected.
+src/controllers/eventController.ts(79,98): error TS1005: ',' expected.
+src/controllers/eventController.ts(84,3): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(84,5): error TS1005: 'try' expected.
+src/controllers/eventController.ts(87,1): error TS1128: Declaration or statement expected.
+src/controllers/eventController.ts(92,11): error TS1134: Variable declaration expected.
+src/controllers/eventController.ts(95,59): error TS1136: Property assignment expected.
+src/controllers/eventController.ts(95,84): error TS1005: ',' expected.
+src/controllers/eventController.ts(95,85): error TS1472: 'catch' or 'finally' expected.
+src/controllers/eventController.ts(106,5): error TS1005: ',' expected.
+src/controllers/eventController.ts(109,1): error TS1128: Declaration or statement expected.
+src/controllers/lostFoundController.ts(108,13): error TS1180: Property destructuring pattern expected.
+src/controllers/lostFoundController.ts(108,31): error TS2809: Declaration or statement expected. This '=' follows a block of statements, so if you intended to write a destructuring assignment, you might need to wrap the whole assignment in parentheses.
+src/controllers/lostFoundController.ts(108,33): error TS1472: 'catch' or 'finally' expected.
+src/controllers/lostFoundController.ts(117,5): error TS1005: ',' expected.
+src/controllers/lostFoundController.ts(121,1): error TS1128: Declaration or statement expected.
+src/controllers/lostFoundController.ts(126,13): error TS1180: Property destructuring pattern expected.
+src/controllers/lostFoundController.ts(126,31): error TS2809: Declaration or statement expected. This '=' follows a block of statements, so if you intended to write a destructuring assignment, you might need to wrap the whole assignment in parentheses.
+src/controllers/lostFoundController.ts(126,33): error TS1472: 'catch' or 'finally' expected.
+src/controllers/lostFoundController.ts(184,5): error TS1005: ',' expected.
+src/controllers/lostFoundController.ts(188,1): error TS1128: Declaration or statement expected.
+src/controllers/lostFoundController.ts(193,13): error TS1180: Property destructuring pattern expected.
+src/controllers/lostFoundController.ts(193,31): error TS2809: Declaration or statement expected. This '=' follows a block of statements, so if you intended to write a destructuring assignment, you might need to wrap the whole assignment in parentheses.
+src/controllers/lostFoundController.ts(193,33): error TS1472: 'catch' or 'finally' expected.
+src/controllers/lostFoundController.ts(214,5): error TS1005: ',' expected.
+src/controllers/lostFoundController.ts(218,1): error TS1128: Declaration or statement expected.
+src/controllers/lostFoundController.ts(253,13): error TS1180: Property destructuring pattern expected.
+src/controllers/lostFoundController.ts(253,31): error TS2809: Declaration or statement expected. This '=' follows a block of statements, so if you intended to write a destructuring assignment, you might need to wrap the whole assignment in parentheses.
+src/controllers/lostFoundController.ts(253,33): error TS1472: 'catch' or 'finally' expected.
+src/controllers/lostFoundController.ts(279,5): error TS1005: ',' expected.
+src/controllers/lostFoundController.ts(283,1): error TS1128: Declaration or statement expected.
+src/controllers/lostFoundController.ts(288,13): error TS1180: Property destructuring pattern expected.
+src/controllers/lostFoundController.ts(288,31): error TS2809: Declaration or statement expected. This '=' follows a block of statements, so if you intended to write a destructuring assignment, you might need to wrap the whole assignment in parentheses.
+src/controllers/lostFoundController.ts(288,33): error TS1472: 'catch' or 'finally' expected.
+src/controllers/lostFoundController.ts(305,5): error TS1005: ',' expected.
+src/controllers/lostFoundController.ts(309,1): error TS1128: Declaration or statement expected.
+src/controllers/lostFoundController.ts(314,13): error TS1180: Property destructuring pattern expected.
+src/controllers/lostFoundController.ts(314,31): error TS2809: Declaration or statement expected. This '=' follows a block of statements, so if you intended to write a destructuring assignment, you might need to wrap the whole assignment in parentheses.
+src/controllers/lostFoundController.ts(314,33): error TS1472: 'catch' or 'finally' expected.
+src/controllers/lostFoundController.ts(336,5): error TS1005: ',' expected.
+src/controllers/lostFoundController.ts(340,1): error TS1128: Declaration or statement expected.

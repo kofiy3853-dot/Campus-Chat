@@ -1,10 +1,12 @@
 import { Response } from 'express';
+import { Types } from 'mongoose';
+import { AuthRequest } from '../types/express';
 import LostFoundPost from '../models/LostFoundPost';
 import LostFoundReport from '../models/LostFoundReport';
 import User from '../models/User';
 
 // Create a lost/found post
-export const createPost = async (req: any, res: Response) => {
+export const createPost = async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, category, status, location, date, image_url, image_thumbnail } = req.body;
     const userId = req.user._id;
@@ -52,10 +54,13 @@ export const createPost = async (req: any, res: Response) => {
 };
 
 // Get all posts (paginated, with filters)
-export const getAllPosts = async (req: any, res: Response) => {
+export const getAllPosts = async (req: AuthRequest, res: Response) => {
   try {
-    const { page = 1, limit = 10, status, category, search } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const page_str = (req.query.page as string) || '1';
+    const limit_str = (req.query.limit as string) || '10';
+    const { status, category, search } = req.query as any;
+
+    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
 
     const query: any = { is_deleted: false };
 
@@ -78,7 +83,7 @@ export const getAllPosts = async (req: any, res: Response) => {
     const posts = await LostFoundPost.find(query)
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit))
+      .limit(parseInt(limit_str))
       .populate('creator', 'name profile_picture');
 
     const total = await LostFoundPost.countDocuments(query);
@@ -86,8 +91,8 @@ export const getAllPosts = async (req: any, res: Response) => {
     res.json({
       data: posts,
       pagination: {
-        current_page: parseInt(page),
-        total_pages: Math.ceil(total / parseInt(limit)),
+        current_page: parseInt(page_str),
+        total_pages: Math.ceil(total / parseInt(limit_str)),
         total_count: total,
       },
     });
@@ -98,7 +103,7 @@ export const getAllPosts = async (req: any, res: Response) => {
 };
 
 // Get single post
-export const getPost = async (req: any, res: Response) => {
+export const getPost = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
 
@@ -116,7 +121,7 @@ export const getPost = async (req: any, res: Response) => {
 };
 
 // Update post
-export const updatePost = async (req: any, res: Response) => {
+export const updatePost = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
     const { title, description, category, status, location, date, image_url, image_thumbnail, is_resolved } = req.body;
@@ -128,7 +133,7 @@ export const updatePost = async (req: any, res: Response) => {
     }
 
     // Check if user is creator or admin
-    const isCreator = post.creator.toString() === userId.toString();
+    const isCreator = (post.creator as any).toString() === userId.toString();
     const user = await User.findById(userId);
     const isAdmin = user?.role === 'admin';
 
@@ -183,7 +188,7 @@ export const updatePost = async (req: any, res: Response) => {
 };
 
 // Delete post
-export const deletePost = async (req: any, res: Response) => {
+export const deletePost = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
     const userId = req.user._id;
@@ -194,7 +199,7 @@ export const deletePost = async (req: any, res: Response) => {
     }
 
     // Check if user is creator or admin
-    const isCreator = post.creator.toString() === userId.toString();
+    const isCreator = (post.creator as any).toString() === userId.toString();
     const user = await User.findById(userId);
     const isAdmin = user?.role === 'admin';
 
@@ -213,16 +218,17 @@ export const deletePost = async (req: any, res: Response) => {
 };
 
 // Get user's posts
-export const getUserPosts = async (req: any, res: Response) => {
+export const getUserPosts = async (req: AuthRequest, res: Response) => {
   try {
     const { userId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const page_str = (req.query.page as string) || '1';
+    const limit_str = (req.query.limit as string) || '10';
+    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
 
     const posts = await LostFoundPost.find({ creator: userId, is_deleted: false })
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit))
+      .limit(parseInt(limit_str))
       .populate('creator', 'name profile_picture');
 
     const total = await LostFoundPost.countDocuments({ creator: userId, is_deleted: false });
@@ -230,8 +236,8 @@ export const getUserPosts = async (req: any, res: Response) => {
     res.json({
       data: posts,
       pagination: {
-        current_page: parseInt(page),
-        total_pages: Math.ceil(total / parseInt(limit)),
+        current_page: parseInt(page_str),
+        total_pages: Math.ceil(total / parseInt(limit_str)),
         total_count: total,
       },
     });
@@ -242,7 +248,7 @@ export const getUserPosts = async (req: any, res: Response) => {
 };
 
 // Report a post
-export const reportPost = async (req: any, res: Response) => {
+export const reportPost = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
     const { reason, description } = req.body;
@@ -254,13 +260,16 @@ export const reportPost = async (req: any, res: Response) => {
     }
 
     // Check if user already reported this post
-    const existingReport = await LostFoundReport.findOne({ post: postId, reported_by: userId });
+    const existingReport = await LostFoundReport.findOne({ 
+      post: new Types.ObjectId(postId as any), 
+      reported_by: userId 
+    });
     if (existingReport) {
       return res.status(400).json({ message: 'You have already reported this post' });
     }
 
     const report = await LostFoundReport.create({
-      post: postId,
+      post: new Types.ObjectId(postId as string),
       reported_by: userId,
       reason,
       description,
@@ -274,12 +283,12 @@ export const reportPost = async (req: any, res: Response) => {
 };
 
 // Increment contact count
-export const incrementContactCount = async (req: any, res: Response) => {
+export const incrementContactCount = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
 
     const post = await LostFoundPost.findByIdAndUpdate(
-      postId,
+      new Types.ObjectId(postId as string),
       { $inc: { contact_count: 1 } },
       { new: true }
     ).populate('creator', 'name profile_picture email');
@@ -300,7 +309,7 @@ export const incrementContactCount = async (req: any, res: Response) => {
 };
 
 // Resolve a post
-export const resolvePost = async (req: any, res: Response) => {
+export const resolvePost = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
     const userId = req.user._id;
@@ -311,7 +320,7 @@ export const resolvePost = async (req: any, res: Response) => {
     }
 
     // Check if user is creator or admin
-    const isCreator = post.creator.toString() === userId.toString();
+    const isCreator = (post.creator as any).toString() === userId.toString();
     const user = await User.findById(userId);
     const isAdmin = user?.role === 'admin';
 
@@ -329,3 +338,6 @@ export const resolvePost = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message || 'Failed to resolve post' });
   }
 };
+
+
+

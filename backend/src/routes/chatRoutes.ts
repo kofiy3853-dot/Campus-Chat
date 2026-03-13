@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { Response } from 'express';
+import { AuthRequest } from '../types/express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -28,7 +29,7 @@ const upload = multer({
 });
 
 // Media upload – returns { url, type }
-router.post('/upload', protect, upload.single('file'), (req: any, res) => {
+router.post('/upload', protect, upload.single('file'), (req: AuthRequest, res: Response) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
   const ext = path.extname(req.file.originalname).toLowerCase();

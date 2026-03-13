@@ -1,11 +1,13 @@
 import { Response } from 'express';
+import { Types } from 'mongoose';
+import { AuthRequest } from '../types/express';
 import Poll from '../models/Poll';
 import PollVote from '../models/PollVote';
 import PollReport from '../models/PollReport';
 import User from '../models/User';
 
 // Create a new poll
-export const createPoll = async (req: any, res: Response) => {
+export const createPoll = async (req: AuthRequest, res: Response) => {
   try {
     const { question, options, expires_at, is_anonymous, hide_results_until_voted } = req.body;
     const userId = req.user._id;
@@ -51,10 +53,10 @@ export const createPoll = async (req: any, res: Response) => {
 };
 
 // Get poll feed (paginated)
-export const getPollFeed = async (req: any, res: Response) => {
+export const getPollFeed = async (req: AuthRequest, res: Response) => {
   try {
-    const { page = 1, limit = 10, sort = 'newest' } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const page_str = (req.query.page as string) || '1'; const limit_str = (req.query.limit as string) || '10'; const sort = (req.query.sort as string) || 'newest';
+    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
 
     const now = new Date();
     
@@ -74,7 +76,7 @@ export const getPollFeed = async (req: any, res: Response) => {
     const polls = await Poll.find({ is_deleted: false, status: { $ne: 'closed' } })
       .sort(sortQuery)
       .skip(skip)
-      .limit(parseInt(limit))
+      .limit(parseInt(limit_str))
       .populate('creator', 'name profile_picture');
 
     const total = await Poll.countDocuments({ is_deleted: false, status: { $ne: 'closed' } });
@@ -94,8 +96,8 @@ export const getPollFeed = async (req: any, res: Response) => {
     res.json({
       data: pollsWithVoteStatus,
       pagination: {
-        current_page: parseInt(page),
-        total_pages: Math.ceil(total / parseInt(limit)),
+        current_page: parseInt(page_str),
+        total_pages: Math.ceil(total / parseInt(limit_str)),
         total_count: total,
       },
     });
@@ -106,7 +108,7 @@ export const getPollFeed = async (req: any, res: Response) => {
 };
 
 // Get single poll with results
-export const getPoll = async (req: any, res: Response) => {
+export const getPoll = async (req: AuthRequest, res: Response) => {
   try {
     const { pollId } = req.params;
     const userId = req.user._id;
@@ -124,7 +126,7 @@ export const getPoll = async (req: any, res: Response) => {
     }
 
     // Check if user has voted
-    const userVote = await PollVote.findOne({ poll: pollId, user: userId });
+    const userVote = await PollVote.findOne({ poll: new Types.ObjectId(pollId as string), user: userId });
 
     // Calculate results
     const results = poll.options.map((opt, idx) => ({
@@ -151,7 +153,7 @@ export const getPoll = async (req: any, res: Response) => {
 };
 
 // Vote on a poll
-export const votePoll = async (req: any, res: Response) => {
+export const votePoll = async (req: AuthRequest, res: Response) => {
   try {
     const { pollId } = req.params;
     const { selected_option } = req.body;
@@ -180,14 +182,14 @@ export const votePoll = async (req: any, res: Response) => {
     }
 
     // Check if user already voted
-    const existingVote = await PollVote.findOne({ poll: pollId, user: userId });
+    const existingVote = await PollVote.findOne({ poll: new Types.ObjectId(pollId as string), user: userId });
     if (existingVote) {
       return res.status(400).json({ message: 'You have already voted on this poll' });
     }
 
     // Create vote
     const vote = await PollVote.create({
-      poll: pollId,
+      poll: new Types.ObjectId(pollId as string),
       user: userId,
       selected_option,
     });
@@ -221,7 +223,7 @@ export const votePoll = async (req: any, res: Response) => {
 };
 
 // Get poll results (without voting requirement)
-export const getPollResults = async (req: any, res: Response) => {
+export const getPollResults = async (req: AuthRequest, res: Response) => {
   try {
     const { pollId } = req.params;
     const userId = req.user._id;
@@ -231,7 +233,7 @@ export const getPollResults = async (req: any, res: Response) => {
       return res.status(404).json({ message: 'Poll not found' });
     }
 
-    const userVote = await PollVote.findOne({ poll: pollId, user: userId });
+    const userVote = await PollVote.findOne({ poll: new Types.ObjectId(pollId as string), user: userId });
     const shouldShowResults = !poll.hide_results_until_voted || !!userVote;
 
     const results = poll.options.map((opt, idx) => ({
@@ -255,7 +257,7 @@ export const getPollResults = async (req: any, res: Response) => {
 };
 
 // Report a poll
-export const reportPoll = async (req: any, res: Response) => {
+export const reportPoll = async (req: AuthRequest, res: Response) => {
   try {
     const { pollId } = req.params;
     const { reason, description } = req.body;
@@ -267,13 +269,13 @@ export const reportPoll = async (req: any, res: Response) => {
     }
 
     // Check if user already reported this poll
-    const existingReport = await PollReport.findOne({ poll: pollId, reported_by: userId });
+    const existingReport = await PollReport.findOne({ poll: new Types.ObjectId(pollId as string), reported_by: userId });
     if (existingReport) {
       return res.status(400).json({ message: 'You have already reported this poll' });
     }
 
     const report = await PollReport.create({
-      poll: pollId,
+      poll: new Types.ObjectId(pollId as string),
       reported_by: userId,
       reason,
       description,
@@ -287,7 +289,7 @@ export const reportPoll = async (req: any, res: Response) => {
 };
 
 // Delete a poll (only creator or admin)
-export const deletePoll = async (req: any, res: Response) => {
+export const deletePoll = async (req: AuthRequest, res: Response) => {
   try {
     const { pollId } = req.params;
     const userId = req.user._id;
@@ -298,7 +300,7 @@ export const deletePoll = async (req: any, res: Response) => {
     }
 
     // Check if user is creator or admin
-    const isCreator = poll.creator.toString() === userId.toString();
+    const isCreator = (poll.creator as any).toString() === userId.toString();
     const user = await User.findById(userId);
     const isAdmin = user?.role === 'admin';
 
@@ -320,13 +322,13 @@ export const deletePoll = async (req: any, res: Response) => {
 export const getUserPolls = async (req: any, res: Response) => {
   try {
     const { userId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const page_str = (req.query.page as string) || '1'; const limit_str = (req.query.limit as string) || '10';
+    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
 
     const polls = await Poll.find({ creator: userId, is_deleted: false })
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit))
+      .limit(parseInt(limit_str))
       .populate('creator', 'name profile_picture');
 
     const total = await Poll.countDocuments({ creator: userId, is_deleted: false });
@@ -334,8 +336,8 @@ export const getUserPolls = async (req: any, res: Response) => {
     res.json({
       data: polls,
       pagination: {
-        current_page: parseInt(page),
-        total_pages: Math.ceil(total / parseInt(limit)),
+        current_page: parseInt(page_str),
+        total_pages: Math.ceil(total / parseInt(limit_str)),
         total_count: total,
       },
     });
@@ -344,3 +346,4 @@ export const getUserPolls = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message || 'Failed to fetch user polls' });
   }
 };
+
