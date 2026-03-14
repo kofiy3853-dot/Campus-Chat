@@ -74,7 +74,8 @@ const ChatWindow = () => {
       const incomingId = String(message._id);
       setMessages(prev => {
         if (prev.some(m => String(m._id) === incomingId)) return prev;
-        return [...prev, message];
+        const newMessages = [...prev, message];
+        return newMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
       });
 
       // Mark as read if from someone else

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Search, Plus, Users, MessageSquare } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import Skeleton from './Skeleton';
 import UserSearchModal from './UserSearchModal';
 import NotificationCenter from './NotificationCenter';
@@ -16,6 +17,8 @@ interface ChatListPanelProps {
 
 const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
   const { user } = useAuth();
+  const { socket } = useSocket();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<'chats' | 'groups'>('chats');
   const [items, setItems] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,21 +26,64 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const endpoint = activeTab === 'chats' ? '/api/chat/conversations' : '/api/groups';
+      const response = await api.get(endpoint);
+      setItems(response.data);
+    } catch (err) {
+      console.error('Failed to fetch chat list. This may be due to an expired session or network issue:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const endpoint = activeTab === 'chats' ? '/api/chat/conversations' : '/api/groups';
-        const response = await api.get(endpoint);
-        setItems(response.data);
-      } catch (err) {
-        console.error('Failed to fetch chat list. This may be due to an expired session or network issue:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     if (user) fetchData();
   }, [user, activeTab]);
+
+  useEffect(() => {
+    if (!socket || !user) return;
+
+    const handleNewMessage = (message: any) => {
+      setItems(prev => {
+        const conversationId = message.conversation_id || message.group_id;
+        const index = prev.findIndex(item => item._id === conversationId);
+        
+        if (index === -1) {
+          // New conversation not in list, refetch entire list to get metadata
+          fetchData();
+          return prev;
+        }
+
+        const newItems = [...prev];
+        const item = { ...newItems[index] };
+        
+        // Update unread count if we are not currently in this conversation
+        const isActive = location.pathname.includes(item._id);
+        if (!isActive && message.sender_id?._id !== user._id && message.sender_id !== user._id) {
+          item.unread_count = (item.unread_count || 0) + 1;
+        }
+
+        item.last_message = message;
+        item.last_message_time = message.timestamp;
+
+        // Move to top
+        newItems.splice(index, 1);
+        newItems.unshift(item);
+        return newItems;
+      });
+    };
+
+    socket.on('receive_message', handleNewMessage);
+    socket.on('receive_group_message', handleNewMessage);
+
+    return () => {
+      socket.off('receive_message', handleNewMessage);
+      socket.off('receive_group_message', handleNewMessage);
+    };
+  }, [socket, user, location.pathname, activeTab]);
 
   const filteredItems = items.filter((item: any) => {
     const name = activeTab === 'chats' 

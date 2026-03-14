@@ -45,10 +45,11 @@ const GroupWindow = () => {
     socket.on('connect', joinRoom); // re-join after backend restart / reconnect
 
     const messageHandler = (message: any) => {
+      const incomingId = String(message._id);
       setMessages(prev => {
-        const incomingId = String(message._id);
         if (prev.some(m => String(m._id) === incomingId)) return prev;
-        return [...prev, message];
+        const newMessages = [...prev, message];
+        return newMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
       });
     };
 
