@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { User, Camera, Mail, Contact, GraduationCap, Shield, Save, LogOut, Lock, ChevronLeft } from 'lucide-react';
+import { User, Camera, Mail, Contact, GraduationCap, Shield, Save, LogOut, Lock, ChevronLeft, Smile } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 import api from '../services/api';
