@@ -96,6 +96,7 @@ export const sendGroupMessage = async (req: any, res: Response) => {
       group_id: groupId,
       sender_id: req.user.id,
       message_text,
+      message_type: req.body.message_type || 'text',
       media_url,
     });
 
