@@ -11,13 +11,15 @@ import {
   Users2,
   CheckCircle2,
   Sparkles,
-  SearchX
+  SearchX,
+  Plus
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import Skeleton from '../components/Skeleton';
 import { getMediaUrl } from '../utils/imageUrl';
+import CreateGroupModal from '../components/CreateGroupModal';
 
 interface Group {
   _id: string;
@@ -28,6 +30,33 @@ interface Group {
   createdAt: string;
 }
 
+const EmptyGroups: React.FC<{ onCreate: () => void, onBrowse: () => void }> = ({ onCreate, onBrowse }) => (
+  <div className="col-span-full py-16 px-6 text-center bg-white border border-dashed border-slate-200 rounded-[3rem] animate-in fade-in zoom-in duration-500">
+    <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-sm">
+      <SearchX className="w-10 h-10 text-slate-300" />
+    </div>
+    <h3 className="text-xl font-black text-slate-800 mb-2">No groups found</h3>
+    <p className="text-sm text-slate-400 font-medium max-w-xs mx-auto mb-10 leading-relaxed">
+      We couldn't find any groups matching your search. Create your own community or explore what's trending!
+    </p>
+
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <button 
+        onClick={onCreate}
+        className="w-full sm:w-auto px-8 py-4 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-slate-200 hover:bg-sky-500 hover:shadow-sky-200 transition-all flex items-center justify-center gap-2"
+      >
+        <Plus className="w-4 h-4" /> Create Group
+      </button>
+      <button 
+        onClick={onBrowse}
+        className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-slate-100 text-slate-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:border-sky-500 hover:text-sky-500 transition-all flex items-center justify-center gap-2"
+      >
+        <TrendingUp className="w-4 h-4" /> Browse Trending
+      </button>
+    </div>
+  </div>
+);
+
 const DiscoverPage: React.FC = () => {
   const navigate = useNavigate();
   const [groups, setGroups] = useState<Group[]>([]);
@@ -36,6 +65,7 @@ const DiscoverPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'groups' | 'people'>('all');
   const [searching, setSearching] = useState(false);
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
   const fetchDiscoveryData = async () => {
     try {
@@ -253,11 +283,10 @@ const DiscoverPage: React.FC = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="col-span-full py-12 text-center bg-white border border-dashed border-slate-200 rounded-[2.5rem]">
-                    <SearchX className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                    <h4 className="text-slate-400 font-bold uppercase tracking-widest text-sm">No groups found</h4>
-                    <p className="text-xs text-slate-300 mt-1 uppercase font-bold">Try a different search term</p>
-                  </div>
+                  <EmptyGroups 
+                    onCreate={() => setIsCreateGroupOpen(true)} 
+                    onBrowse={() => handleSearch('')} 
+                  />
                 )}
               </div>
             </section>
@@ -321,6 +350,11 @@ const DiscoverPage: React.FC = () => {
 
         </div>
       </main>
+
+      <CreateGroupModal 
+        isOpen={isCreateGroupOpen}
+        onClose={() => setIsCreateGroupOpen(false)}
+      />
     </div>
   );
 };
