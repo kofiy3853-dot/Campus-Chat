@@ -1,11 +1,13 @@
 import { Response } from 'express';
 import { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import Conversation from '../models/Conversation';
 import Message from '../models/Message';
 import User from '../models/User';
 import { io } from '../server';
 import { createNotification } from './notificationController';
+import { logDetailedError } from '../utils/logger';
 
 export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
