@@ -54,7 +54,7 @@ const Login = () => {
       </div>
 
       {/* Right Form Panel */}
-      <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white relative z-10 shadow-2xl lg:shadow-none">
+      <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 bg-white relative z-10 shadow-2xl lg:shadow-none min-h-screen overflow-y-auto">
         <div className="mx-auto w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-10 justify-center">
             <div className="p-2 bg-primary-600 rounded-lg shadow-sm">

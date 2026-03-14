@@ -36,7 +36,7 @@ body {
   height: 100vh;
   height: -webkit-fill-available;
   height: 100dvh;
-  overflow: hidden;
+  overflow: initial; /* Allow global scrolling on mobile/small screens */
   padding: var(--safe-area-inset-top) var(--safe-area-inset-right) var(--safe-area-inset-bottom) var(--safe-area-inset-left);
 }
 
