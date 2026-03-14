@@ -54,7 +54,7 @@ const Dashboard = () => {
             <Route path="/" element={<LandingDashboard />} />
           </Routes>
         </main>
-        <FloatingActionMenu />
+        {!isConversation && <FloatingActionMenu />}
       </div>
     </SocketProvider>
   );

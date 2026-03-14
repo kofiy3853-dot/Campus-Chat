@@ -115,8 +115,8 @@ const GroupWindow = () => {
       />
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-8 space-y-2 scrollbar-hide bg-white">
-        <div className="flex flex-col justify-end min-h-full">
+      <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-32 md:pb-32 space-y-6 scrollbar-hide bg-slate-50/30">
+        <div className="flex flex-col justify-end min-h-full space-y-1">
             <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
                 <div className="w-20 h-20 rounded-[2rem] bg-gray-50 flex items-center justify-center mb-4 border border-gray-100 text-3xl font-bold text-sky-400 shadow-xl shadow-sky-400/5">
                     {group?.group_name?.[0] || '?'}
