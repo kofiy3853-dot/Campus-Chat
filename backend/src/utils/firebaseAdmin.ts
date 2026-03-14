@@ -1,14 +1,6 @@
 import * as admin from 'firebase-admin';
 
-// Replace the placeholder below with the path to your service account JSON file
-// or initialize with environment variables.
-// Example for initialization with a JSON file:
-// const serviceAccount = require("./path/to/serviceAccountKey.json");
-
-// Example for initialization with env vars (recommended for production):
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT 
-  ? JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString())
-  : null;
+const serviceAccount = require('../../firebase-service-account.json');
 
 if (serviceAccount) {
   admin.initializeApp({
