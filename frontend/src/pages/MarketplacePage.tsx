@@ -167,6 +167,7 @@ const MarketplacePage: React.FC = () => {
       {/* Mobile Fab */}
       <button 
         onClick={() => setIsComposeOpen(true)}
+        aria-label="Create new listing"
         className="fixed bottom-24 right-6 w-14 h-14 bg-sky-500 text-white rounded-2xl shadow-xl shadow-sky-500/20 flex items-center justify-center md:hidden z-40 active:scale-90 transition-transform"
       >
         <Plus className="w-7 h-7" />

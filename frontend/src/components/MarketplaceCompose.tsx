@@ -98,9 +98,10 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
               <button 
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
+                aria-label="Upload item image"
                 className="flex flex-col items-center gap-2 text-slate-400 group-hover:text-sky-500 transition-colors"
               >
-                <div className="p-4 rounded-full bg-white shadow-sm ring-1 ring-slate-100">
+                <div className="p-4 rounded-full bg-white shadow-sm ring-1 ring-slate-100" title="Camera icon">
                   <Camera className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-black uppercase tracking-wider">Add Item Image</span>
@@ -130,6 +131,7 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="Price"
+                  title="Item price"
                   className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20"
                   required
                 />
@@ -151,6 +153,7 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe your item..."
+              title="Item description"
               rows={3}
               className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20 resize-none"
               required
