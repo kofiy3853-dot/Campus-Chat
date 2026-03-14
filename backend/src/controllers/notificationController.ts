@@ -141,6 +141,7 @@ export const updateNotificationPreferences = async (req: any, res: Response) => 
 };
 
 import { io } from '../server';
+import admin from '../utils/firebaseAdmin';
 
 // Create notification (internal helper)
 export const createNotification = async (
@@ -169,8 +170,46 @@ export const createNotification = async (
     const populatedNotification = await Notification.findById(notification._id)
       .populate('sender_id', 'name profile_picture');
 
-    // Broadcast real-time notification
+    // Broadcast real-time notification via Socket.IO
     io.to(`notification:${userId}`).emit('notification', populatedNotification);
+
+    // --- Push Notifications via FCM ---
+    const deviceTokens = await DeviceToken.find({ user_id: userId, is_active: true });
+    const tokens = deviceTokens.map(dt => dt.token);
+
+    if (tokens.length > 0 && admin.apps.length > 0) {
+      const message = {
+        notification: {
+          title,
+          body,
+        },
+        data: {
+          ...data,
+          type,
+          click_action: '/dashboard/notifications', // Customize based on your routing
+        },
+        tokens,
+      };
+
+      try {
+        const response = await admin.messaging().sendEachForMulticast(message);
+        console.log(`Successfully sent ${response.successCount} push notifications`);
+        
+        // Handle token invalidation if needed
+        if (response.failureCount > 0) {
+          response.responses.forEach((resp, idx) => {
+            if (!resp.success) {
+              const errorCode = resp.error?.code;
+              if (errorCode === 'messaging/invalid-registration-token' || errorCode === 'messaging/registration-token-not-registered') {
+                DeviceToken.updateOne({ token: tokens[idx] }, { is_active: false }).exec();
+              }
+            }
+          });
+        }
+      } catch (pushError) {
+        console.error('Error sending push notifications:', pushError);
+      }
+    }
 
     return populatedNotification;
   } catch (error: any) {

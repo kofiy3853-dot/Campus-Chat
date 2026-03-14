@@ -16,9 +16,11 @@ import DiscoverPage from '../pages/DiscoverPage';
 import MarketplacePage from '../pages/MarketplacePage';
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { SocketProvider } from '../context/SocketContext';
+import { usePushNotifications } from '../hooks/usePushNotifications';
 import { clsx } from 'clsx';
 
 const Dashboard = () => {
+  const { requestPermission, permission } = usePushNotifications();
   const location = useLocation();
   const isConversation = location.pathname.includes('/chat/') || (location.pathname.includes('/groups/') && !location.pathname.endsWith('/null') && location.pathname !== '/dashboard/groups');
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');

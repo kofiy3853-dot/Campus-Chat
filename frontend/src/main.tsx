@@ -8,3 +8,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>,
 )
+
+// Register standard Service Worker for Firebase Messaging
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/firebase-messaging-sw.js')
+      .then((registration) => {
+        console.log('Firebase Service Worker registered with scope:', registration.scope);
+      })
+      .catch((err) => {
+        console.log('Firebase Service Worker registration failed:', err);
+      });
+  });
+}
