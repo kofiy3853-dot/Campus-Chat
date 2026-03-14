@@ -3,6 +3,7 @@ import { Phone, Video, MoreVertical, Search, Users, ChevronLeft } from 'lucide-r
 import { useNavigate } from 'react-router-dom';
 import NotificationCenter from './NotificationCenter';
 import { getMediaUrl } from '../utils/imageUrl';
+import { formatLastSeen } from '../utils/time';
 
 interface ChatHeaderProps {
   user: any;
@@ -46,7 +47,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
               </span>
             ) : (
               <span className={user?.status === 'online' ? "text-green-500" : "text-gray-400"}>
-                {user?.isGroup ? `${user.memberCount} members` : (user?.status === 'online' ? 'Online' : 'Offline')}
+                {user?.isGroup 
+                  ? `${user.memberCount} members` 
+                  : (user?.status === 'online' ? 'Online' : `Last seen ${formatLastSeen(user?.last_seen)}`)}
               </span>
             )}
           </p>

@@ -102,7 +102,11 @@ io.on('connection', async (socket) => {
     socket.join(`notification:${userId}`);
 
     // Update DB
-    User.findByIdAndUpdate(userId, { status: 'online', last_seen: new Date() }).catch(e => {
+    User.findByIdAndUpdate(userId, { status: 'online', last_seen: new Date() }, { new: true }).then(user => {
+        if (user) {
+            io.emit('user_status_change', { userId, status: 'online', last_seen: user.last_seen });
+        }
+    }).catch(e => {
         console.error('[Socket] User status update error:', e.message);
     });
   }
@@ -182,7 +186,12 @@ io.on('connection', async (socket) => {
           onlineUsers.delete(userId);
           
           // Mark offline in DB
-          User.findByIdAndUpdate(userId, { status: 'offline', last_seen: new Date() }).catch(() => {});
+          const now = new Date();
+          User.findByIdAndUpdate(userId, { status: 'offline', last_seen: now }, { new: true }).then(user => {
+              if (user) {
+                  io.emit('user_status_change', { userId, status: 'offline', last_seen: user.last_seen });
+              }
+          }).catch(() => {});
           
           console.log(`[Socket] User ${userId} is now fully offline`);
         }

@@ -138,6 +138,16 @@ const ChatWindow = () => {
       }
     };
 
+    const statusHandler = (data: any) => {
+      setConversation((prev: any) => {
+        if (!prev) return prev;
+        const participants = prev.participants.map((p: any) => 
+          p._id === data.userId ? { ...p, status: data.status, last_seen: data.last_seen } : p
+        );
+        return { ...prev, participants };
+      });
+    };
+
     socket.on('receive_message', messageHandler);
     socket.on('typing_start', typingHandler);
     socket.on('typing_stop', typingStopHandler);
@@ -145,6 +155,7 @@ const ChatWindow = () => {
     socket.on('message_edited', editHandler);
     socket.on('message_deleted', deleteHandler);
     socket.on('messages_read', messagesReadHandler);
+    socket.on('user_status_change', statusHandler);
 
     return () => {
       socket.off('connect', joinRoom);
@@ -155,6 +166,7 @@ const ChatWindow = () => {
       socket.off('message_edited', editHandler);
       socket.off('message_deleted', deleteHandler);
       socket.off('messages_read', messagesReadHandler);
+      socket.off('user_status_change', statusHandler);
     };
   }, [socket, id, user?._id, markAsRead]);
 

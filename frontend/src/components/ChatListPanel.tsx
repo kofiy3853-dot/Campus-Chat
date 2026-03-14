@@ -76,12 +76,26 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       });
     };
 
+    const handleStatusChange = (data: any) => {
+      setItems((prev: any[]) => prev.map(item => {
+        if (activeTab === 'chats') {
+          const participants = item.participants?.map((p: any) => 
+            p._id === data.userId ? { ...p, status: data.status, last_seen: data.last_seen } : p
+          );
+          return { ...item, participants };
+        }
+        return item;
+      }));
+    };
+
     socket.on('receive_message', handleNewMessage);
     socket.on('receive_group_message', handleNewMessage);
+    socket.on('user_status_change', handleStatusChange);
 
     return () => {
       socket.off('receive_message', handleNewMessage);
       socket.off('receive_group_message', handleNewMessage);
+      socket.off('user_status_change', handleStatusChange);
     };
   }, [socket, user, location.pathname, activeTab]);
 
