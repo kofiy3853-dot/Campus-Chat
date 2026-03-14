@@ -107,7 +107,7 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
                 <span className="text-xs font-black uppercase tracking-wider">Add Item Image</span>
               </button>
             )}
-            <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
+            <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" title="Hidden image input" />
           </div>
 
           <div className="space-y-4">
