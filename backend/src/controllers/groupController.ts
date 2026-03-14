@@ -112,7 +112,16 @@ export const sendGroupMessage = async (req: any, res: Response) => {
 
     res.status(201).json(populatedMessage);
   } catch (error: any) {
-    res.status(500).json({ message: error.message });
+    console.error(`--- [GroupController] FATAL Error in sendGroupMessage ---`);
+    console.error(`Details:`, {
+      sender: req.user?.id,
+      groupId: req.body.groupId,
+      message_text: req.body.message_text,
+    });
+    console.error(`Error Message:`, error.message);
+    console.error(`Stack:`, error.stack);
+    console.error(`-------------------------------------------------`);
+    res.status(500).json({ message: error.message, stack: error.stack });
   }
 };
 
