@@ -229,10 +229,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                   )}
                 >
                   <span>{emoji}</span>
-                  {count > 1 && <span className={clsx(
+                  {((count as any) > 1) && <span className={clsx(
                     "text-[10px] font-bold",
                     myReactions.includes(emoji) ? "text-sky-600" : "text-slate-400"
-                  )}>{count}</span>}
+                  )}>{count as any}</span>}
                 </button>
               ))}
             </div>
