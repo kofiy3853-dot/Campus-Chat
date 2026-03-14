@@ -19,12 +19,13 @@ const Dashboard = () => {
   const location = useLocation();
   const isConversation = location.pathname.includes('/chat/') || (location.pathname.includes('/groups/') && !location.pathname.endsWith('/null') && location.pathname !== '/dashboard/groups');
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');
-  const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/' || location.pathname === '/dashboard/notifications';
+  const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/groups' || location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/chats';
+  const isNavHiddenPage = false; // Persistent nav on all primary dashboard pages
 
   return (
     <SocketProvider>
       <div className="flex h-[100dvh] overflow-hidden bg-white font-sans selection:bg-sky-500/30">
-        {!isLanding && <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />}
+        <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />
         {!isLanding && <ChatListPanel className={isListView ? "flex w-full md:w-80" : "hidden md:flex md:w-80"} />}
         
         <main className={`flex-1 flex flex-col h-full overflow-hidden bg-white ${isListView && !isLanding ? 'hidden md:flex' : 'flex w-full'} ${!isLanding ? 'md:pt-0' : ''}`}>
