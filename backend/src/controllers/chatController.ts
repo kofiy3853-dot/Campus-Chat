@@ -52,6 +52,10 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
   const { recipientId, message_text, message_type, media_url } = req.body;
 
   try {
+    if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
+      return res.status(400).json({ message: 'Invalid or missing recipient ID' });
+    }
+
     let conversation = await Conversation.findOne({
       participants: { $all: [req.user.id, recipientId] },
     });
@@ -65,42 +69,41 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
     const message = await Message.create({
       conversation_id: conversation._id,
       sender_id: req.user.id,
-      message_text,
-      message_type,
+      message_text: message_text || '',
+      message_type: message_type || 'text',
       media_url,
     });
 
-    // Populate sender so socket receivers can render name/avatar without a DB call
-    await message.populate('sender_id', 'name profile_picture');
+    // Safer population
+    await message.populate([
+      { path: 'sender_id', select: 'name profile_picture' }
+    ]);
 
     conversation.last_message = message._id as any;
     conversation.last_message_time = new Date();
     await conversation.save();
 
-    // Trigger notification for recipient
-    createNotification(
-      recipientId,
-      'message',
-      `New message from ${req.user.name}`,
-      message_text || (message_type === 'image' ? 'Sent an image' : 'Sent a file'),
-      { conversation_id: conversation._id },
-      req.user.id
-    );
+    // Trigger notification for recipient - wrap in try/catch since it's not awaited
+    try {
+      createNotification(
+        recipientId,
+        'message',
+        `New message from ${req.user.name || 'Student'}`,
+        message_text || (message_type === 'image' ? 'Sent an image' : message_type === 'voice' ? 'Sent a voice message' : 'Sent a file'),
+        { conversation_id: conversation._id.toString() },
+        req.user.id
+      );
+    } catch (notifErr) {
+      console.error('[ChatController] Notification background error:', notifErr);
+    }
 
     res.status(201).json(message);
   } catch (error: any) {
-    console.error(`--- [ChatController] FATAL Error in sendMessage ---`);
-    console.error(`Details:`, {
-      sender: req.user?.id,
-      recipientId,
-      message_text,
-      message_type,
-      conversation_id: (error as any).conversation_id
+    logDetailedError('SEND_MESSAGE_FAILURE', error);
+    res.status(500).json({ 
+      message: error.message, 
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
     });
-    console.error(`Error Message:`, error.message);
-    console.error(`Stack:`, error.stack);
-    console.error(`--------------------------------------------`);
-    res.status(500).json({ message: error.message, stack: error.stack });
   }
 };
 export const createConversation = async (req: AuthRequest, res: Response) => {
