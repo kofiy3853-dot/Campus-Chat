@@ -117,7 +117,7 @@ const MarketplacePage: React.FC = () => {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={clsx(
-                  "px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap border",
+                  "px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest whitespace-nowrap border",
                   activeCategory === cat ? "bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-200" : "bg-white text-slate-400 border-slate-100 hover:border-sky-200"
                 )}
               >

@@ -38,7 +38,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
   return (
     <aside className={clsx(
-      "bg-white border-gray-100 z-50 transition-none",
+      "bg-white border-gray-100 z-50",
       "fixed bottom-0 left-0 right-0 border-t flex flex-row items-center px-4 h-20 justify-around",
       "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start",
       className
@@ -56,7 +56,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
             to={item.to}
             end={item.to === '/dashboard'}
             className={({ isActive }) => clsx(
-              "flex flex-col items-center gap-1 group transition-none",
+              "flex flex-col items-center gap-1 group",
               "p-2 rounded-2xl md:p-3",
               isActive 
                 ? "text-sky-500 md:bg-sky-50" 

@@ -211,7 +211,7 @@ const DiscoverPage: React.FC = () => {
                     >
                       <div>
                         <div className="flex items-start justify-between mb-4">
-                          <div className="w-14 h-14 rounded-2xl bg-sky-50 text-sky-500 border border-sky-100 flex items-center justify-center font-black text-2xl shadow-sm group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all duration-500">
+                          <div className="w-14 h-14 rounded-2xl bg-sky-50 text-sky-500 border border-sky-100 flex items-center justify-center font-black text-2xl shadow-sm group-hover:bg-sky-500 group-hover:text-white">
                             {group.group_name[0]}
                           </div>
                           <div className="flex flex-col items-end">
@@ -223,7 +223,7 @@ const DiscoverPage: React.FC = () => {
                             </span>
                           </div>
                         </div>
-                        <h3 className="text-lg font-black text-slate-800 mb-2 truncate group-hover:text-sky-500 transition-colors">{group.group_name}</h3>
+                        <h3 className="text-lg font-black text-slate-800 mb-2 truncate">{group.group_name}</h3>
                         <p className="text-sm text-slate-400 line-clamp-2 font-medium leading-relaxed mb-6">{group.description || 'Join this group to connect with other students and stay updated on campus life.'}</p>
                       </div>
 
@@ -245,7 +245,7 @@ const DiscoverPage: React.FC = () => {
                         </div>
                         <button 
                           onClick={() => joinGroup(group._id)}
-                          className="px-6 py-2.5 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 hover:bg-sky-500 hover:shadow-sky-200 hover:-translate-y-1 active:translate-y-0 transition-all"
+                          className="px-6 py-2.5 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 hover:bg-sky-500 hover:shadow-sky-200 transition-all"
                         >
                           Join Group
                         </button>
@@ -292,7 +292,7 @@ const DiscoverPage: React.FC = () => {
                         <img 
                           src={getMediaUrl(person.profile_picture) || `https://ui-avatars.com/api/?name=${person.name}&background=0EA5E9&color=fff`} 
                           alt={person.name}
-                          className="relative w-full h-full object-cover rounded-full border-2 border-slate-50 group-hover:border-sky-300 transition-all duration-500"
+                          className="relative w-full h-full object-cover rounded-full border-2 border-slate-50 group-hover:border-sky-300"
                         />
                         {person.status === 'online' && (
                           <div className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 rounded-full border-4 border-white"></div>

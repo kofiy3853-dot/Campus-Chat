@@ -238,14 +238,14 @@ const ProfileSettings = () => {
             <button 
               onClick={handleSave}
               disabled={loading}
-              className="flex-1 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base text-white shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2 transition-all"
+              className="flex-1 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base text-white shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2"
             >
               <Save className="w-4 h-4 md:w-5 md:h-5" />
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
             <button 
               onClick={logout}
-              className="px-4 md:px-6 py-2.5 md:py-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-xl text-sm md:text-base font-bold flex items-center gap-2 transition-all"
+              className="px-4 md:px-6 py-2.5 md:py-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-xl text-sm md:text-base font-bold flex items-center gap-2"
             >
               <LogOut className="w-4 h-4 md:w-5 md:h-5" />
               Logout

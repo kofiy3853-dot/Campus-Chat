@@ -79,18 +79,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     if (message.delivery_status === 'sent') {
       return <Check className="w-3.5 h-3.5 text-white/60 drop-shadow-sm" strokeWidth={3} />;
     }
-    return <Clock className="w-3 h-3 text-white/40 animate-pulse" strokeWidth={3} />;
+    return <Clock className="w-3 h-3 text-white/40" strokeWidth={3} />;
   };
 
   return (
     <div
       className={clsx(
-        "flex w-full mb-6 px-1 md:px-2 animate-in fade-in slide-in-from-bottom-2 duration-300",
+        "flex w-full mb-6 px-1 md:px-2",
         isMe ? "justify-end" : "justify-start"
       )}
     >
       {!isMe && (
-        <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl overflow-hidden mr-3 shrink-0 border-2 border-white bg-slate-100 self-end mb-1 shadow-md hover:scale-110 transition-transform cursor-pointer">
+        <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl overflow-hidden mr-3 shrink-0 border-2 border-white bg-slate-100 self-end mb-1 shadow-md cursor-pointer">
           <img src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}&background=0EA5E9&color=fff`} alt={senderName} className="w-full h-full object-cover" />
         </div>
       )}

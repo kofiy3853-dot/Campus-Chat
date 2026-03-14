@@ -68,7 +68,7 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
-      <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden">
         <div className="p-6 border-b border-slate-50 flex items-center justify-between">
           <h2 className="text-xl font-black text-slate-800 tracking-tight">Post New Item</h2>
           <button 
@@ -81,7 +81,7 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="relative group flex flex-col items-center justify-center h-48 bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl overflow-hidden hover:border-sky-300 transition-all">
+          <div className="relative group flex flex-col items-center justify-center h-48 bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl overflow-hidden hover:border-sky-300">
             {imagePreview ? (
               <>
                 <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
@@ -160,9 +160,9 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
           <button 
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-sky-500 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-lg shadow-sky-200 hover:bg-sky-600 transition-all flex items-center justify-center gap-2 mt-2"
+            className="w-full py-4 bg-sky-500 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-lg shadow-sky-200 hover:bg-sky-600 flex items-center justify-center gap-2 mt-2"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Create Listing'}
+            {loading ? <Loader2 className="w-5 h-5" /> : 'Create Listing'}
           </button>
         </form>
       </div>
