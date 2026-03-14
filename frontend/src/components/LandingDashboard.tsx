@@ -23,6 +23,7 @@ import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
 import { clsx } from 'clsx';
 import Skeleton from './Skeleton';
+import NotificationCenter from './NotificationCenter';
 
 const LandingDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -99,7 +100,11 @@ const LandingDashboard: React.FC = () => {
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          <button title="Notifications" className="p-2.5 bg-slate-50 text-slate-400 hover:text-sky-500 rounded-2xl relative border border-slate-100 transition-all hover:scale-105 active:scale-95">
+          <button 
+            title="Notifications" 
+            onClick={() => navigate('/dashboard/notifications')}
+            className="p-2.5 bg-slate-50 text-slate-400 hover:text-sky-500 rounded-2xl relative border border-slate-100 transition-all hover:scale-105 active:scale-95"
+          >
             <Bell className="w-5 h-5" />
             <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
