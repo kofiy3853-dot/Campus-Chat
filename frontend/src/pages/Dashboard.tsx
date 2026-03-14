@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <SocketProvider>
-      <div className="flex h-[100dvh] overflow-hidden bg-white font-sans selection:bg-sky-500/30">
+      <div className="flex h-[100dvh] min-h-screen overflow-hidden bg-white font-sans selection:bg-sky-500/30">
         {/* NavSidebar is now persistent across all dashboard views */}
         <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />
         

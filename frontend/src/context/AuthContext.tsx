@@ -60,12 +60,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setUser(userData);
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+      }
+    } catch (err) {
+      console.error('Failed to parse stored user data:', err);
+      localStorage.removeItem('user'); // Clear potentially corrupted data
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
 
     return () => {
       axios.interceptors.request.eject(requestInterceptor);
