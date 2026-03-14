@@ -102,7 +102,7 @@ const ProfileSettings = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-slate-950 p-4 md:p-6 scrollbar-hide">
+    <div className="flex-1 min-h-0 overflow-y-auto bg-slate-950 p-4 md:p-6 pb-32 md:pb-32">
       <div className="max-w-2xl mx-auto">
         <header className="mb-6 md:mb-10 text-center relative">
           <button 

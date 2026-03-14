@@ -175,7 +175,7 @@ const DiscoverPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto px-6 py-8 scrollbar-hide">
+      <main className="flex-1 min-h-0 overflow-y-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-12 pb-32">
           
           {/* Recommended Groups Section */}
