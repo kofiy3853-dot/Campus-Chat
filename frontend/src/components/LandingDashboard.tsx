@@ -343,28 +343,6 @@ const LandingDashboard: React.FC = () => {
           </div>
         </section>
       </main>
-
-      {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 h-24 bg-white/80 backdrop-blur-xl border-t border-slate-100 flex items-center justify-around px-2 z-40 pb-4">
-        <button title="Home" onClick={() => navigate('/dashboard')} className="flex flex-col items-center gap-1.5 text-sky-500 p-2 group transition-all">
-          <div className="p-1.5 rounded-xl bg-sky-50 group-active:scale-95 transition-all">
-            <Home className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-black uppercase tracking-wider">Home</span>
-        </button>
-        <button title="Chats" onClick={() => navigate('/dashboard/chats')} className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-sky-500 p-2 group transition-all">
-          <div className="p-1.5 rounded-xl group-hover:bg-slate-50 group-active:scale-95 transition-all">
-            <MessageSquare className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-black uppercase tracking-wider">Chats</span>
-        </button>
-        <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-sky-500 p-2 group transition-all">
-          <div className="p-1.5 rounded-xl group-hover:bg-slate-50 group-active:scale-95 transition-all">
-            <User className="w-6 h-6" />
-          </div>
-          <span className="text-[10px] font-black uppercase tracking-wider">Profile</span>
-        </button>
-      </nav>
     </div>
   );
 };

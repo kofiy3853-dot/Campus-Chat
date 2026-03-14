@@ -97,3 +97,34 @@ export const sendGroupMessage = async (req: any, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const discoverGroups = async (req: AuthRequest, res: Response) => {
+  try {
+    const groups = await Group.find({
+      members: { $ne: req.user.id },
+    })
+    .populate('members', 'name profile_picture')
+    .sort({ createdAt: -1 })
+    .limit(10);
+
+    res.json(groups);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchGroups = async (req: AuthRequest, res: Response) => {
+  const { query } = req.query;
+  try {
+    const groups = await Group.find({
+      $or: [
+        { group_name: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+      ],
+    }).populate('members', 'name profile_picture');
+
+    res.json(groups);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
