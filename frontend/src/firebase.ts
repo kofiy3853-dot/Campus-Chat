@@ -1,8 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging';
+import { getMessaging, isSupported } from 'firebase/messaging';
 
 // Your web app's Firebase configuration
-// Replace these placeholders with your actual Firebase config values
 const firebaseConfig = {
   apiKey: "AIzaSyAgBukQdNz0y9MpMGc4q24C77VAMVUkJn8",
   authDomain: "campus-chat-fcbcb.firebaseapp.com",
@@ -16,7 +15,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Cloud Messaging
-export const messaging = getMessaging(app);
+// Initialize Firebase Cloud Messaging conditionally
+export const messaging = async () => {
+    const supported = await isSupported();
+    return supported ? getMessaging(app) : null;
+};
 
 export default app;

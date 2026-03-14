@@ -4,23 +4,31 @@ import { messaging } from '../firebase';
 import api from '../services/api';
 
 export const usePushNotifications = () => {
-  const [permission, setPermission] = useState<NotificationPermission>(Notification.permission);
+  const [permission, setPermission] = useState<NotificationPermission>(
+    typeof Notification !== 'undefined' ? Notification.permission : 'denied' as NotificationPermission
+  );
   const [token, setToken] = useState<string | null>(null);
 
   const requestPermission = async () => {
+    if (typeof Notification === 'undefined') {
+      console.warn('Push notifications are not supported in this browser.');
+      return;
+    }
+
     try {
       const permission = await Notification.requestPermission();
       setPermission(permission);
       
       if (permission === 'granted') {
-        // Replace with your actual VAPID key
-        const fcmToken = await getToken(messaging, {
+        const messagingInstance = await messaging();
+        if (!messagingInstance) return;
+
+        const fcmToken = await getToken(messagingInstance, {
           vapidKey: '0rhA5b6S0y1tBfQFhrHjx4PBrx4cf_r_79fe1YlLKDM'
         });
         
         if (fcmToken) {
           setToken(fcmToken);
-          // Register the token with your backend
           await api.post('/api/notifications/device-token', {
             token: fcmToken,
             device_type: 'web'
@@ -33,18 +41,25 @@ export const usePushNotifications = () => {
   };
 
   useEffect(() => {
-    if (permission === 'granted') {
+    if (typeof Notification !== 'undefined' && permission === 'granted') {
       requestPermission();
     }
 
-    // Listen for foreground messages
-    const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('Foreground message received:', payload);
-      // You can trigger a custom UI notification here if you want
-    });
+    let unsubscribe: () => void = () => {};
+
+    const setupListener = async () => {
+      const messagingInstance = await messaging();
+      if (messagingInstance) {
+        unsubscribe = onMessage(messagingInstance, (payload) => {
+          console.log('Foreground message received:', payload);
+        });
+      }
+    };
+
+    setupListener();
 
     return () => unsubscribe();
-  }, []);
+  }, [permission]);
 
   return { permission, token, requestPermission };
 };
