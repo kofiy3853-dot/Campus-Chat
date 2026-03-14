@@ -16,6 +16,7 @@ import {
   ShoppingBag
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useChat } from '../context/ChatContext';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
 
@@ -27,6 +28,7 @@ interface NavSidebarProps {
 
 const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
   const { user, logout } = useAuth();
+  const { unreadCount } = useChat();
 
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
@@ -56,14 +58,21 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
             to={item.to}
             end={item.to === '/dashboard'}
             className={({ isActive }) => clsx(
-              "flex flex-col items-center gap-1 group",
+              "flex flex-col items-center gap-1 group relative",
               "p-2 rounded-2xl md:p-3",
               isActive 
                 ? "text-sky-500 md:bg-sky-50" 
                 : "text-gray-400 hover:text-sky-500 md:hover:bg-gray-50"
             )}
           >
-            <item.icon className="w-6 h-6" />
+            <div className="relative">
+              <item.icon className="w-6 h-6" />
+              {item.label === 'Chats' && unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+            </div>
             <span className="text-[10px] font-bold md:hidden">{item.label}</span>
             <div className="hidden md:block absolute left-full ml-4 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-none">
               {item.label}
