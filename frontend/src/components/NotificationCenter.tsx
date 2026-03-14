@@ -32,11 +32,25 @@ const NotificationCenter: React.FC = () => {
         setNotifications((prev) => [notification, ...prev]);
         setUnreadCount((prev) => prev + 1);
       });
+
+      socket.on('notification_read', ({ notificationId }: { notificationId: string }) => {
+        setNotifications((prev) =>
+          prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
+        );
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      });
+
+      socket.on('all_notifications_read', () => {
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+        setUnreadCount(0);
+      });
     }
 
     return () => {
       if (socket) {
         socket.off('notification');
+        socket.off('notification_read');
+        socket.off('all_notifications_read');
       }
     };
   }, [socket]);
@@ -148,6 +162,10 @@ const NotificationCenter: React.FC = () => {
               {notifications.map((notification) => (
                 <div
                   key={notification._id}
+                  onClick={() => {
+                    if (!notification.read) markAsRead(notification._id);
+                    // Navigation or details view could go here
+                  }}
                   className={clsx(
                     'p-4 border-b border-gray-50 hover:bg-gray-50 transition-none cursor-pointer',
                     !notification.read && 'bg-sky-50/50'

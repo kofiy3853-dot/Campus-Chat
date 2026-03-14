@@ -54,11 +54,23 @@ const NotificationsPage: React.FC = () => {
       socket.on('notification', (newNotification: Notification) => {
         setNotifications((prev) => [newNotification, ...prev]);
       });
+
+      socket.on('notification_read', ({ notificationId }: { notificationId: string }) => {
+        setNotifications((prev) =>
+          prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
+        );
+      });
+
+      socket.on('all_notifications_read', () => {
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      });
     }
 
     return () => {
       if (socket) {
         socket.off('notification');
+        socket.off('notification_read');
+        socket.off('all_notifications_read');
       }
     };
   }, [socket]);

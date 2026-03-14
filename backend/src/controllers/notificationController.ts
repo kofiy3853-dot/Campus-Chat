@@ -35,6 +35,9 @@ export const markNotificationAsRead = async (req: AuthRequest, res: Response) =>
       return res.status(404).json({ message: 'Notification not found' });
     }
 
+    // Broadcast update
+    io.to(`notification:${req.user.id}`).emit('notification_read', { notificationId });
+
     res.json(notification);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -48,6 +51,9 @@ export const markAllNotificationsAsRead = async (req: AuthRequest, res: Response
       { user_id: req.user.id, read: false },
       { read: true, read_at: new Date() }
     );
+
+    // Broadcast update
+    io.to(`notification:${req.user.id}`).emit('all_notifications_read');
 
     res.json({ message: 'All notifications marked as read' });
   } catch (error: any) {
