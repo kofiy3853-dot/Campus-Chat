@@ -72,7 +72,7 @@ const GroupWindow = () => {
   }, [socket, id]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {

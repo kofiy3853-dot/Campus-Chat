@@ -159,7 +159,7 @@ const ChatWindow = () => {
   }, [socket, id, user?._id, markAsRead]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
