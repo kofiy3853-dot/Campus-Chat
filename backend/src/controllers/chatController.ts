@@ -4,7 +4,7 @@ import { AuthRequest } from '../types/express';
 import Conversation from '../models/Conversation';
 import Message from '../models/Message';
 import User from '../models/User';
-import Notification from '../models/Notification';
+import { createNotification } from './notificationController';
 
 export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
@@ -75,6 +75,16 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
     conversation.last_message = message._id as any;
     conversation.last_message_time = new Date();
     await conversation.save();
+
+    // Trigger notification for recipient
+    createNotification(
+      recipientId,
+      'message',
+      `New message from ${req.user.name}`,
+      message_text || (message_type === 'image' ? 'Sent an image' : 'Sent a file'),
+      { conversation_id: conversation._id },
+      req.user.id
+    );
 
     res.status(201).json(message);
   } catch (error: any) {
@@ -288,7 +298,7 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
   try {
     const result = await Message.updateMany(
       {
-        conversation_id: new Types.ObjectId(conversationId),
+        conversation_id: new Types.ObjectId(conversationId as string),
         sender_id: { $ne: req.user._id },
         delivery_status: { $ne: 'read' },
       },

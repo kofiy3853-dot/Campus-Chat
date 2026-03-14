@@ -76,7 +76,7 @@ const corsOptions: cors.CorsOptions = {
   optionsSuccessStatus: 200, // For legacy browser support
 };
 
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: corsOptions,
 });
 

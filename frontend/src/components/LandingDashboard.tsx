@@ -12,30 +12,42 @@ import {
   MessageSquare, 
   Users, 
   Home,
-  Package
+  Package,
+  ChevronRight,
+  TrendingUp,
+  Clock,
+  MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
 import { clsx } from 'clsx';
+import Skeleton from './Skeleton';
 
 const LandingDashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [recentChats, setRecentChats] = useState<any[]>([]);
   const [groups, setGroups] = useState<any[]>([]);
+  const [trendingConfessions, setTrendingConfessions] = useState<any[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [chatsRes, groupsRes] = await Promise.all([
+        const [chatsRes, groupsRes, confessionsRes, eventsRes] = await Promise.all([
           api.get('/api/chat/conversations'),
-          api.get('/api/groups')
+          api.get('/api/groups'),
+          api.get('/api/confessions?page=1&sort=top'),
+          api.get('/api/events?sort=upcoming')
         ]);
-        setRecentChats(chatsRes.data.slice(0, 5));
-        setGroups(groupsRes.data.slice(0, 5));
+        setRecentChats((chatsRes.data || []).slice(0, 5));
+        setGroups((groupsRes.data || []).slice(0, 5));
+        setTrendingConfessions((confessionsRes.data.confessions || []).slice(0, 3));
+        setUpcomingEvents((eventsRes.data || []).slice(0, 3));
       } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
       } finally {
@@ -45,175 +57,305 @@ const LandingDashboard: React.FC = () => {
     fetchData();
   }, []);
 
-  const features = [
+  const quickActions = [
+    { 
+      id: 'post-confession', 
+      title: 'Post Confession', 
+      icon: Ghost, 
+      color: 'bg-purple-50 text-purple-600 border-purple-100',
+      action: () => navigate('/dashboard/confessions?compose=true') 
+    },
+    { 
+      id: 'create-event', 
+      title: 'Create Event', 
+      icon: Calendar, 
+      color: 'bg-sky-50 text-sky-600 border-sky-100',
+      action: () => navigate('/dashboard/events?compose=true') 
+    },
+    { 
+      id: 'report-lost', 
+      title: 'Report Lost Item', 
+      icon: Package, 
+      color: 'bg-orange-50 text-orange-600 border-orange-100',
+      action: () => navigate('/dashboard/lost-found') 
+    },
     { 
       id: 'announcements', 
-      title: 'Announcements', 
-      desc: 'Campus updates and official notices.', 
+      title: 'View Announcements', 
       icon: Megaphone, 
-      color: 'bg-blue-50 text-sky-500',
-      to: '/dashboard/announcements' 
-    },
-    { 
-      id: 'confessions', 
-      title: 'Campus Confessions', 
-      desc: 'Anonymous student confessions.', 
-      icon: Ghost, 
-      color: 'bg-purple-50 text-purple-500',
-      to: '/dashboard/confessions' 
-    },
-    { 
-      id: 'events', 
-      title: 'Campus Events', 
-      desc: 'Discover upcoming campus events.', 
-      icon: Calendar, 
-      color: 'bg-green-50 text-green-500',
-      to: '/dashboard/events' 
-    },
-    { 
-      id: 'lost-found', 
-      title: 'Lost & Found', 
-      desc: 'Report or find lost items.', 
-      icon: Package, 
-      color: 'bg-orange-50 text-orange-500',
-      to: '/dashboard/lost-found' 
+      color: 'bg-blue-50 text-blue-600 border-blue-100',
+      action: () => navigate('/dashboard/announcements') 
     },
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-white text-[#333333]">
-      {/* Top Nav */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-100 px-4 flex items-center justify-between z-50">
-        <h1 className="text-xl font-black text-sky-400 tracking-tight">Campus Chat</h1>
-        <div className="flex items-center gap-4">
-          <button title="Search" className="p-2 text-gray-400 hover:text-sky-500">
-            <Search className="w-6 h-6" />
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#1E293B]">
+      {/* Top Header */}
+      <header className="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-slate-100 px-6 py-4 flex items-center justify-between z-40">
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Campus Chat</span>
+          <h1 className="text-xl font-black text-slate-800 tracking-tight">
+            Welcome back, <span className="text-sky-500">{user?.name}</span>
+          </h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <button title="Notifications" className="p-2.5 bg-slate-50 text-slate-400 hover:text-sky-500 rounded-2xl relative border border-slate-100 transition-all hover:scale-105 active:scale-95">
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
-          <button title="Notifications" className="p-2 text-gray-400 hover:text-sky-500 relative">
-            <Bell className="w-6 h-6" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-          </button>
-          <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="w-8 h-8 rounded-full overflow-hidden border border-gray-200">
-            <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="Profile" className="w-full h-full object-cover" />
+          <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-slate-50 shadow-sm transition-all hover:scale-105 active:scale-95">
+            <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=0EA5E9&color=fff`} alt="Profile" className="w-full h-full object-cover" />
           </button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 pt-20 pb-24 px-4 overflow-y-auto">
-        {/* Feature Grid */}
-        <section className="mb-8">
+      <main className="flex-1 px-4 pb-28 pt-6 space-y-8 max-w-2xl mx-auto w-full">
+        
+        {/* Search Bar */}
+        <div className="relative group">
+          <div className="absolute inset-0 bg-sky-500/5 blur-xl group-focus-within:blur-2xl transition-all rounded-3xl opacity-0 group-focus-within:opacity-100"></div>
+          <div className="relative flex items-center bg-white border border-slate-100 rounded-[2rem] px-5 py-4 shadow-sm group-focus-within:border-sky-200 transition-all duration-300">
+            <Search className="w-5 h-5 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
+            <input 
+              type="text" 
+              placeholder="Search students, groups, confessions, or events"
+              className="flex-1 bg-transparent border-none outline-none px-3 text-sm font-medium text-slate-700 placeholder:text-slate-400"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Quick Actions Grid */}
+        <section>
           <div className="grid grid-cols-2 gap-4">
-            {features.map((f) => (
+            {quickActions.map((action) => (
               <button 
-                key={f.id} 
-                onClick={() => navigate(f.to)}
-                className="flex flex-col items-start p-4 bg-white border border-gray-100 rounded-3xl text-left hover:border-sky-200 transition-none"
+                key={action.id} 
+                onClick={action.action}
+                className={clsx(
+                  "flex flex-col items-center justify-center p-5 rounded-3xl border text-center transition-all duration-300 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
+                  action.color
+                )}
               >
-                <div className={clsx("p-3 rounded-2xl mb-4 transition-none", f.color)}>
-                  <f.icon className="w-6 h-6" />
+                <div className="p-3 rounded-2xl bg-white shadow-sm mb-3">
+                  <action.icon className="w-6 h-6" />
                 </div>
-                <h3 className="font-bold text-sm mb-1">{f.title}</h3>
-                <p className="text-[10px] text-gray-400 leading-tight">{f.desc}</p>
+                <span className="font-bold text-[xs] tracking-tight">{action.title}</span>
               </button>
             ))}
           </div>
         </section>
 
-        {/* Groups Section */}
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold">Groups</h2>
-            <button onClick={() => navigate('/dashboard/groups')} className="text-sky-500 text-sm font-bold flex items-center gap-1">
-              See All
+        {/* Trending Confessions */}
+        <section>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-purple-50 flex items-center justify-center border border-purple-100">
+                <Ghost className="w-4 h-4 text-purple-500" />
+              </div>
+              <h2 className="text-lg font-black text-slate-800 tracking-tight">Trending Confessions</h2>
+            </div>
+            <button onClick={() => navigate('/dashboard/confessions')} className="text-purple-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+              See All <ChevronRight className="w-4 h-4" />
             </button>
           </div>
+          
           <div className="space-y-3">
-            {groups.map((group) => (
-              <div key={group._id} className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-2xl border border-transparent hover:border-sky-100 transition-none">
-                <div className="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-sky-500 font-bold text-lg transition-none">
-                  {group.group_name[0]}
+            {loading ? (
+              [1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-3xl" />)
+            ) : trendingConfessions.length > 0 ? (
+              trendingConfessions.map((c) => (
+                <div key={c._id} onClick={() => navigate('/dashboard/confessions')} className="p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-purple-200 transition-all cursor-pointer">
+                  <p className="text-sm text-slate-600 leading-relaxed font-medium mb-3 line-clamp-2 italic">“{c.text}”</p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">
+                      <TrendingUp className="w-3 h-3" /> {c.likesCount || 0} Likes
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">
+                      <MessageSquare className="w-3 h-3" /> {c.commentsCount || 0} Comments
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-sm truncate text-gray-800">{group.group_name}</h4>
-                  <p className="text-[10px] text-gray-500 truncate">{group.members.length} members • {group.last_message?.message_text || 'No messages'}</p>
-                </div>
-                {group.owner === user?._id && (
-                  <button title="Delete Group" className="p-2 text-gray-300 hover:text-red-500 transition-none">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
+              ))
+            ) : (
+              <div className="p-8 text-center bg-white border border-slate-100 rounded-3xl">
+                <Ghost className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                <p className="text-xs text-slate-400 font-medium">No trending confessions yet</p>
               </div>
-            ))}
-            <button 
-              onClick={() => navigate('/dashboard/groups/new')} 
-              title="Create New Group"
-              className="fixed bottom-24 right-6 w-14 h-14 bg-sky-400 text-white rounded-full flex items-center justify-center shadow-lg shadow-sky-200 z-50 active:scale-95 transition-none"
-            >
-              <Plus className="w-8 h-8" />
-            </button>
+            )}
           </div>
         </section>
 
-        {/* Recent Chats Section */}
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold">Recent Chats</h2>
-            <button onClick={() => navigate('/dashboard/chats')} className="text-sky-500 text-sm font-bold">See All</button>
+        {/* Upcoming Events */}
+        <section>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-sky-50 flex items-center justify-center border border-sky-100">
+                <Calendar className="w-4 h-4 text-sky-500" />
+              </div>
+              <h2 className="text-lg font-black text-slate-800 tracking-tight">Upcoming Events</h2>
+            </div>
+            <button onClick={() => navigate('/dashboard/events')} className="text-sky-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+              See All <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
-          <div className="space-y-4">
-            {recentChats.map((chat) => {
-              const otherUser = chat.participants.find((p: any) => p._id !== user?._id);
-              return (
-                <button 
-                  key={chat._id} 
-                  onClick={() => navigate(`/dashboard/chat/${chat._id}`)}
-                  className="w-full flex items-center gap-3 text-left"
-                >
-                  <div className="relative">
-                    <img 
-                      src={getMediaUrl(otherUser?.profile_picture) || `https://ui-avatars.com/api/?name=${otherUser?.name}`} 
-                      alt={otherUser?.name} 
-                      className="w-12 h-12 rounded-full object-cover border border-gray-100 transition-none"
-                    />
-                    {otherUser?.status === 'online' && (
-                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white transition-none"></div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 transition-none">
-                    <div className="flex justify-between items-baseline mb-0.5 transition-none">
-                      <h4 className="font-bold text-sm truncate text-gray-800">{otherUser?.name}</h4>
-                      <span className="text-[10px] text-gray-400">{chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
+
+          <div className="flex overflow-x-auto gap-4 no-scrollbar pb-2">
+            {loading ? (
+              [1, 2].map((i) => <Skeleton key={i} className="min-w-[240px] h-32 rounded-3xl shrink-0" />)
+            ) : upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <div key={event._id} onClick={() => navigate('/dashboard/events')} className="min-w-[260px] p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-sky-200 transition-all cursor-pointer shrink-0">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-sky-500 bg-sky-50 px-2.5 py-1 rounded-full">
+                      {event.category || 'General'}
+                    </span>
+                    <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400">
+                      <Users className="w-3 h-3" /> {event.attendeesCount || 0}
                     </div>
-                    <div className="flex justify-between items-center transition-none">
-                      <p className="text-xs text-gray-500 truncate">{chat.last_message?.message_text || 'Start conversation'}</p>
-                      {chat.unread_count > 0 && (
-                        <span className="bg-sky-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center transition-none">
-                          {chat.unread_count}
-                        </span>
+                  </div>
+                  <h4 className="font-bold text-slate-800 mb-2 truncate">{event.title}</h4>
+                  <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {new Date(event.dateTime).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3" /> {event.location}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="w-full p-8 text-center bg-white border border-slate-100 rounded-3xl">
+                <Calendar className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                <p className="text-xs text-slate-400 font-medium">No upcoming events</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Popular Groups */}
+        <section>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-orange-50 flex items-center justify-center border border-orange-100">
+                <Users className="w-4 h-4 text-orange-500" />
+              </div>
+              <h2 className="text-lg font-black text-slate-800 tracking-tight">Popular Groups</h2>
+            </div>
+            <button onClick={() => navigate('/dashboard/groups')} className="text-orange-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+              Discover <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            {loading ? (
+              [1, 2, 3].map((i) => <Skeleton key={i} className="h-16 rounded-2xl" />)
+            ) : groups.length > 0 ? (
+              groups.map((group) => (
+                <div key={group._id} onClick={() => navigate(`/dashboard/groups/${group._id}`)} className="flex items-center gap-4 p-3 bg-white border border-slate-100 rounded-2xl hover:border-orange-200 transition-all cursor-pointer shadow-sm">
+                  <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 font-black text-lg">
+                    {group.group_name[0]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-sm text-slate-800 truncate">{group.group_name}</h4>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{group.members.length} Members</p>
+                  </div>
+                  <div className="flex items-center gap-1 px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-bold text-slate-400">
+                    Join
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center p-6 text-slate-400 text-xs font-medium italic">No groups suggested yet</p>
+            )}
+          </div>
+        </section>
+
+        {/* Recent Chats */}
+        <section>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-sky-50 flex items-center justify-center border border-sky-100">
+                <MessageSquare className="w-4 h-4 text-sky-500" />
+              </div>
+              <h2 className="text-lg font-black text-slate-800 tracking-tight">Recent Chats</h2>
+            </div>
+            <button onClick={() => navigate('/dashboard/chats')} className="text-sky-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+              Messages <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {loading ? (
+              [1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-3xl" />)
+            ) : recentChats.length > 0 ? (
+              recentChats.map((chat) => {
+                const otherUser = chat.participants.find((p: any) => p._id !== user?._id);
+                return (
+                  <button 
+                    key={chat._id} 
+                    onClick={() => navigate(`/dashboard/chat/${chat._id}`)}
+                    className="w-full flex items-center gap-4 p-4 bg-white border border-slate-50 rounded-3xl transition-all hover:shadow-md group shadow-sm"
+                  >
+                    <div className="relative">
+                      <img 
+                        src={getMediaUrl(otherUser?.profile_picture) || `https://ui-avatars.com/api/?name=${otherUser?.name}&background=0EA5E9&color=fff`} 
+                        alt={otherUser?.name} 
+                        className="w-12 h-12 rounded-full object-cover border-2 border-slate-50 ring-4 ring-transparent group-hover:ring-sky-50 transition-all"
+                      />
+                      {otherUser?.status === 'online' && (
+                        <div className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
                       )}
                     </div>
-                  </div>
-                </button>
-              );
-            })}
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="flex justify-between items-baseline mb-0.5">
+                        <h4 className="font-black text-slate-800 text-sm truncate">{otherUser?.name}</h4>
+                        <span className="text-[10px] font-bold text-slate-400">{chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <p className="text-xs text-slate-500 truncate font-medium">{chat.last_message?.message_text || 'Start conversation'}</p>
+                        {chat.unread_count > 0 && (
+                          <span className="bg-sky-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-sky-200">
+                            {chat.unread_count}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })
+            ) : (
+              <div className="p-10 text-center bg-slate-50 border border-dashed border-slate-200 rounded-[2rem]">
+                <MessageSquare className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">No active chats</p>
+                <p className="text-[10px] text-slate-300 mt-1">Start chatting with your fellow students!</p>
+              </div>
+            )}
           </div>
         </section>
       </main>
 
       {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t border-gray-100 flex items-center justify-around px-2 z-50">
-        <button title="Home" onClick={() => navigate('/dashboard')} className="flex flex-col items-center gap-1 text-sky-500">
-          <Home className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Home</span>
+      <nav className="fixed bottom-0 left-0 right-0 h-24 bg-white/80 backdrop-blur-xl border-t border-slate-100 flex items-center justify-around px-2 z-40 pb-4">
+        <button title="Home" onClick={() => navigate('/dashboard')} className="flex flex-col items-center gap-1.5 text-sky-500 p-2 group transition-all">
+          <div className="p-1.5 rounded-xl bg-sky-50 group-active:scale-95 transition-all">
+            <Home className="w-6 h-6" />
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-wider">Home</span>
         </button>
-        <button title="Chats" onClick={() => navigate('/dashboard/chats')} className="flex flex-col items-center gap-1 text-gray-400 hover:text-sky-500">
-          <MessageSquare className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Chats</span>
+        <button title="Chats" onClick={() => navigate('/dashboard/chats')} className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-sky-500 p-2 group transition-all">
+          <div className="p-1.5 rounded-xl group-hover:bg-slate-50 group-active:scale-95 transition-all">
+            <MessageSquare className="w-6 h-6" />
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-wider">Chats</span>
         </button>
-        <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="flex flex-col items-center gap-1 text-gray-400 hover:text-sky-500">
-          <User className="w-6 h-6" />
-          <span className="text-[10px] font-bold">Profile</span>
+        <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-sky-500 p-2 group transition-all">
+          <div className="p-1.5 rounded-xl group-hover:bg-slate-50 group-active:scale-95 transition-all">
+            <User className="w-6 h-6" />
+          </div>
+          <span className="text-[10px] font-black uppercase tracking-wider">Profile</span>
         </button>
       </nav>
     </div>

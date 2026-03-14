@@ -134,6 +134,8 @@ export const updateNotificationPreferences = async (req: any, res: Response) => 
   }
 };
 
+import { io } from '../server';
+
 // Create notification (internal helper)
 export const createNotification = async (
   userId: string,
@@ -157,7 +159,14 @@ export const createNotification = async (
       data,
     });
 
-    return notification;
+    // Populate sender info for the frontend
+    const populatedNotification = await Notification.findById(notification._id)
+      .populate('sender_id', 'name profile_picture');
+
+    // Broadcast real-time notification
+    io.to(`notification:${userId}`).emit('notification', populatedNotification);
+
+    return populatedNotification;
   } catch (error: any) {
     console.error('Error creating notification:', error.message);
   }
