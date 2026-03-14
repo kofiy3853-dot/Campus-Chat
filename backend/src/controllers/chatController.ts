@@ -4,6 +4,7 @@ import { AuthRequest } from '../types/express';
 import Conversation from '../models/Conversation';
 import Message from '../models/Message';
 import User from '../models/User';
+import { io } from '../server';
 import { createNotification } from './notificationController';
 
 export const getConversations = async (req: AuthRequest, res: Response) => {
@@ -88,8 +89,18 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(message);
   } catch (error: any) {
-    console.error(`[ChatController] Error in sendMessage:`, error);
-    res.status(500).json({ message: error.message });
+    console.error(`--- [ChatController] FATAL Error in sendMessage ---`);
+    console.error(`Details:`, {
+      sender: req.user?.id,
+      recipientId,
+      message_text,
+      message_type,
+      conversation_id: (error as any).conversation_id
+    });
+    console.error(`Error Message:`, error.message);
+    console.error(`Stack:`, error.stack);
+    console.error(`--------------------------------------------`);
+    res.status(500).json({ message: error.message, stack: error.stack });
   }
 };
 export const createConversation = async (req: AuthRequest, res: Response) => {
