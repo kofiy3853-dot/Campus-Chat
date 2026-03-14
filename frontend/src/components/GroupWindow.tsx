@@ -21,6 +21,11 @@ const GroupWindow = () => {
 
   useEffect(() => {
     const fetchGroupData = async () => {
+      if (id === 'mock-1') {
+        setError('This is a demo group and cannot be loaded.');
+        setLoading(false);
+        return;
+      }
       try {
         setLoading(true);
         setError(null);
