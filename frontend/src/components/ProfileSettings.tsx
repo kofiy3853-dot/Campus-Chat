@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import clsx from 'clsx';
 import { User, Camera, Mail, Contact, GraduationCap, Shield, Save, LogOut, Lock, ChevronLeft, Smile } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
