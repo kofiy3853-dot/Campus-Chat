@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import LostFoundPost from '../models/LostFoundPost';
 import LostFoundReport from '../models/LostFoundReport';
@@ -261,7 +261,7 @@ export const reportPost = async (req: AuthRequest, res: Response) => {
 
     // Check if user already reported this post
     const existingReport = await LostFoundReport.findOne({ 
-      post: new Types.ObjectId(postId as any), 
+      post: new mongoose.Types.ObjectId(postId as any), 
       reported_by: userId 
     });
     if (existingReport) {
@@ -269,7 +269,7 @@ export const reportPost = async (req: AuthRequest, res: Response) => {
     }
 
     const report = await LostFoundReport.create({
-      post: new Types.ObjectId(postId as string),
+      post: new mongoose.Types.ObjectId(postId as string),
       reported_by: userId,
       reason,
       description,
@@ -288,7 +288,7 @@ export const incrementContactCount = async (req: AuthRequest, res: Response) => 
     const { postId } = req.params;
 
     const post = await LostFoundPost.findByIdAndUpdate(
-      new Types.ObjectId(postId as string),
+      new mongoose.Types.ObjectId(postId as string),
       { $inc: { contact_count: 1 } },
       { new: true }
     ).populate('creator', 'name profile_picture email');

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import Poll from '../models/Poll';
 import PollVote from '../models/PollVote';
@@ -126,7 +126,7 @@ export const getPoll = async (req: AuthRequest, res: Response) => {
     }
 
     // Check if user has voted
-    const userVote = await PollVote.findOne({ poll: new Types.ObjectId(pollId as string), user: userId });
+    const userVote = await PollVote.findOne({ poll: new mongoose.Types.ObjectId(pollId as string), user: userId });
 
     // Calculate results
     const results = poll.options.map((opt, idx) => ({
@@ -182,14 +182,14 @@ export const votePoll = async (req: AuthRequest, res: Response) => {
     }
 
     // Check if user already voted
-    const existingVote = await PollVote.findOne({ poll: new Types.ObjectId(pollId as string), user: userId });
+    const existingVote = await PollVote.findOne({ poll: new mongoose.Types.ObjectId(pollId as string), user: userId });
     if (existingVote) {
       return res.status(400).json({ message: 'You have already voted on this poll' });
     }
 
     // Create vote
     const vote = await PollVote.create({
-      poll: new Types.ObjectId(pollId as string),
+      poll: new mongoose.Types.ObjectId(pollId as string),
       user: userId,
       selected_option,
     });
@@ -233,7 +233,7 @@ export const getPollResults = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Poll not found' });
     }
 
-    const userVote = await PollVote.findOne({ poll: new Types.ObjectId(pollId as string), user: userId });
+    const userVote = await PollVote.findOne({ poll: new mongoose.Types.ObjectId(pollId as string), user: userId });
     const shouldShowResults = !poll.hide_results_until_voted || !!userVote;
 
     const results = poll.options.map((opt, idx) => ({
@@ -269,13 +269,13 @@ export const reportPoll = async (req: AuthRequest, res: Response) => {
     }
 
     // Check if user already reported this poll
-    const existingReport = await PollReport.findOne({ poll: new Types.ObjectId(pollId as string), reported_by: userId });
+    const existingReport = await PollReport.findOne({ poll: new mongoose.Types.ObjectId(pollId as string), reported_by: userId });
     if (existingReport) {
       return res.status(400).json({ message: 'You have already reported this poll' });
     }
 
     const report = await PollReport.create({
-      poll: new Types.ObjectId(pollId as string),
+      poll: new mongoose.Types.ObjectId(pollId as string),
       reported_by: userId,
       reason,
       description,

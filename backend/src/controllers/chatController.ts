@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { Types } from 'mongoose';
 import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import Conversation from '../models/Conversation';
@@ -284,7 +283,7 @@ export const blockUser = async (req: AuthRequest, res: Response) => {
     if (isBlocked) {
       user.blocked_users = user.blocked_users.filter(id => id.toString() !== userId);
     } else {
-      user.blocked_users.push(new Types.ObjectId(userId as string) as any);
+      user.blocked_users.push(new mongoose.Types.ObjectId(userId as string) as any);
     }
 
     await user.save();
@@ -320,14 +319,14 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
   const { conversationId } = req.params;
 
   try {
-    if (!Types.ObjectId.isValid(conversationId)) {
+    if (!mongoose.isValidObjectId(conversationId)) {
       console.error(`[ChatController] Invalid conversationId: ${conversationId}`);
       return res.status(400).json({ message: 'Invalid conversation ID' });
     }
 
     const result = await Message.updateMany(
       {
-        conversation_id: new Types.ObjectId(conversationId as string),
+        conversation_id: new mongoose.Types.ObjectId(conversationId as string),
         sender_id: { $ne: req.user._id },
         delivery_status: { $ne: 'read' },
       },
