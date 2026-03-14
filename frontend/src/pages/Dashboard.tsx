@@ -14,21 +14,30 @@ import LandingDashboard from '../components/LandingDashboard';
 import NotificationsPage from '../pages/NotificationsPage';
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { SocketProvider } from '../context/SocketContext';
+import { clsx } from 'clsx';
 
 const Dashboard = () => {
   const location = useLocation();
   const isConversation = location.pathname.includes('/chat/') || (location.pathname.includes('/groups/') && !location.pathname.endsWith('/null') && location.pathname !== '/dashboard/groups');
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');
-  const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/groups' || location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/chats';
-  const isNavHiddenPage = false; // Persistent nav on all primary dashboard pages
+  const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
+  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications';
 
   return (
     <SocketProvider>
       <div className="flex h-[100dvh] overflow-hidden bg-white font-sans selection:bg-sky-500/30">
+        {/* NavSidebar is now persistent across all dashboard views */}
         <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />
-        {!isLanding && <ChatListPanel className={isListView ? "flex w-full md:w-80" : "hidden md:flex md:w-80"} />}
         
-        <main className={`flex-1 flex flex-col h-full overflow-hidden bg-white ${isListView && !isLanding ? 'hidden md:flex' : 'flex w-full'} ${!isLanding ? 'md:pt-0' : ''}`}>
+        {/* Chat list panel - visible on list views, hidden on mobile during conversation, hidden on landing/profile/notifications */}
+        {(!isLanding && !isProfileOrNotifications) && (
+          <ChatListPanel className={isListView ? "flex w-full md:w-80" : "hidden md:flex md:w-80"} />
+        )}
+        
+        <main className={clsx(
+          "flex-1 flex flex-col h-full overflow-hidden bg-white",
+          (isListView && !isLanding && !isProfileOrNotifications) ? 'hidden md:flex' : 'flex w-full'
+        )}>
           <Routes>
             <Route path="chat/:id" element={<ChatWindow />} />
             <Route path="groups/:id" element={<GroupWindow />} />
