@@ -206,6 +206,7 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
         department: user.department,
         level: user.level,
         profile_picture: user.profile_picture,
+        tick_color: user.tick_color,
     });
   } catch (error) {
     console.error('Error uploading profile picture:', error);
