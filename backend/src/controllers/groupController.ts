@@ -4,6 +4,7 @@ import { AuthRequest } from '../types/express';
 import Group from '../models/Group';
 import Message from '../models/Message';
 import GroupMessage from '../models/GroupMessage';
+import { io } from '../server';
 
 export const createGroup = async (req: AuthRequest, res: Response) => {
   const { group_name, description, members } = req.body;
@@ -141,6 +142,60 @@ export const searchGroups = async (req: AuthRequest, res: Response) => {
     } as any).populate('members', 'name profile_picture');
 
     res.json(groups);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Add reaction to group message
+export const addGroupMessageReaction = async (req: AuthRequest, res: Response) => {
+  const { messageId } = req.params;
+  const { emoji } = req.body;
+
+  try {
+    const message = await GroupMessage.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    // Check if user is member of the group
+    const group = await Group.findOne({
+      _id: message.group_id,
+      members: req.user.id
+    });
+
+    if (!group) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    const existingReaction = message.reactions.find(
+      (r: any) => r.userId.toString() === (req.user.id as any) && r.emoji === emoji
+    );
+
+    if (existingReaction) {
+      // Remove reaction if already exists
+      message.reactions = message.reactions.filter(
+        (r: any) => !(r.userId.toString() === (req.user.id as any) && r.emoji === emoji)
+      );
+    } else {
+      // Add new reaction
+      message.reactions.push({
+        userId: req.user.id,
+        emoji: emoji
+      });
+    }
+
+    await message.save();
+
+    // Broadcast reaction update
+    io.to(message.group_id.toString()).emit('group_message_reaction', {
+      messageId: message._id,
+      reactions: message.reactions,
+      roomId: message.group_id.toString(),
+    });
+
+    res.json(message);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

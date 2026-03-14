@@ -239,6 +239,13 @@ export const addMessageReaction = async (req: AuthRequest, res: Response) => {
     await message.save();
     await message.populate('sender_id', 'name profile_picture');
 
+    // Broadcast reaction update
+    io.to(message.conversation_id.toString()).emit('message_reaction', {
+      messageId: message._id,
+      reactions: message.reactions,
+      roomId: message.conversation_id.toString(),
+    });
+
     res.json(message);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

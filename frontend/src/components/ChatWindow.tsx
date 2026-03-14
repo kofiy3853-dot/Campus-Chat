@@ -97,18 +97,9 @@ const ChatWindow = () => {
 
     const reactionHandler = (data: any) => {
       if (data.roomId === id) {
-        setMessages(prev => prev.map(m => {
-          if (m._id === data.messageId) {
-            const reactions = m.reactions || [];
-            const existing = reactions.find((r: any) => (r.userId?._id || r.userId) === data.userId && r.emoji === data.emoji);
-            if (existing) {
-              return { ...m, reactions: reactions.filter((r: any) => !((r.userId?._id || r.userId) === data.userId && r.emoji === data.emoji)) };
-            } else {
-              return { ...m, reactions: [...reactions, { userId: data.userId, emoji: data.emoji }] };
-            }
-          }
-          return m;
-        }));
+        setMessages(prev => prev.map(m => 
+          m._id === data.messageId ? { ...m, reactions: data.reactions } : m
+        ));
       }
     };
 

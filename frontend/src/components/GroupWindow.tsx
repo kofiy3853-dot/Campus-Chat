@@ -65,9 +65,40 @@ const GroupWindow = () => {
 
     socket.on('receive_group_message', messageHandler);
 
+    const reactionHandler = (data: any) => {
+      if (data.roomId === id) {
+        setMessages(prev => prev.map(m => 
+          m._id === data.messageId ? { ...m, reactions: data.reactions } : m
+        ));
+      }
+    };
+
+    const editHandler = (data: any) => {
+      if (data.roomId === id) {
+        setMessages(prev => prev.map(m => 
+          m._id === data.messageId ? { ...m, message_text: data.message_text, edited_at: new Date() } : m
+        ));
+      }
+    };
+
+    const deleteHandler = (data: any) => {
+      if (data.roomId === id) {
+        setMessages(prev => prev.map(m => 
+          m._id === data.messageId ? { ...m, is_deleted: true, message_text: '[Message deleted]' } : m
+        ));
+      }
+    };
+
+    socket.on('group_message_reaction', reactionHandler);
+    socket.on('group_message_edited', editHandler);
+    socket.on('group_message_deleted', deleteHandler);
+
     return () => {
       socket.off('connect', joinRoom);
       socket.off('receive_group_message', messageHandler);
+      socket.off('group_message_reaction', reactionHandler);
+      socket.off('group_message_edited', editHandler);
+      socket.off('group_message_deleted', deleteHandler);
     };
   }, [socket, id]);
 
@@ -92,7 +123,26 @@ const GroupWindow = () => {
   };
 
   const handleTyping = () => {
-    // Group typing indicator logic could be added here
+    socket?.emit('typing_start', { roomId: id, userId: user?._id });
+  };
+
+  const onReaction = (messageId: string, emoji: string) => {
+    // The ChatMessage component handles the API call, we just need to broadcast
+    socket?.emit('group_message_reaction', { messageId, emoji, roomId: id, userId: user?._id });
+  };
+
+  const onEdit = (messageId: string, newText: string) => {
+    socket?.emit('group_message_edited', { messageId, message_text: newText, roomId: id });
+    setMessages(prev => prev.map(m => 
+      m._id === messageId ? { ...m, message_text: newText, edited_at: new Date() } : m
+    ));
+  };
+
+  const onDelete = (messageId: string) => {
+    socket?.emit('group_message_deleted', { messageId, roomId: id });
+    setMessages(prev => prev.map(m => 
+      m._id === messageId ? { ...m, is_deleted: true, message_text: '[Message deleted]' } : m
+    ));
   };
 
   if (!id || id === 'null') return (
@@ -157,15 +207,13 @@ const GroupWindow = () => {
 
                 return (
                     <div key={msg._id || index} className="group/msg relative">
-                        {!isMe && (
-                            <span className="text-[10px] font-bold text-slate-500 ml-4 mb-0.5 block uppercase tracking-wider">
-                                {senderName}
-                            </span>
-                        )}
-                        <ChatMessage 
-                            message={msg} 
-                            isMe={isMe} 
-                        />
+                    <ChatMessage 
+                        message={msg} 
+                        isMe={isMe} 
+                        onReaction={onReaction}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                    />
                     </div>
                 );
             })}

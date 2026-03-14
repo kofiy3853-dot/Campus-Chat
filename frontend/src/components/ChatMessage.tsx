@@ -25,13 +25,28 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
   const handleReaction = async (emoji: string) => {
     try {
-      await api.post(`/api/chat/messages/${message._id}/reaction`, { emoji });
+      const endpoint = message.group_id 
+        ? `/api/groups/messages/${message._id}/reaction`
+        : `/api/chat/messages/${message._id}/reaction`;
+      
+      const response = await api.post(endpoint, { emoji });
+      // The parent component should handle the message update via socket or state
       onReaction?.(message._id, emoji);
       setShowReactions(false);
     } catch (error) {
       console.error('Error adding reaction:', error);
     }
   };
+
+  const reactionCounts = message.reactions?.reduce((acc: Record<string, number>, curr: any) => {
+    acc[curr.emoji] = (acc[curr.emoji] || 0) + 1;
+    return acc;
+  }, {}) || {};
+
+  const myReactions = message.reactions?.filter((r: any) => {
+    const rUserId = r.userId?._id || r.userId;
+    return rUserId?.toString() === user?.id?.toString();
+  }).map((r: any) => r.emoji) || [];
 
   const handleEdit = async () => {
     if (!editText.trim()) return;
@@ -189,19 +204,28 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           )}
 
           {/* Reactions */}
-          {message.reactions && message.reactions.length > 0 && (
+          {Object.keys(reactionCounts).length > 0 && (
             <div className={clsx(
               "absolute -bottom-3 flex flex-wrap gap-1 p-1 bg-white border border-slate-100 rounded-full shadow-lg shadow-slate-200 z-10",
               isMe ? "right-2" : "left-2"
             )}>
-              {message.reactions.map((reaction: any, idx: number) => (
-                <span 
-                  key={idx} 
-                  title={reaction.userId?.name}
-                  className="w-6 h-6 flex items-center justify-center text-sm hover:scale-125 transition-transform cursor-pointer"
+              {Object.entries(reactionCounts).map(([emoji, count]) => (
+                <button 
+                  key={emoji} 
+                  onClick={() => handleReaction(emoji)}
+                  className={clsx(
+                    "flex items-center gap-1 px-2 py-0.5 rounded-full transition-all text-sm",
+                    myReactions.includes(emoji) 
+                      ? "bg-sky-50 border border-sky-100 ring-1 ring-sky-200/50" 
+                      : "hover:bg-slate-50 border border-transparent"
+                  )}
                 >
-                  {reaction.emoji}
-                </span>
+                  <span>{emoji}</span>
+                  {count > 1 && <span className={clsx(
+                    "text-[10px] font-bold",
+                    myReactions.includes(emoji) ? "text-sky-600" : "text-slate-400"
+                  )}>{count}</span>}
+                </button>
               ))}
             </div>
           )}
