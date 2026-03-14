@@ -20,6 +20,7 @@ export interface IUser extends Document {
     email_notifications: boolean;
     browser_notifications: boolean;
   };
+  tick_color: string;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -40,6 +41,7 @@ const UserSchema: Schema = new Schema({
     email_notifications: { type: Boolean, default: true },
     browser_notifications: { type: Boolean, default: true }
   },
+  tick_color: { type: String, default: '#38BDF8' },
 }, { timestamps: true });
 
 UserSchema.pre<IUser>('save', async function () {

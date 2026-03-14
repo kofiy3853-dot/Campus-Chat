@@ -15,10 +15,9 @@ const ProfileSettings = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    department: user?.department || '',
     level: user?.level || '300 Level',
-    profile_picture: user?.profile_picture || ''
+    profile_picture: user?.profile_picture || '',
+    tick_color: user?.tick_color || '#38BDF8'
   });
 
   React.useEffect(() => {
@@ -27,10 +26,10 @@ const ProfileSettings = () => {
         const { data } = await api.get('/api/auth/profile');
         updateUser(data);
         setFormData({
-          name: data.name,
           department: data.department || '',
           level: data.level || '300 Level',
-          profile_picture: data.profile_picture || ''
+          profile_picture: data.profile_picture || '',
+          tick_color: data.tick_color || '#38BDF8'
         });
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -232,6 +231,45 @@ const ProfileSettings = () => {
                 <p className="text-[9px] md:text-[10px] text-slate-500 lowercase">Manage your blocked contacts</p>
               </div>
             </button>
+          </section>
+
+          <section className="glass rounded-xl md:rounded-2xl p-4 md:p-6 border border-slate-800/50">
+            <h3 className="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-6 flex items-center gap-2">
+              <Smile className="w-4 h-4 md:w-5 md:h-5 text-primary-400" />
+              Chat Appearance
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs md:text-sm font-medium text-slate-200">Message Tick Color</p>
+                  <p className="text-[9px] md:text-[10px] text-slate-500 lowercase">Choose the color for your message delivery status</p>
+                </div>
+                <input 
+                  type="color" 
+                  id="tick_color"
+                  value={formData.tick_color}
+                  onChange={handleChange}
+                  className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer"
+                  title="Choose tick color"
+                />
+              </div>
+              
+              <div className="flex gap-2 pt-2">
+                {['#38BDF8', '#2196f3', '#25D366', '#9C27B0', '#F43F5E', '#F59E0B'].map(color => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, tick_color: color }))}
+                    className={clsx(
+                      "w-8 h-8 rounded-full border-2 transition-all",
+                      formData.tick_color === color ? "border-white scale-110 shadow-lg" : "border-slate-800"
+                    )}
+                    style={{ backgroundColor: color }}
+                    title={`Select ${color}`}
+                  />
+                ))}
+              </div>
+            </div>
           </section>
 
           <div className="flex items-center gap-3 pt-3">

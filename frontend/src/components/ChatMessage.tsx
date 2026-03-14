@@ -73,8 +73,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   // Enhanced delivery status icons
   const DeliveryStatus = () => {
     if (!isMe) return null;
+    const tickColor = user?.tick_color || '#38BDF8';
+    
     if (message.delivery_status === 'read') {
-      return <CheckCheck className="w-3.5 h-3.5 text-blue-400 drop-shadow-sm" strokeWidth={3} />;
+      return (
+        <CheckCheck 
+          className="w-3.5 h-3.5 drop-shadow-sm" 
+          strokeWidth={3} 
+          style={{ color: tickColor }} 
+        />
+      );
     }
     if (message.delivery_status === 'sent') {
       return <Check className="w-3.5 h-3.5 text-white/60 drop-shadow-sm" strokeWidth={3} />;

@@ -38,6 +38,7 @@ export const register = async (req: Request, res: Response) => {
         student_id: user.student_id,
         department: user.department,
         level: user.level,
+        tick_color: user.tick_color,
         token: generateToken((user._id as any).toString()),
       });
     } else {
@@ -93,6 +94,7 @@ export const login = async (req: Request, res: Response) => {
         student_id: user.student_id,
         department: user.department,
         level: user.level,
+        tick_color: user.tick_color,
         token,
       });
     } else {
@@ -123,7 +125,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 };
 
 export const updateProfile = async (req: AuthRequest, res: Response) => {
-  const { name, department, level, profile_picture } = req.body;
+  const { name, department, level, profile_picture, tick_color } = req.body;
 
   try {
     const user = await User.findById(req.user.id);
@@ -133,6 +135,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
       user.department = department || user.department;
       user.level = level || user.level;
       user.profile_picture = profile_picture || user.profile_picture;
+      user.tick_color = tick_color || user.tick_color;
 
       const updatedUser = await user.save();
 
@@ -144,6 +147,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
         department: updatedUser.department,
         level: updatedUser.level,
         profile_picture: updatedUser.profile_picture,
+        tick_color: updatedUser.tick_color,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
