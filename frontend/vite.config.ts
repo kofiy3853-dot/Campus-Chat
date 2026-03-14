@@ -10,6 +10,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    target: 'es2015',
+    cssTarget: 'safari12', // Specifically target older Safari CSS
+  },
   server: {
     host: true,
     proxy: {
