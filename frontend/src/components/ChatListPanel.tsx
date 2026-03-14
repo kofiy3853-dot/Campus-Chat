@@ -130,10 +130,13 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       <div className="flex-1 overflow-y-auto px-2 md:px-3 pb-24 md:pb-6 space-y-0.5 md:space-y-1 scrollbar-hide">
         {filteredItems.map((item: any) => {
           const isGroup = activeTab === 'groups';
-          const otherParticipant = isGroup ? null : item.participants?.find((p: any) => p._id !== user?._id);
-          const name = isGroup ? item.group_name : otherParticipant?.name;
+          const participants = item.participants || [];
+          const otherParticipant = isGroup ? null : participants.find((p: any) => p?._id !== user?._id);
+          const name = isGroup ? item.group_name : (otherParticipant?.name || 'Unknown User');
           const avatar = isGroup ? null : otherParticipant?.profile_picture;
           const status = isGroup ? null : otherParticipant?.status;
+
+          if (!item._id) return null;
 
           return (
             <NavLink

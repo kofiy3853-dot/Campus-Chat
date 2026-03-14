@@ -15,6 +15,7 @@ const ChatWindow = () => {
   const { socket } = useSocket();
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [conversation, setConversation] = useState<any>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -31,30 +32,36 @@ const ChatWindow = () => {
     }
   }, [id, socket, user?._id]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        setLoading(true);
-        setSearchResults(null);
-        setIsSearchOpen(false);
-        const [msgRes, convRes] = await Promise.all([
-          api.get(`/api/chat/messages/${id}`),
-          api.get(`/api/chat/conversations`)
-        ]);
-        setMessages(msgRes.data);
-        const currentConv = convRes.data.find((c: any) => c._id === id);
-        setConversation(currentConv);
-        markAsRead();
-      } catch (err) {
-        console.error('Error fetching messages:', err);
-      } finally {
-        setLoading(false);
+  const fetchMessages = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setSearchResults(null);
+      setIsSearchOpen(false);
+      const [msgRes, convRes] = await Promise.all([
+        api.get(`/api/chat/messages/${id}`),
+        api.get(`/api/chat/conversations`)
+      ]);
+      setMessages(msgRes.data);
+      const currentConv = convRes.data.find((c: any) => c._id === id);
+      if (!currentConv) {
+        throw new Error('Conversation not found');
       }
-    };
+      setConversation(currentConv);
+      markAsRead();
+    } catch (err: any) {
+      console.error('Error fetching messages:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to load messages');
+    } finally {
+      setLoading(false);
+    }
+  }, [id, markAsRead]);
+
+  useEffect(() => {
     if (id && id !== 'null') {
       fetchMessages();
     }
-  }, [id, markAsRead]);
+  }, [id, fetchMessages]);
 
   useEffect(() => {
     if (!socket || !id || id === 'null') return;
@@ -157,6 +164,12 @@ const ChatWindow = () => {
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
     try {
       const otherParticipant = conversation?.participants.find((p: any) => p._id !== user?._id);
+      
+      if (!otherParticipant) {
+        console.error('Recipient not found');
+        return;
+      }
+
       const { data } = await api.post('/api/chat/send', {
         recipientId: otherParticipant._id,
         message_text: messageText,
@@ -216,10 +229,27 @@ const ChatWindow = () => {
     </div>
   );
 
+  if (error) return (
+    <div className="flex-1 flex flex-col items-center justify-center bg-white p-8 text-center">
+      <div className="w-20 h-20 bg-red-50 text-red-500 rounded-[2.5rem] flex items-center justify-center mb-6 border border-red-100">
+        <Loader2 className="w-10 h-10 animate-spin opacity-20" />
+      </div>
+      <h3 className="text-xl font-black text-slate-800 mb-2">Something went wrong</h3>
+      <p className="text-slate-400 max-w-[280px] mb-8">{error}</p>
+      <button 
+        onClick={() => fetchMessages()}
+        className="px-6 py-3 bg-sky-500 text-white rounded-2xl font-black shadow-lg shadow-sky-500/20 hover:scale-105 active:scale-95 transition-all"
+      >
+        Try Again
+      </button>
+    </div>
+  );
+
   if (loading) return (
     <div className="flex-1 flex items-center justify-center bg-white">
-      <div className="flex flex-col items-center gap-4 text-gray-400 font-medium">
-        Loading...
+      <div className="flex flex-col items-center gap-4 text-slate-400 font-bold uppercase tracking-widest text-xs">
+        <Loader2 className="w-8 h-8 animate-spin text-sky-500 mb-2" />
+        Loading Messages
       </div>
     </div>
   );

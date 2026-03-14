@@ -88,6 +88,7 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(message);
   } catch (error: any) {
+    console.error(`[ChatController] Error in sendMessage:`, error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -296,6 +297,11 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
   const { conversationId } = req.params;
 
   try {
+    if (!Types.ObjectId.isValid(conversationId)) {
+      console.error(`[ChatController] Invalid conversationId: ${conversationId}`);
+      return res.status(400).json({ message: 'Invalid conversation ID' });
+    }
+
     const result = await Message.updateMany(
       {
         conversation_id: new Types.ObjectId(conversationId as string),
@@ -307,7 +313,7 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
 
     res.json({ message: 'Messages marked as read', modifiedCount: result.modifiedCount });
   } catch (error: any) {
-    console.error('Error in markMessagesAsRead:', error);
+    console.error(`[ChatController] Error in markMessagesAsRead for ${conversationId}:`, error);
     res.status(500).json({ message: error.message });
   }
 };

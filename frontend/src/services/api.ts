@@ -26,4 +26,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Add interceptor for responses
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.warn('Session expired or unauthorized. Logging out...');
+      localStorage.removeItem('user');
+      // Force reload to trigger AuthContext logout/redirect if on a protected route
+      if (!window.location.pathname.startsWith('/login') && window.location.pathname !== '/') {
+        window.location.href = '/?expired=true';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

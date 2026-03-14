@@ -89,6 +89,8 @@ const FloatingActionMenu: React.FC = () => {
           <h3 className="text-xl font-black text-slate-800">Quick Actions</h3>
           <button 
             onClick={() => setIsOpen(false)}
+            title="Close"
+            aria-label="Close"
             className="p-2 bg-slate-50 rounded-full text-slate-400 hover:text-slate-600"
           >
             <X className="w-5 h-5" />
