@@ -257,26 +257,27 @@ const LandingDashboard: React.FC = () => {
           <div className="grid grid-cols-1 gap-3">
             {loading ? (
               [1, 2, 3].map((i) => <Skeleton key={i} className="h-16 rounded-2xl" />)
-            ) : (groups.length > 0 ? groups : [
-              { _id: 'mock-1', group_name: 'Computer Science Students', members: new Array(156).fill(0) },
-              { _id: 'mock-2', group_name: 'Level 200 Discussions', members: new Array(89).fill(0) },
-              { _id: 'mock-3', group_name: 'Campus Football Fans', members: new Array(245).fill(0) },
-              { _id: 'mock-4', group_name: 'Hostel Block A', members: new Array(120).fill(0) },
-              { _id: 'mock-5', group_name: 'Study Group', members: new Array(42).fill(0) },
-            ]).slice(0, 5).map((group) => (
-              <div key={group._id} onClick={() => navigate(`/dashboard/groups/${group._id}`)} className="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-3xl hover:border-orange-200 transition-all cursor-pointer shadow-sm group">
-                <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black text-lg group-hover:scale-110 transition-transform">
-                  {group.group_name[0]}
+            ) : groups.length > 0 ? (
+              groups.slice(0, 5).map((group) => (
+                <div key={group._id} onClick={() => navigate(`/dashboard/groups/${group._id}`)} className="flex items-center gap-4 p-4 bg-white border border-slate-100 rounded-3xl hover:border-orange-200 transition-all cursor-pointer shadow-sm group">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black text-lg group-hover:scale-110 transition-transform">
+                    {group.group_name[0]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-sm text-slate-800 truncate">{group.group_name}</h4>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{group.members?.length || 0} Members</p>
+                  </div>
+                  <button className="flex items-center gap-1 px-4 py-2 bg-orange-50 border border-orange-100 rounded-2xl text-[10px] font-black text-orange-600 hover:bg-orange-600 hover:text-white transition-all uppercase tracking-wider">
+                    Join
+                  </button>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-sm text-slate-800 truncate">{group.group_name}</h4>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{group.members?.length || 0} Members</p>
-                </div>
-                <button className="flex items-center gap-1 px-4 py-2 bg-orange-50 border border-orange-100 rounded-2xl text-[10px] font-black text-orange-600 hover:bg-orange-600 hover:text-white transition-all uppercase tracking-wider">
-                  Join
-                </button>
+              ))
+            ) : (
+              <div className="p-8 text-center bg-white border border-slate-100 rounded-3xl">
+                <Users className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                <p className="text-xs text-slate-400 font-medium">No popular groups available</p>
               </div>
-            ))}
+            )}
           </div>
         </section>
 

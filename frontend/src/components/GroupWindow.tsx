@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -10,10 +10,12 @@ import ChatInput from './ChatInput';
 
 const GroupWindow = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { socket } = useSocket();
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [group, setGroup] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -21,15 +23,18 @@ const GroupWindow = () => {
     const fetchGroupData = async () => {
       try {
         setLoading(true);
+        setError(null);
         const [msgRes, groupRes] = await Promise.all([
           api.get(`/api/groups/messages/${id}`),
           api.get(`/api/groups`)
         ]);
         setMessages(msgRes.data || []);
         const currentGroup = groupRes.data.find((g: any) => g._id === id);
+        if (!currentGroup) throw new Error('Group not found');
         setGroup(currentGroup);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching group data:', err);
+        setError(err.response?.data?.message || 'Failed to load group');
       } finally {
         setLoading(false);
       }
@@ -98,6 +103,20 @@ const GroupWindow = () => {
         <div className="flex flex-col items-center gap-4 text-gray-400 font-medium">
             Loading...
         </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
+        <Users className="w-16 h-16 mb-4 opacity-10" />
+        <h3 className="text-xl font-bold text-gray-800 mb-2">Oops!</h3>
+        <p className="max-w-xs text-center mb-6">{error}</p>
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className="px-6 py-2 bg-sky-500 text-white rounded-xl font-bold hover:bg-sky-600 transition-colors"
+        >
+          Back to Dashboard
+        </button>
     </div>
   );
 

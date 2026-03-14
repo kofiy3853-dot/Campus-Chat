@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import Group from '../models/Group';
 import Message from '../models/Message';
@@ -56,7 +57,13 @@ export const joinGroup = async (req: AuthRequest, res: Response) => {
 };
 
 export const getGroupMessages = async (req: AuthRequest, res: Response) => {
-  const { groupId } = req.params;
+  const { groupId: rawGroupId } = req.params;
+  const groupId = Array.isArray(rawGroupId) ? rawGroupId[0] : rawGroupId;
+
+  if (!mongoose.Types.ObjectId.isValid(groupId)) {
+    return res.status(400).json({ message: 'Invalid group ID format' });
+  }
+
   try {
     // Security check: Verify the user is a member of the group
     const group = await Group.findOne({
@@ -79,6 +86,11 @@ export const getGroupMessages = async (req: AuthRequest, res: Response) => {
 
 export const sendGroupMessage = async (req: any, res: Response) => {
   const { groupId, message_text, media_url } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(groupId)) {
+    return res.status(400).json({ message: 'Invalid group ID format' });
+  }
+
   try {
     const message = await GroupMessage.create({
       group_id: groupId,
