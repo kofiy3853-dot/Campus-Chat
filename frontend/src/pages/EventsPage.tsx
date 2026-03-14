@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Calendar, Plus, Filter, TrendingUp, Clock, Search, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
@@ -16,6 +17,8 @@ const EventsPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sort, setSort] = useState<'upcoming' | 'popular'>('upcoming');
   const [search, setSearch] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchEvents = async () => {
     setLoading(true);
@@ -29,10 +32,19 @@ const EventsPage: React.FC = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchEvents();
   }, [activeCategory, sort]);
+
+  // Check for compose query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('compose') === 'true') {
+      setShowCompose(true);
+      // Clean up URL
+      navigate('/dashboard/events', { replace: true });
+    }
+  }, [location.search, navigate]);
 
   const handleUpdateEvent = (updatedEvent: any) => {
     setEvents(events.map((e: any) => e._id === updatedEvent._id ? updatedEvent : e));

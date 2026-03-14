@@ -11,6 +11,7 @@ import EventsPage from '../pages/EventsPage';
 import PollsPage from '../pages/PollsPage';
 import LostFoundPage from '../pages/LostFoundPage';
 import LandingDashboard from '../components/LandingDashboard';
+import FloatingActionMenu from '../components/FloatingActionMenu';
 import { SocketProvider } from '../context/SocketContext';
 
 const Dashboard = () => {
@@ -39,6 +40,7 @@ const Dashboard = () => {
             <Route path="/" element={<LandingDashboard />} />
           </Routes>
         </main>
+        <FloatingActionMenu />
       </div>
     </SocketProvider>
   );

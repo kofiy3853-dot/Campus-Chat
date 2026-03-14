@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Ghost, Plus, Filter, TrendingUp, Clock, MessageSquare, ShieldAlert, PenLine, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +14,8 @@ const ConfessionsPage: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showCompose, setShowCompose] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const observer = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +49,16 @@ const ConfessionsPage: React.FC = () => {
     setHasMore(true);
     fetchConfessions(1, sort, true);
   }, [sort, fetchConfessions]);
+
+  // Check for compose query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('compose') === 'true') {
+      setShowCompose(true);
+      // Clean up URL
+      navigate('/dashboard/confessions', { replace: true });
+    }
+  }, [location.search, navigate]);
 
   // Infinite scroll observer
   useEffect(() => {
