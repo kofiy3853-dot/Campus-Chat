@@ -12,7 +12,8 @@ import {
   Calendar,
   BarChart3,
   Search,
-  Home
+  Home,
+  ShoppingBag
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { clsx } from 'clsx';
@@ -30,6 +31,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
     { icon: Search, label: 'Discover', to: '/dashboard/discover' },
+    { icon: ShoppingBag, label: 'Market', to: '/dashboard/marketplace' },
     { icon: MessageSquare, label: 'Chats', to: '/dashboard/chats' },
     { icon: Bell, label: 'Alerts', to: '/dashboard/notifications' },
     { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },

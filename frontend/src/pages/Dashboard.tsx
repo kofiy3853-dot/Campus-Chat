@@ -13,6 +13,7 @@ import LostFoundPage from '../pages/LostFoundPage';
 import LandingDashboard from '../components/LandingDashboard';
 import NotificationsPage from '../pages/NotificationsPage';
 import DiscoverPage from '../pages/DiscoverPage';
+import MarketplacePage from '../pages/MarketplacePage';
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { SocketProvider } from '../context/SocketContext';
 import { clsx } from 'clsx';
@@ -22,7 +23,7 @@ const Dashboard = () => {
   const isConversation = location.pathname.includes('/chat/') || (location.pathname.includes('/groups/') && !location.pathname.endsWith('/null') && location.pathname !== '/dashboard/groups');
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');
   const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
-  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/discover';
+  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/discover' || location.pathname === '/dashboard/marketplace';
 
   return (
     <SocketProvider>
@@ -49,6 +50,7 @@ const Dashboard = () => {
             <Route path="lost-found" element={<LostFoundPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="discover" element={<DiscoverPage />} />
+            <Route path="marketplace" element={<MarketplacePage />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
             <Route path="/" element={<LandingDashboard />} />
