@@ -33,7 +33,7 @@ router.post('/upload', protect, upload.single('file'), (req: AuthRequest, res: R
   if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
   const ext = path.extname(req.file.originalname).toLowerCase();
-  let type: 'image' | 'audio' | 'file' = 'file';
+  let type: 'image' | 'voice' | 'file' = 'file';
   if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) type = 'image';
   else if (['.mp3', '.ogg', '.wav', '.webm', '.m4a'].includes(ext)) type = 'voice';
 

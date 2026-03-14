@@ -4,12 +4,13 @@ import { getMessaging } from 'firebase/messaging';
 // Your web app's Firebase configuration
 // Replace these placeholders with your actual Firebase config values
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAgBukQdNz0y9MpMGc4q24C77VAMVUkJn8",
+  authDomain: "campus-chat-fcbcb.firebaseapp.com",
+  projectId: "campus-chat-fcbcb",
+  storageBucket: "campus-chat-fcbcb.firebasestorage.app",
+  messagingSenderId: "369950817039",
+  appId: "1:369950817039:web:81102cb3161c665b0e1c7a",
+  measurementId: "G-7DELY2NXVX"
 };
 
 // Initialize Firebase

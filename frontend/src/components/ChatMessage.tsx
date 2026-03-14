@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { clsx } from 'clsx';
-import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical, Paperclip, Clock } from 'lucide-react';
+import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical, Paperclip, Clock, Mic } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
