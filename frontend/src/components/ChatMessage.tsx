@@ -45,7 +45,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
   const myReactions = message.reactions?.filter((r: any) => {
     const rUserId = r.userId?._id || r.userId;
-    return rUserId?.toString() === user?.id?.toString();
+    return rUserId?.toString() === user?._id?.toString();
   }).map((r: any) => r.emoji) || [];
 
   const handleEdit = async () => {

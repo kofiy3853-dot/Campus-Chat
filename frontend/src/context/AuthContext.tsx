@@ -11,6 +11,7 @@ interface User {
   token: string;
   profile_picture?: string;
   status?: string;
+  tick_color?: string;
 }
 
 interface AuthContextType {

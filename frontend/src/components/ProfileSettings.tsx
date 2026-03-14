@@ -14,7 +14,9 @@ const ProfileSettings = () => {
   const [isBlockListOpen, setIsBlockListOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const [formData, setFormData] = useState({
+   const [formData, setFormData] = useState({
+    name: user?.name || '',
+    department: user?.department || '',
     level: user?.level || '300 Level',
     profile_picture: user?.profile_picture || '',
     tick_color: user?.tick_color || '#38BDF8'
@@ -26,6 +28,7 @@ const ProfileSettings = () => {
         const { data } = await api.get('/api/auth/profile');
         updateUser(data);
         setFormData({
+          name: data.name || '',
           department: data.department || '',
           level: data.level || '300 Level',
           profile_picture: data.profile_picture || '',
@@ -68,10 +71,10 @@ const ProfileSettings = () => {
     try {
       // 1. Upload profile picture if one is selected
       if (selectedFile) {
-        const formData = new FormData();
-        formData.append('image', selectedFile);
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', selectedFile);
         
-        const { data: uploadData } = await api.post('/api/auth/profile-picture', formData, {
+        const { data: uploadData } = await api.post('/api/auth/profile-picture', uploadFormData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
