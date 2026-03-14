@@ -133,10 +133,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
           {previewFile.type === 'image' && (
             <img src={previewFile.url} alt="preview" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shrink-0" />
           )}
-          {previewFile.type === 'audio' && (
+          {previewFile.type === 'voice' && (
             <audio controls src={previewFile.url} className="h-9 md:h-10 flex-1" />
           )}
-          {(previewFile.type === 'file' || !['image','audio'].includes(previewFile.type)) && (
+          {(previewFile.type === 'file' || !['image','voice'].includes(previewFile.type)) && (
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <Paperclip className="w-3.5 h-3.5 md:w-4 md:h-4 text-sky-400 shrink-0" />
               <span className="text-xs md:text-sm text-gray-700 truncate">{previewFile.name}</span>

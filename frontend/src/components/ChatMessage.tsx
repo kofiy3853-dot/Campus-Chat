@@ -142,9 +142,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                         className="max-h-80 object-cover w-full rounded-2xl transition-transform hover:scale-[1.02] duration-500"
                       />
                     </a>
-                  ) : message.message_type === 'audio' || message.media_url?.match(/\.(mp3|ogg|wav|webm|m4a)$/i) ? (
-                    <div className="p-3 bg-slate-50/50 backdrop-blur-sm">
-                      <audio controls src={getMediaUrl(message.media_url)} className="w-full h-10" />
+                  ) : (message.message_type === 'voice' || message.media_url?.match(/\.(mp3|ogg|wav|webm|m4a)$/i)) ? (
+                    <div className="p-4 bg-slate-50/50 backdrop-blur-sm flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0">
+                        <Mic className="w-5 h-5 text-sky-500" />
+                      </div>
+                      <audio 
+                        controls 
+                        src={getMediaUrl(message.media_url)} 
+                        className="flex-1 h-8 custom-audio-player" 
+                      />
                     </div>
                   ) : (
                     <a
