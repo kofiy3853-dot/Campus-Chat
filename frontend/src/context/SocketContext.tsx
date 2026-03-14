@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
+import { useToast } from './ToastContext';
+
 interface SocketContextType {
   socket: Socket | null;
   connected: boolean;
@@ -11,6 +13,7 @@ const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [connected, setConnected] = useState(false);
 
@@ -35,6 +38,16 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     newSocket.on('disconnect', () => {
       setConnected(false);
+    });
+
+    newSocket.on('notification', (data: any) => {
+        // Only show toast if it's not a message from self (though server doesn't send such)
+        // and if it's a new real-time event.
+        showToast(
+            data.type === 'message' ? 'message' : 'info',
+            data.title,
+            data.body
+        );
     });
 
     setSocket(newSocket);

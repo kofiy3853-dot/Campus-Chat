@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import { ToastProvider } from './context/ToastContext';
 import './App.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -18,7 +19,8 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
+        <ToastProvider>
+          <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -33,6 +35,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Routes>
         </div>
+        </ToastProvider>
       </AuthProvider>
     </Router>
   );
