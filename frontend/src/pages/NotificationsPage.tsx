@@ -162,6 +162,7 @@ const NotificationsPage: React.FC = () => {
       <header className="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-slate-100 px-4 py-4 flex items-center gap-4 z-10 shrink-0">
         <button 
           onClick={() => navigate('/dashboard')}
+          title="Back to Dashboard"
           className="p-2 hover:bg-slate-50 rounded-xl text-slate-400 hover:text-sky-500 transition-colors"
         >
           <ChevronLeft className="w-6 h-6" />

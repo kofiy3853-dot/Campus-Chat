@@ -8,6 +8,7 @@ import Skeleton from './Skeleton';
 import UserSearchModal from './UserSearchModal';
 import NotificationCenter from './NotificationCenter';
 import { getMediaUrl } from '../utils/imageUrl';
+import CreateGroupModal from './CreateGroupModal';
 
 interface ChatListPanelProps {
   className?: string;
@@ -20,6 +21,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,8 +78,14 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
           <div className="flex gap-2 items-center">
             <NotificationCenter />
             <button 
-              onClick={() => setIsSearchOpen(true)}
-              title="New Chat" 
+              onClick={() => {
+                if (activeTab === 'groups') {
+                  setIsCreateGroupOpen(true);
+                } else {
+                  setIsSearchOpen(true);
+                }
+              }}
+              title={activeTab === 'groups' ? "Create Group" : "New Chat"} 
               className="p-1.5 md:p-2 bg-gray-50 border border-gray-100 rounded-xl text-sky-500 hover:bg-gray-100 shadow-sm transition-colors"
             >
               <Plus className="w-5 h-5 md:w-5 md:h-5" />
@@ -202,6 +210,11 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       <UserSearchModal 
         isOpen={isSearchOpen} 
         onClose={() => setIsSearchOpen(false)} 
+      />
+
+      <CreateGroupModal 
+        isOpen={isCreateGroupOpen}
+        onClose={() => setIsCreateGroupOpen(false)}
       />
     </div>
   );
