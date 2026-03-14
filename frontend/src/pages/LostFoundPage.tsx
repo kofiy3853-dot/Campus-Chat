@@ -110,7 +110,7 @@ const LostFoundPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white px-3 md:px-6 py-4 md:py-8 transition-none">
+    <div className="h-full overflow-y-auto bg-white px-3 md:px-6 py-4 md:py-8 transition-none scrollbar-hide">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-5 md:mb-8">

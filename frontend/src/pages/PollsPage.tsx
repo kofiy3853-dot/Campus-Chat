@@ -101,7 +101,7 @@ const PollsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 p-3 md:p-6">
+    <div className="h-full overflow-y-auto bg-slate-950 p-3 md:p-6 scrollbar-hide">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-5 md:mb-8">

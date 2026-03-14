@@ -90,7 +90,7 @@ const LandingDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC] text-[#1E293B]">
+    <div className="flex flex-col h-full bg-[#F8FAFC] text-[#1E293B] overflow-y-auto scrollbar-hide">
       {/* Top Header */}
       <header className="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-slate-100 px-6 py-4 flex items-center justify-between z-40">
         <div className="flex flex-col">
