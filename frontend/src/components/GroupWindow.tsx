@@ -126,17 +126,25 @@ const GroupWindow = () => {
                 <p className="text-sm font-medium opacity-60">This is the beginning of the {group?.group_name || 'shared'} story.</p>
             </div>
             
-            {messages.map((msg, index) => (
-                <div key={msg._id || index} className="group/msg relative">
-                    {! (msg.sender_id._id === user?._id || msg.sender_id === user?._id) && (
-                        <span className="text-[10px] font-bold text-slate-500 ml-4 mb-0.5 block uppercase tracking-wider">{msg.sender_id?.name}</span>
-                    )}
-                    <ChatMessage 
-                        message={msg} 
-                        isMe={msg.sender_id._id === user?._id || msg.sender_id === user?._id} 
-                    />
-                </div>
-            ))}
+            {messages.map((msg, index) => {
+                const senderId = typeof msg.sender_id === 'object' ? msg.sender_id?._id : msg.sender_id;
+                const isMe = senderId === user?._id;
+                const senderName = typeof msg.sender_id === 'object' ? msg.sender_id?.name : 'User';
+
+                return (
+                    <div key={msg._id || index} className="group/msg relative">
+                        {!isMe && (
+                            <span className="text-[10px] font-bold text-slate-500 ml-4 mb-0.5 block uppercase tracking-wider">
+                                {senderName}
+                            </span>
+                        )}
+                        <ChatMessage 
+                            message={msg} 
+                            isMe={isMe} 
+                        />
+                    </div>
+                );
+            })}
             <div ref={messagesEndRef} />
         </div>
       </div>

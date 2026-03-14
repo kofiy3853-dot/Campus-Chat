@@ -86,13 +86,17 @@ export const sendGroupMessage = async (req: any, res: Response) => {
       message_text,
       media_url,
     });
+
+    // Populate sender info for real-time broadcast
+    const populatedMessage = await GroupMessage.findById(message._id)
+      .populate('sender_id', 'name profile_picture');
     
     await Group.findByIdAndUpdate(groupId, {
       last_message: message._id,
       last_message_time: new Date(),
     });
 
-    res.status(201).json(message);
+    res.status(201).json(populatedMessage);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -121,7 +125,7 @@ export const searchGroups = async (req: AuthRequest, res: Response) => {
         { group_name: { $regex: query, $options: 'i' } },
         { description: { $regex: query, $options: 'i' } },
       ],
-    }).populate('members', 'name profile_picture');
+    } as any).populate('members', 'name profile_picture');
 
     res.json(groups);
   } catch (error: any) {
