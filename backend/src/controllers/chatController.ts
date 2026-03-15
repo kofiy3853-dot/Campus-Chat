@@ -249,7 +249,7 @@ export const editMessage = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// Delete message (soft delete)
+// Delete message (hard delete)
 export const deleteMessage = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
 
@@ -264,11 +264,9 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You can only delete your own messages' });
     }
 
-    message.is_deleted = true;
-    message.deleted_at = new Date();
-    await message.save();
+    await Message.findByIdAndDelete(messageId);
 
-    res.json({ message: 'Message deleted' });
+    res.json({ success: true, message: 'Message deleted' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

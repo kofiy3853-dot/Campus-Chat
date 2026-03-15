@@ -227,11 +227,14 @@ const ChatWindow = () => {
     ));
   };
 
-  const onDelete = (messageId: string) => {
-    socket?.emit('message_deleted', { messageId, roomId: id });
-    setMessages(prev => prev.map(m => 
-      m._id === messageId ? { ...m, is_deleted: true, message_text: '[Message deleted]' } : m
-    ));
+  const onDelete = async (messageId: string) => {
+    try {
+      await api.delete(`/chat/messages/${messageId}`);
+      setMessages(prev => prev.filter(m => m._id !== messageId));
+      socket?.emit('message_deleted', { messageId, roomId: id });
+    } catch (err: any) {
+      console.error('Delete message error:', err);
+    }
   };
 
   if (!id || id === 'null') return (
