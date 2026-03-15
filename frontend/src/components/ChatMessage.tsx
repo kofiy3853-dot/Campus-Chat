@@ -94,7 +94,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   return (
     <div
       className={clsx(
-        "flex w-full mb-6 px-1 md:px-2 transition-all duration-300",
+        "flex w-full mb-1 px-1 md:px-2 transition-all duration-300",
         isMe ? "justify-end" : "justify-start"
       )}
     >
@@ -106,7 +106,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
       
       <div 
         className={clsx(
-          "max-w-[85%] md:max-w-[70%] group relative transform-gpu transition-all duration-300",
+          "max-w-[70%] group relative transform-gpu transition-all duration-300",
           isMe ? "flex flex-col items-end" : "flex flex-col items-start"
         )}
         onContextMenu={(e) => {
@@ -128,7 +128,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         )}
 
         <div className={clsx(
-          "px-5 py-3.5 rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300",
+          "px-[14px] py-[10px] rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300",
           isMe 
             ? "bg-gradient-to-br from-sky-400 to-sky-500 text-white rounded-br-md hover:shadow-sky-200/50" 
             : "bg-white text-slate-700 rounded-bl-md border border-slate-100/50 hover:shadow-slate-300/50"
