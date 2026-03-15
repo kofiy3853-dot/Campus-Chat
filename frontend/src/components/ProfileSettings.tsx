@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 import api from '../services/api';
 import BlockList from './BlockList';
+import ChangePasswordModal from './ChangePasswordModal';
 import { getMediaUrl } from '../utils/imageUrl';
 
 import { compressImage } from '../utils/imageCompression';
@@ -15,6 +16,7 @@ const ProfileSettings = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isBlockListOpen, setIsBlockListOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
    const [formData, setFormData] = useState({
@@ -217,7 +219,9 @@ const ProfileSettings = () => {
               <Shield className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Security & Preferences
             </h3>
-            <button className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 text-left group transition-all border border-transparent hover:border-slate-100">
+            <button 
+              onClick={() => setIsPasswordModalOpen(true)}
+              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 text-left group transition-all border border-transparent hover:border-slate-100">
               <div className="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 transition-colors">
                 <Lock className="w-5 h-5 text-sky-500" />
               </div>
@@ -302,7 +306,11 @@ const ProfileSettings = () => {
         </div>
       </div>
       
-      {/* BlockList Modal */}
+      {/* Modals */}
+      <ChangePasswordModal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => setIsPasswordModalOpen(false)} 
+      />
       {isBlockListOpen && (
         <BlockList onClose={() => setIsBlockListOpen(false)} />
       )}

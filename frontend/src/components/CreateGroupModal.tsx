@@ -64,7 +64,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
     setCreating(true);
     try {
       const memberIds = selectedMembers.map((m) => m._id);
-      const { data } = await api.post('/api/groups', {
+      const { data } = await api.post('/api/groups/create', {
         group_name: groupName,
         description,
         members: memberIds,

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, MapPin, GraduationCap, Clock, Mail, Users, MessageSquare } from 'lucide-react';
+import { X, User, MapPin, GraduationCap, Clock, Mail, Users, MessageSquare, Shield, ShieldOff, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
 import { formatLastSeen } from '../utils/time';
+import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
 interface ProfileViewProps {
@@ -14,17 +15,23 @@ interface ProfileViewProps {
 }
 
 const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, isGroup, groupData }) => {
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user: currentUser } = useAuth();
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [blockLoading, setBlockLoading] = useState(false);
 
   useEffect(() => {
     if (!isOpen || isGroup) return;
 
-    const fetchProfile = async () => {
+    const fetchProfileAndBlockStatus = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get(`/api/auth/profile/${targetId}`);
-        setProfile(data);
+        const [profileRes, blockRes] = await Promise.all([
+          api.get(`/api/auth/profile/${targetId}`),
+          api.get('/api/chat/blocked-users')
+        ]);
+        setProfile(profileRes.data);
+        const isUserBlocked = blockRes.data.some((u: any) => u._id === targetId);
+        setIsBlocked(isUserBlocked);
       } catch (err) {
         console.error('Error fetching user profile:', err);
       } finally {
@@ -32,8 +39,20 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
       }
     };
 
-    fetchProfile();
+    fetchProfileAndBlockStatus();
   }, [isOpen, targetId, isGroup]);
+
+  const handleBlockToggle = async () => {
+    try {
+      setBlockLoading(true);
+      await api.post(`/api/chat/block/${targetId}`);
+      setIsBlocked(!isBlocked);
+    } catch (error) {
+      console.error('Error toggling block status:', error);
+    } finally {
+      setBlockLoading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -155,7 +174,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
               </div>
             </div>
 
-            <div className="pt-6 border-t border-slate-50">
+            <div className="pt-6 border-t border-slate-50 space-y-3">
               <button 
                 onClick={onClose}
                 className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-slate-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
@@ -163,6 +182,33 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
                 <MessageSquare className="w-4 h-4" />
                 Return to Chat
               </button>
+
+              {!isGroup && currentUser?._id !== targetId && (
+                <button 
+                  onClick={handleBlockToggle}
+                  disabled={blockLoading}
+                  className={clsx(
+                    "w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[11px] transition-all flex items-center justify-center gap-2 border shadow-sm",
+                    isBlocked 
+                      ? "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100" 
+                      : "bg-red-50 text-red-600 border-red-100 hover:bg-red-50 shadow-red-500/10 hover:border-red-200"
+                  )}
+                >
+                  {blockLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isBlocked ? (
+                    <>
+                      <ShieldOff className="w-4 h-4" />
+                      Unblock User
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-4 h-4" />
+                      Block User
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>

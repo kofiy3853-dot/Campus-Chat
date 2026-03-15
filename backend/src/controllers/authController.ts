@@ -228,3 +228,30 @@ export const getUserProfile = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const changePassword = async (req: AuthRequest, res: Response) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: 'Current and new passwords are required' });
+  }
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect current password' });
+    }
+
+    user.password_hash = newPassword; // the pre-save hook will hash it
+    await user.save();
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
