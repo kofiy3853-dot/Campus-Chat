@@ -145,6 +145,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
           </div>
           <button 
             onClick={onCancelEdit}
+            aria-label="Cancel editing"
+            title="Cancel editing"
             className="p-1 hover:bg-amber-100 rounded-lg text-amber-500 transition-colors"
           >
             <X className="w-4 h-4" />
