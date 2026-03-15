@@ -112,7 +112,6 @@ export const getGroupMessages = async (req: AuthRequest, res: Response) => {
 
     const messages = await GroupMessage.find({ 
       group_id: groupId,
-      is_deleted: { $ne: true }
     })
       .populate('sender_id', 'name profile_picture')
       .sort({ timestamp: -1 })
@@ -297,12 +296,12 @@ export const markGroupMessagesAsRead = async (req: AuthRequest, res: Response) =
   }
 };
 
-// Delete group message (soft delete)
+// Delete group message (hard delete)
 export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
-  const { messageId } = req.params;
+  const { id } = req.params;
 
   try {
-    const message = await GroupMessage.findById(messageId);
+    const message = await GroupMessage.findById(id);
 
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -312,11 +311,8 @@ export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You can only delete your own messages' });
     }
 
-    // Soft delete
-    await GroupMessage.findByIdAndUpdate(messageId, {
-      is_deleted: true,
-      deleted_at: new Date()
-    });
+    // Hard delete
+    await GroupMessage.findByIdAndDelete(id);
 
     // Broadcast deletion
     io.to(message.group_id.toString()).emit('group_message_deleted', {
@@ -324,9 +320,9 @@ export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
       roomId: message.group_id.toString()
     });
 
-    res.json({ success: true, message: 'Message deleted' });
+    res.json({ success: true, message: 'Message deleted successfully' });
   } catch (error: any) {
-    console.error(`[GroupController] Error deleting message ${messageId}:`, error.message);
+    console.error(`[GroupController] Error deleting message ${id}:`, error.message);
     res.status(500).json({ message: error.message });
   }
 };

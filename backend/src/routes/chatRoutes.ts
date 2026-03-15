@@ -48,7 +48,7 @@ router.get('/messages/:conversationId', protect, getMessages);
 router.post('/send', protect, messageRateLimiter, sendMessage);
 router.get('/search', protect, searchRateLimiter, searchMessages);
 router.put('/messages/:messageId', protect, editMessage);
-router.delete('/messages/:messageId', protect, deleteMessage);
+router.delete('/messages/:id', protect, deleteMessage);
 router.post('/messages/:messageId/reaction', protect, addMessageReaction);
 router.post('/block/:userId', protect, blockUser);
 router.get('/blocked-users', protect, getBlockedUsers);

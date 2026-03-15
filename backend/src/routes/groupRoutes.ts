@@ -23,6 +23,6 @@ router.post('/join', protect, joinGroup);
 router.get('/messages/:groupId', protect, getGroupMessages);
 router.post('/send', protect, sendGroupMessage);
 router.post('/messages/:groupId/read', protect, markGroupMessagesAsRead);
-router.delete('/messages/:messageId', protect, deleteGroupMessage);
+router.delete('/messages/:id', protect, deleteGroupMessage);
 
 export default router;

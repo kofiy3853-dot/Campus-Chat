@@ -113,7 +113,6 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
 
     const messages = await Message.find({ 
       conversation_id: conversationId,
-      is_deleted: { $ne: true }
     })
       .populate('sender_id', 'name profile_picture')
       .sort({ timestamp: -1 })
@@ -230,7 +229,6 @@ export const searchMessages = async (req: AuthRequest, res: Response) => {
 
     const searchFilter: any = {
       conversation_id: conversationId,
-      is_deleted: { $ne: true },
     };
 
     if (query) {
@@ -280,10 +278,10 @@ export const editMessage = async (req: AuthRequest, res: Response) => {
 
 // Delete message (hard delete)
 export const deleteMessage = async (req: AuthRequest, res: Response) => {
-  const { messageId } = req.params;
+  const { id } = req.params;
 
   try {
-    const message = await Message.findById(messageId);
+    const message = await Message.findById(id);
 
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -293,9 +291,7 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You can only delete your own messages' });
     }
 
-    message.is_deleted = true;
-    message.deleted_at = new Date();
-    await message.save();
+    await Message.findByIdAndDelete(id);
 
     // Broadcast deletion
     io.to(message.conversation_id.toString()).emit('message_deleted', {
@@ -303,7 +299,7 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
       roomId: message.conversation_id.toString()
     });
 
-    res.json({ success: true, message: 'Message deleted' });
+    res.json({ success: true, message: 'Message deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
