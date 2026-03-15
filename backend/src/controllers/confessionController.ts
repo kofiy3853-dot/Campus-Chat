@@ -158,8 +158,8 @@ export const deleteConfession = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'Unauthorized.' });
     }
 
-    await Confession.findByIdAndUpdate(req.params.id, { isDeleted: true });
-    res.json({ message: 'Confession deleted.' });
+    await Confession.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Confession deleted successfully.' });
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
