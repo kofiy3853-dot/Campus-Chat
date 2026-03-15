@@ -64,15 +64,18 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: File, explicitType?: 'voice' | 'image' | 'file') => {
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
       const { data } = await api.post('/api/chat/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+      setPreviewFile({ 
+        url: data.url, 
+        type: explicitType || data.type, 
+        name: file.name 
       });
-      setPreviewFile({ url: data.url, type: data.type, name: file.name });
     } catch {
       alert('Upload failed. Please try again.');
     } finally {
@@ -141,7 +144,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
         const extension = mimeType.split('/')[1].split(';')[0] || 'webm';
         const file = new File([blob], `voice-${Date.now()}.${extension}`, { type: mimeType });
         stream.getTracks().forEach(t => t.stop());
-        await uploadFile(file);
+        await uploadFile(file, 'voice');
       };
       recorder.start();
       mediaRecorderRef.current = recorder;

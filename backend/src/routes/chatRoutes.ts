@@ -35,7 +35,7 @@ router.post('/upload', protect, upload.single('file'), (req: AuthRequest, res: R
   const ext = path.extname(req.file.originalname).toLowerCase();
   let type: 'image' | 'voice' | 'file' = 'file';
   if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) type = 'image';
-  else if (['.mp3', '.ogg', '.wav', '.webm', '.m4a'].includes(ext)) type = 'voice';
+  else if (['.mp3', '.ogg', '.wav', '.webm', '.m4a', '.mp4', '.aac'].includes(ext)) type = 'voice';
 
   const url = `/uploads/media/${req.file.filename}`;
   res.json({ url, type, originalName: req.file.originalname });
