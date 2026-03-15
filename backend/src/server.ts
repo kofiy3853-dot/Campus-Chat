@@ -108,7 +108,7 @@ io.on('connection', async (socket) => {
     socket.join(`notification:${uId}`);
 
     // Update DB
-    User.findByIdAndUpdate(uId, { status: 'online', last_seen: new Date() }, { new: true }).then(user => {
+    User.findByIdAndUpdate(uId, { status: 'online', last_seen: new Date() }, { returnDocument: 'after' }).then(user => {
         if (user) {
             io.emit('user_status_change', { userId: uId, status: 'online', last_seen: user.last_seen });
         }
@@ -218,7 +218,7 @@ io.on('connection', async (socket) => {
           
           // Mark offline in DB
           const now = new Date();
-          User.findByIdAndUpdate(userId, { status: 'offline', last_seen: now }, { new: true }).then(user => {
+          User.findByIdAndUpdate(userId, { status: 'offline', last_seen: now }, { returnDocument: 'after' }).then(user => {
               if (user) {
                   io.emit('user_status_change', { userId, status: 'offline', last_seen: user.last_seen });
               }

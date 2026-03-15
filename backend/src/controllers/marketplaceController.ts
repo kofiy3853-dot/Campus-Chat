@@ -67,7 +67,7 @@ export const updateListingStatus = async (req: AuthRequest, res: Response) => {
     const item = await MarketplaceItem.findOneAndUpdate(
       { _id: id, seller_id: req.user.id },
       { status },
-      { new: true }
+      { returnDocument: 'after' }
     ).populate('seller_id', 'name profile_picture status');
 
     if (!item) return res.status(404).json({ message: 'Listing not found or unauthorized' });
