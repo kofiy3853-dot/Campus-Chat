@@ -11,16 +11,54 @@ interface UnreadContextType {
   refreshUnreadCount: () => void;
 }
 
+// Global AudioContext must be unlocked by a user gesture on mobile
+let globalAudioCtx: any = null;
+let audioUnlocked = false;
+
+if (typeof window !== 'undefined') {
+  const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+  if (AudioContextClass) {
+    globalAudioCtx = new AudioContextClass();
+  }
+}
+
+const unlockAudio = () => {
+  if (audioUnlocked || !globalAudioCtx) return;
+  try {
+    // Play silent buffer to unlock the audio instance (Fixes iOS Safari/Mobile Chrome)
+    const buffer = globalAudioCtx.createBuffer(1, 1, 22050);
+    const source = globalAudioCtx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(globalAudioCtx.destination);
+    source.start(0);
+    if (globalAudioCtx.state === 'suspended') {
+      globalAudioCtx.resume();
+    }
+    audioUnlocked = true;
+  } catch (e) {
+    console.warn("Failed to unlock audio context", e);
+  } finally {
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('click', unlockAudio);
+  }
+};
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+  document.addEventListener('click', unlockAudio, { once: true });
+}
+
 const playNotificationSound = () => {
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    if (!globalAudioCtx) return;
+    if (globalAudioCtx.state === 'suspended') {
+      globalAudioCtx.resume();
+    }
     
     // Create a smooth, pleasant double chime ("Ding-Ding")
     const playTone = (freq: number, startTime: number, duration: number) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+      const osc = globalAudioCtx.createOscillator();
+      const gain = globalAudioCtx.createGain();
       
       osc.type = 'sine';
       osc.frequency.value = freq;
@@ -31,14 +69,14 @@ const playNotificationSound = () => {
       gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
       
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(globalAudioCtx.destination);
       
       osc.start(startTime);
       osc.stop(startTime + duration);
     };
 
-    playTone(1318.51, ctx.currentTime, 0.4); // E6
-    playTone(1760.00, ctx.currentTime + 0.15, 0.6); // A6
+    playTone(1318.51, globalAudioCtx.currentTime, 0.4); // E6
+    playTone(1760.00, globalAudioCtx.currentTime + 0.15, 0.6); // A6
   } catch (err) {
     console.log("Audio playback failed:", err);
   }
