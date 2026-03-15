@@ -105,20 +105,20 @@ const ProfileSettings = () => {
   };
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto bg-slate-950 p-4 md:p-6 pb-32 md:pb-32">
+    <div className="flex-1 min-h-[100dvh] overflow-y-auto bg-slate-50/50 p-4 md:p-6 pb-32 md:pb-32">
       <div className="max-w-2xl mx-auto">
-        <header className="mb-6 md:mb-10 text-center relative">
+        <header className="mb-6 md:mb-10 text-center relative mt-2 md:mt-0">
           <button 
             onClick={() => window.history.back()}
-            className="md:hidden absolute left-0 top-0 p-2 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl"
+            className="md:hidden absolute left-0 top-0 p-2 text-slate-400 hover:text-sky-600 hover:bg-white rounded-xl shadow-sm border border-slate-100 transition-all"
             aria-label="Back"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          <div className="relative inline-block group mb-4 md:mb-6">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden border-4 border-slate-900 shadow-2xl relative">
+          <div className="relative inline-block group mb-4 md:mb-6 mt-6 md:mt-0">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] overflow-hidden border-4 border-white shadow-xl shadow-sky-900/10 relative bg-slate-100">
               <img 
-                src={previewUrl || getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} 
+                src={previewUrl || getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=0ea5e9&color=fff`} 
                 className="w-full h-full object-cover" 
                 alt="Profile Preview" 
               />
@@ -135,68 +135,68 @@ const ProfileSettings = () => {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 aria-label="Upload profile picture"
-                className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer border-none"
+                className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer border-none transition-opacity"
               >
                 <Camera className="text-white w-6 h-6 md:w-8 md:h-8" />
               </button>
             </div>
-            <div className="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2 bg-primary-600 p-1.5 md:p-2 rounded-lg md:rounded-xl border-4 border-slate-950 text-white select-none pointer-events-none">
+            <div className="absolute -bottom-2 -right-2 bg-sky-500 p-2 md:p-2.5 rounded-xl md:rounded-2xl border-4 border-slate-50 text-white select-none pointer-events-none shadow-lg shadow-sky-500/20">
               <Camera className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </div>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">{user?.name}</h2>
-          <p className="text-slate-400 mt-0.5 text-xs md:text-base">{user?.student_id}</p>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">{user?.name}</h2>
+          <p className="text-slate-500 mt-1 text-xs md:text-sm font-medium tracking-wide">{user?.student_id}</p>
         </header>
 
         <div className="space-y-4 md:space-y-6">
-          <section className="glass rounded-xl md:rounded-2xl p-4 md:p-6 border border-slate-800/50">
-            <h3 className="text-base md:text-lg font-semibold text-slate-200 mb-4 md:mb-6 flex items-center gap-2">
-              <User className="w-4 h-4 md:w-5 md:h-5 text-primary-400" />
+          <section className="bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
+            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-5 md:mb-8 flex items-center gap-2">
+              <User className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Personal Information
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div className="space-y-1.5 md:space-y-2">
-                <label htmlFor="name" className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Full Name</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+              <div className="space-y-2">
+                <label htmlFor="name" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
                 <input 
                   id="name"
                   type="text" 
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Your full name"
-                  className="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-2.5 md:py-3 px-4 text-sm md:text-base text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all font-medium"
                 />
               </div>
-              <div className="space-y-1.5 md:space-y-2">
-                <label htmlFor="email" className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Email</label>
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
                 <input 
                   id="email"
                   type="email" 
                   defaultValue={user?.email}
                   readOnly
                   placeholder="Your email address"
-                  className="w-full bg-slate-900/10 border border-slate-800/50 rounded-xl py-2.5 md:py-3 px-4 text-sm md:text-base text-slate-500 cursor-not-allowed outline-none"
+                  className="w-full bg-slate-100/50 border border-slate-200/50 rounded-xl py-3 px-4 text-sm md:text-base text-slate-400 cursor-not-allowed outline-none font-medium"
                 />
               </div>
-              <div className="space-y-1.5 md:space-y-2">
-                <label htmlFor="department" className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Department</label>
+              <div className="space-y-2">
+                <label htmlFor="department" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Department</label>
                 <input 
                   id="department"
                   type="text" 
                   value={formData.department}
                   onChange={handleChange}
                   placeholder="Your department"
-                  className="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-2.5 md:py-3 px-4 text-sm md:text-base text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all font-medium"
                 />
               </div>
-              <div className="space-y-1.5 md:space-y-2">
-                <label htmlFor="level" className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Level</label>
+              <div className="space-y-2">
+                <label htmlFor="level" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Study Level</label>
                 <select 
                   id="level"
                   value={formData.level}
                   onChange={handleChange}
                   aria-label="Select study level"
-                  className="w-full bg-slate-900/50 border border-slate-800 rounded-xl py-2.5 md:py-3 px-4 text-sm md:text-base text-slate-200 focus:ring-1 focus:ring-primary-500 outline-none appearance-none"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none appearance-none transition-all font-medium cursor-pointer"
                 >
                   <option value="100 Level">100 Level</option>
                   <option value="200 Level">200 Level</option>
@@ -208,65 +208,67 @@ const ProfileSettings = () => {
             </div>
           </section>
 
-          <section className="glass rounded-xl md:rounded-2xl p-4 md:p-6 border border-slate-800/50">
-            <h3 className="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-6 flex items-center gap-2">
-              <Shield className="w-4 h-4 md:w-5 md:h-5 text-primary-400" />
+          <section className="bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
+            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 flex items-center gap-2">
+              <Shield className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Security & Preferences
             </h3>
-            <button className="flex items-center gap-3 w-full p-3 md:p-4 rounded-xl hover:bg-slate-800 text-left group transition-colors">
-              <div className="p-2 bg-slate-900 rounded-lg group-hover:bg-primary-500/10">
-                <Lock className="w-4 h-4 md:w-5 md:h-5 text-slate-500 group-hover:text-primary-400" />
+            <button className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 text-left group transition-all border border-transparent hover:border-slate-100">
+              <div className="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 transition-colors">
+                <Lock className="w-5 h-5 text-sky-500" />
               </div>
               <div className="flex-1">
-                <p className="text-xs md:text-sm font-medium text-slate-200">Change Password</p>
-                <p className="text-[9px] md:text-[10px] text-slate-500 lowercase">Update your account password</p>
+                <p className="text-sm font-bold text-slate-800">Change Password</p>
+                <p className="text-[11px] font-medium text-slate-500 tracking-wide mt-0.5">Update your secure login credentials</p>
               </div>
             </button>
 
             <button 
               onClick={() => setIsBlockListOpen(true)}
-              className="flex items-center gap-3 w-full p-3 md:p-4 rounded-xl hover:bg-slate-800 text-left group mt-1 transition-colors"
+              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 text-left group transition-all border border-transparent hover:border-slate-100 mt-2"
             >
-              <div className="p-2 bg-slate-900 rounded-lg group-hover:bg-primary-500/10">
-                <Shield className="w-4 h-4 md:w-5 md:h-5 text-slate-500 group-hover:text-primary-400" />
+              <div className="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 transition-colors">
+                <Shield className="w-5 h-5 text-sky-500" />
               </div>
               <div className="flex-1">
-                <p className="text-xs md:text-sm font-medium text-slate-200">Blocked Users</p>
-                <p className="text-[9px] md:text-[10px] text-slate-500 lowercase">Manage your blocked contacts</p>
+                <p className="text-sm font-bold text-slate-800">Blocked Users</p>
+                <p className="text-[11px] font-medium text-slate-500 tracking-wide mt-0.5">Manage your restricted contacts</p>
               </div>
             </button>
           </section>
 
-          <section className="glass rounded-xl md:rounded-2xl p-4 md:p-6 border border-slate-800/50">
-            <h3 className="text-base md:text-lg font-semibold text-slate-200 mb-3 md:mb-6 flex items-center gap-2">
-              <Smile className="w-4 h-4 md:w-5 md:h-5 text-primary-400" />
+          <section className="bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
+            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 flex items-center gap-2">
+              <Smile className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Chat Appearance
             </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                 <div>
-                  <p className="text-xs md:text-sm font-medium text-slate-200">Message Tick Color</p>
-                  <p className="text-[9px] md:text-[10px] text-slate-500 lowercase">Choose the color for your message delivery status</p>
+                  <p className="text-sm font-bold text-slate-800">Delivery Status Color</p>
+                  <p className="text-[11px] font-medium text-slate-500 tracking-wide mt-0.5">Personalize your message double-ticks</p>
                 </div>
-                <input 
-                  type="color" 
-                  id="tick_color"
-                  value={formData.tick_color}
-                  onChange={handleChange}
-                  className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer"
-                  title="Choose tick color"
-                />
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm">
+                  <input 
+                    type="color" 
+                    id="tick_color"
+                    value={formData.tick_color}
+                    onChange={handleChange}
+                    className="absolute -top-2 -left-2 w-16 h-16 cursor-pointer"
+                    title="Choose tick color"
+                  />
+                </div>
               </div>
               
-              <div className="flex gap-2 pt-2">
-                {['#38BDF8', '#2196f3', '#25D366', '#9C27B0', '#F43F5E', '#F59E0B'].map(color => (
+              <div className="flex flex-wrap gap-3 pt-2">
+                {['#0EA5E9', '#3B82F6', '#10B981', '#8B5CF6', '#F43F5E', '#F59E0B'].map(color => (
                   <button
                     key={color}
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, tick_color: color }))}
                     className={clsx(
-                      "w-8 h-8 rounded-full border-2 transition-all",
-                      formData.tick_color === color ? "border-white scale-110 shadow-lg" : "border-slate-800"
+                      "w-10 h-10 rounded-xl shadow-sm transition-all duration-300",
+                      formData.tick_color === color ? "scale-110 shadow-md ring-4 ring-offset-2 ring-slate-100" : "hover:scale-105"
                     )}
                     style={{ backgroundColor: color }}
                     title={`Select ${color}`}
@@ -276,25 +278,30 @@ const ProfileSettings = () => {
             </div>
           </section>
 
-          <div className="flex items-center gap-3 pt-3">
+          <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
             <button 
               onClick={handleSave}
               disabled={loading}
-              className="flex-1 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base text-white shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2"
+              className="w-full sm:flex-1 bg-sky-500 hover:bg-sky-600 active:scale-[0.98] disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed py-3.5 md:py-4 rounded-2xl font-black text-sm md:text-base text-white shadow-xl shadow-sky-500/20 flex items-center justify-center gap-2 transition-all uppercase tracking-widest"
             >
-              <Save className="w-4 h-4 md:w-5 md:h-5" />
-              {loading ? 'Saving...' : 'Save Changes'}
+              <Save className="w-5 h-5" />
+              {loading ? 'Saving Changes...' : 'Save Profile'}
             </button>
             <button 
               onClick={logout}
-              className="px-4 md:px-6 py-2.5 md:py-3 border border-red-500/30 text-red-400 hover:bg-red-500/10 rounded-xl text-sm md:text-base font-bold flex items-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 md:py-4 border-2 border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200 active:scale-[0.98] rounded-2xl text-sm md:text-base font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
             >
-              <LogOut className="w-4 h-4 md:w-5 md:h-5" />
-              Logout
+              <LogOut className="w-5 h-5" />
+              Sign Out
             </button>
           </div>
         </div>
       </div>
+      
+      {/* BlockList Modal */}
+      {isBlockListOpen && (
+        <BlockList onClose={() => setIsBlockListOpen(false)} />
+      )}
     </div>
   );
 };
