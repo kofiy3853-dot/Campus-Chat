@@ -146,7 +146,7 @@ import admin from '../utils/firebaseAdmin';
 // Create notification (internal helper)
 export const createNotification = async (
   userId: string,
-  type: 'message' | 'group_invite' | 'announcement' | 'event_update',
+  type: 'message' | 'group_invite' | 'announcement' | 'event_update' | 'connection_request' | 'connection_accepted',
   title: string,
   body: string,
   data: any,

@@ -34,7 +34,7 @@ export const sendConnectionRequest = async (req: AuthRequest, res: Response) => 
     // Notify recipient
     createNotification(
       recipientId,
-      'system',
+      'connection_request',
       'New Connection Request',
       `${req.user.name || 'A student'} wants to connect with you.`,
       { type: 'connection_request', connectionId: connection._id.toString() },
@@ -72,7 +72,7 @@ export const respondToConnectionRequest = async (req: AuthRequest, res: Response
     if (status === 'accepted') {
         createNotification(
             connection.sender.toString(),
-            'system',
+            'connection_accepted',
             'Connection Accepted',
             `${req.user.name || 'A student'} accepted your connection request. You can now message them.`,
             { type: 'connection_accepted', responderId: userId },

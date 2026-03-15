@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface INotification extends Document {
   user_id: mongoose.Types.ObjectId;
   sender_id?: mongoose.Types.ObjectId;
-  type: 'message' | 'group_invite' | 'announcement' | 'event_update' | 'confession_reply' | 'event_created' | 'group_join';
+  type: 'message' | 'group_invite' | 'announcement' | 'event_update' | 'confession_reply' | 'event_created' | 'group_join' | 'connection_request' | 'connection_accepted';
   title: string;
   body: string;
   data: {
@@ -20,7 +20,7 @@ export interface INotification extends Document {
 const NotificationSchema: Schema = new Schema({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   sender_id: { type: Schema.Types.ObjectId, ref: 'User' },
-  type: { type: String, enum: ['message', 'group_invite', 'announcement', 'event_update', 'confession_reply', 'event_created', 'group_join'], required: true },
+  type: { type: String, enum: ['message', 'group_invite', 'announcement', 'event_update', 'confession_reply', 'event_created', 'group_join', 'connection_request', 'connection_accepted'], required: true },
   title: { type: String, required: true },
   body: { type: String, required: true },
   data: {

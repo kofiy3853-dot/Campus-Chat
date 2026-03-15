@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
@@ -188,7 +189,7 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
     });
 
     const usersWithStatus = users.map(user => {
-      const conn = connections.find(c => 
+      const conn = connections.find((c: any) => 
         (c.sender.toString() === currentUserId && c.recipient.toString() === user._id.toString()) ||
         (c.recipient.toString() === currentUserId && c.sender.toString() === user._id.toString())
       );
