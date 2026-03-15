@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { X, Camera, Tag, DollarSign, Package, Loader2 } from 'lucide-react';
 import api from '../services/api';
 
+import { compressImage } from '../utils/imageCompression';
+
 interface MarketplaceComposeProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,9 +24,10 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
 
   if (!isOpen) return null;
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const originalFile = e.target.files?.[0];
+    if (originalFile) {
+      const file = await compressImage(originalFile);
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
     }

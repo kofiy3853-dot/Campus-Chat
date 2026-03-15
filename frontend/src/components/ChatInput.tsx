@@ -6,6 +6,7 @@ import {
 import { clsx } from 'clsx';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
+import { compressImage } from '../utils/imageCompression';
 
 interface ChatInputProps {
   onSend: (text: string, mediaUrl?: string, mediaType?: string) => void;
@@ -64,18 +65,23 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const uploadFile = async (file: File, explicitType?: 'voice' | 'image' | 'file') => {
+  const uploadFile = async (originalFile: File, explicitType?: 'voice' | 'image' | 'file') => {
     setUploading(true);
     try {
+      let fileToUpload = originalFile;
+      if (originalFile.type.startsWith('image/')) {
+        fileToUpload = await compressImage(originalFile);
+      }
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', fileToUpload);
       const { data } = await api.post('/api/chat/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setPreviewFile({ 
-        url: data.url, 
+        url: data.url,
         type: explicitType || data.type, 
-        name: file.name 
+        name: originalFile.name 
       });
     } catch {
       alert('Upload failed. Please try again.');

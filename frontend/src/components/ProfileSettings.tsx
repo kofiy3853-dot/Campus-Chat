@@ -7,6 +7,8 @@ import api from '../services/api';
 import BlockList from './BlockList';
 import { getMediaUrl } from '../utils/imageUrl';
 
+import { compressImage } from '../utils/imageCompression';
+
 const ProfileSettings = () => {
   const { user, login, logout, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -46,9 +48,11 @@ const ProfileSettings = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+      const originalFile = e.target.files[0];
+      
+      const file = await compressImage(originalFile);
       
       // Basic validation (optional but good practice)
       if (file.size > 5 * 1024 * 1024) {

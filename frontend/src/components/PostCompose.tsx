@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Upload, Loader2 } from 'lucide-react';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
+import { compressImage } from '../utils/imageCompression';
 
 interface PostComposeProps {
   isOpen: boolean;
@@ -24,11 +25,12 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
   const [error, setError] = useState('');
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const originalFile = e.target.files?.[0];
+    if (!originalFile) return;
 
     try {
       setUploading(true);
+      const file = await compressImage(originalFile);
       const formData = new FormData();
       formData.append('file', file);
 
