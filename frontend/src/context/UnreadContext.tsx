@@ -9,6 +9,13 @@ interface UnreadContextType {
   refreshUnreadCount: () => void;
 }
 
+const playNotificationSound = () => {
+  const audio = new Audio("/sounds/notification.mp3");
+  audio.play().catch((err) => {
+    console.log("Sound blocked by browser or missing file:", err);
+  });
+};
+
 const UnreadContext = createContext<UnreadContextType | undefined>(undefined);
 
 export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -32,6 +39,12 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [refreshUnreadCount]);
 
   useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  useEffect(() => {
     if (!socket || !user) {
       console.log('UnreadContext: Socket or user missing', { hasSocket: !!socket, hasUser: !!user });
       return;
@@ -39,8 +52,19 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     console.log('UnreadContext: Initializing socket listeners for user', user._id);
 
-    const handleNewMessage = () => {
+    const handleNewMessage = (message?: any) => {
       console.log('UnreadContext: receive_message/receive_group_message event received');
+      
+      const isMine = message?.sender?._id === user._id || message?.sender === user._id;
+      if (!isMine) {
+        playNotificationSound();
+        if (document.visibilityState === 'hidden' && "Notification" in window && Notification.permission === "granted") {
+          new Notification("Campus Chat", {
+            body: message?.text || "You received a new message",
+          });
+        }
+      }
+
       refreshUnreadCount();
     };
 

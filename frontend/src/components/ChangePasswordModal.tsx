@@ -66,7 +66,12 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
               <h2 className="text-xl font-black text-slate-800 tracking-tight">Change Password</h2>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors">
+          <button 
+            onClick={onClose} 
+            title="Close"
+            aria-label="Close"
+            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -89,8 +94,9 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
 
           <div className="space-y-4">
             <div>
-              <label className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Current Password</label>
+              <label htmlFor="currentPassword" className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Current Password</label>
               <input
+                id="currentPassword"
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -99,8 +105,9 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
               />
             </div>
             <div>
-              <label className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">New Password</label>
+              <label htmlFor="newPassword" className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">New Password</label>
               <input
+                id="newPassword"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -109,8 +116,9 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
               />
             </div>
             <div>
-              <label className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Confirm New Password</label>
+              <label htmlFor="confirmPassword" className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Confirm New Password</label>
               <input
+                id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

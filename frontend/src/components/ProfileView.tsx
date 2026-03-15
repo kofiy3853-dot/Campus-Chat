@@ -18,6 +18,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
   const { user: currentUser } = useAuth();
   const [isBlocked, setIsBlocked] = useState(false);
   const [blockLoading, setBlockLoading] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isOpen || isGroup) return;
