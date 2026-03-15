@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import { ToastProvider } from './context/ToastContext';
 import { ChatProvider } from './context/ChatContext';
+import { SocketProvider } from './context/SocketContext';
 import './App.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -21,23 +22,25 @@ function App() {
     <Router>
       <AuthProvider>
         <ToastProvider>
-          <ChatProvider>
-            <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route 
-                path="/dashboard/*" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route path="/" element={<Navigate to="/dashboard" />} />
-            </Routes>
-          </div>
-          </ChatProvider>
+          <SocketProvider>
+            <ChatProvider>
+              <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route 
+                    path="/dashboard/*" 
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route path="/" element={<Navigate to="/dashboard" />} />
+                </Routes>
+              </div>
+            </ChatProvider>
+          </SocketProvider>
         </ToastProvider>
       </AuthProvider>
     </Router>
