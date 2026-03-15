@@ -334,20 +334,38 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'Invalid conversation ID' });
     }
 
-    // 1. Mark actual messages as read (for delivery status)
+    const userId = req.user._id;
+
+    // 1. Mark actual messages as read (for delivery status AND unread badge)
+    // We update both fields for robustness across the system
     const result = await Message.updateMany(
       {
         conversation_id: new mongoose.Types.ObjectId(conversationId as string),
-        recipient_id: req.user._id,
-        delivery_status: { $ne: 'read' },
+        $and: [
+          {
+            $or: [
+              { recipient_id: userId },
+              { receiver: userId }
+            ]
+          },
+          {
+            $or: [
+              { delivery_status: { $ne: 'read' } },
+              { read: false }
+            ]
+          }
+        ]
       },
-      { delivery_status: 'read' }
+      { 
+        delivery_status: 'read',
+        read: true 
+      }
     );
 
     // 2. Mark corresponding notifications as read
     await Notification.updateMany(
       {
-        user_id: req.user._id,
+        user_id: userId,
         'data.conversation_id': conversationId.toString(),
         read: false,
       },
@@ -367,11 +385,17 @@ export const markMessagesAsReadBySender = async (req: AuthRequest, res: Response
   try {
     const result = await Message.updateMany(
       {
-        receiver: req.user.id,
+        $or: [
+          { receiver: req.user._id },
+          { recipient_id: req.user._id }
+        ],
         sender_id: senderId,
         read: false,
       },
-      { read: true }
+      { 
+        read: true,
+        delivery_status: 'read'
+      }
     );
     res.json({ message: 'Messages marked as read', modifiedCount: result.modifiedCount });
   } catch (error: any) {
@@ -380,12 +404,15 @@ export const markMessagesAsReadBySender = async (req: AuthRequest, res: Response
   }
 };
 
-// Get unread messages count for the current user
+// Get unread messages count for the current user (Unified with Notifications)
 export const getUnreadCount = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user._id;
-    const count = await Message.countDocuments({
-      receiver: userId,
+    
+    // Using Notification collection as the source of truth for the badge
+    // This includes private messages, group messages, and other alerts
+    const count = await Notification.countDocuments({
+      user_id: userId,
       read: false,
     });
 
