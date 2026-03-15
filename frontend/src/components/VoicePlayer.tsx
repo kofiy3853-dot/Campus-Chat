@@ -70,23 +70,23 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
 
   return (
     <div className={clsx(
-      "flex items-center gap-3 py-2 px-1 rounded-2xl transition-all duration-300",
+      "flex items-center gap-2 py-1 px-1 rounded-2xl transition-all duration-300",
       "w-full max-w-[280px]"
     )}>
       {/* Play/Pause Button */}
       <button
         onClick={togglePlay}
         className={clsx(
-          "w-9 h-9 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95",
-          isMe ? "bg-white text-sky-500" : "bg-sky-500 text-white shadow-lg shadow-sky-200/50"
+          "w-7 h-7 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95",
+          isMe ? "bg-white text-sky-500" : "bg-sky-500 text-white shadow-md shadow-sky-200/50"
         )}
       >
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+        {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
       </button>
 
       {/* Waveform and Progress */}
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
-        <div className="flex items-center items-end gap-[2px] h-6 px-1">
+      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+        <div className="flex items-center gap-[2px] h-5 px-1">
           {waveformBars.map((height, i) => {
             const barProgress = i / waveformBars.length;
             const isActive = progress > barProgress;
@@ -117,7 +117,7 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
       <button
         onClick={handleSpeedToggle}
         className={clsx(
-          "px-2 py-1 rounded-lg text-[10px] font-black transition-all active:scale-95 shrink-0",
+          "px-1.5 py-0.5 rounded-lg text-[9px] font-black transition-all active:scale-95 shrink-0",
           isMe 
             ? "bg-white/20 text-white hover:bg-white/30" 
             : "bg-slate-100 text-slate-500 hover:bg-slate-200"
