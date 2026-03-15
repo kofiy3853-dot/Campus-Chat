@@ -51,7 +51,13 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const handleNotification = (notification: any) => {
       console.log('UnreadContext: notification event received', notification);
-      // Refresh for any notification to be safe, especially messages
+      
+      // Optimistically increment unread count for messages
+      if (notification.type === 'message') {
+        setUnread(prev => prev + 1);
+      }
+      
+      // Still refresh from API to ensure sync (background)
       refreshUnreadCount();
     };
 

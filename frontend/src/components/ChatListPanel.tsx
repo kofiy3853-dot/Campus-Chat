@@ -88,14 +88,52 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       }));
     };
 
+    const handleNotification = (notification: any) => {
+      if (notification.type !== 'message') return;
+
+      setItems(prev => {
+        const conversationId = notification.data?.conversation_id || notification.data?.group_id;
+        const index = prev.findIndex(item => item._id === conversationId);
+        
+        if (index === -1) {
+          fetchData(); // New conversation, refresh list
+          return prev;
+        }
+
+        const newItems = [...prev];
+        const item = { ...newItems[index] };
+        
+        // Update unread count if we are not currently in this conversation
+        const isActive = location.pathname.includes(item._id);
+        if (!isActive) {
+          item.unread_count = (item.unread_count || 0) + 1;
+        }
+
+        // Optimistically update last message preview info
+        item.last_message = {
+          message_text: notification.body,
+          timestamp: new Date().toISOString(),
+          sender_id: notification.sender_id?._id || notification.sender_id
+        };
+        item.last_message_time = item.last_message.timestamp;
+
+        // Move to top
+        newItems.splice(index, 1);
+        newItems.unshift(item);
+        return newItems;
+      });
+    };
+
     socket.on('receive_message', handleNewMessage);
     socket.on('receive_group_message', handleNewMessage);
     socket.on('user_status_change', handleStatusChange);
+    socket.on('notification', handleNotification);
 
     return () => {
       socket.off('receive_message', handleNewMessage);
       socket.off('receive_group_message', handleNewMessage);
       socket.off('user_status_change', handleStatusChange);
+      socket.off('notification', handleNotification);
     };
   }, [socket, user, location.pathname, activeTab]);
 
