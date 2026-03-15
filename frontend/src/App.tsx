@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 const Login = lazy(() => import('./pages/Login'));
@@ -8,6 +8,7 @@ import { ToastProvider } from './context/ToastContext';
 import { ChatProvider } from './context/ChatContext';
 import { SocketProvider } from './context/SocketContext';
 import { UnreadProvider } from './context/UnreadContext';
+import { SplashScreen } from '@capacitor/splash-screen';
 import './App.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -20,6 +21,18 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 function App() {
+  useEffect(() => {
+    // Hide the splash screen after the app is mounted
+    const hideSplash = async () => {
+      try {
+        await SplashScreen.hide();
+      } catch (e) {
+        console.warn('SplashScreen hide failed (probably not running on native):', e);
+      }
+    };
+    hideSplash();
+  }, []);
+
   return (
     <Router>
       <AuthProvider>

@@ -47,6 +47,8 @@ const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
+  'http://localhost',
+  'capacitor://localhost',
   'https://campus-chat-fjxp.vercel.app',
   'https://campus-chat-fjxp-dbqj1blko-kofiy3853-dots-projects.vercel.app',
 ].filter(Boolean);
