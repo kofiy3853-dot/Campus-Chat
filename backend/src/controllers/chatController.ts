@@ -77,10 +77,12 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
     const message = await Message.create({
       conversation_id: conversation._id,
       sender_id: req.user.id,
-      recipient_id: recipientId, // Explicitly store recipient for fast unread counts
+      recipient_id: recipientId, // For compatibility
+      receiver: recipientId, // Explicitly requested
       message_text: message_text || '',
       message_type: message_type || 'text',
       media_url,
+      read: false, // Explicitly requested
     });
 
     // Safer population
@@ -359,19 +361,37 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
   }
 };
 
+// Mark all messages from a specific sender as read
+export const markMessagesAsReadBySender = async (req: AuthRequest, res: Response) => {
+  const { senderId } = req.params;
+  try {
+    const result = await Message.updateMany(
+      {
+        receiver: req.user.id,
+        sender_id: senderId,
+        read: false,
+      },
+      { read: true }
+    );
+    res.json({ message: 'Messages marked as read', modifiedCount: result.modifiedCount });
+  } catch (error: any) {
+    console.error('Error in markMessagesAsReadBySender:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Get unread messages count for the current user
 export const getUnreadCount = async (req: AuthRequest, res: Response) => {
   try {
-    // Count unread notifications of type 'message' (includes both private and group)
-    const count = await Notification.countDocuments({
-      user_id: req.user._id,
-      type: 'message',
-      read: false
+    const userId = req.user.id;
+    const count = await Message.countDocuments({
+      receiver: userId,
+      read: false,
     });
 
-    res.json({ count });
+    res.json({ unread: count });
   } catch (error: any) {
-    console.error('[ChatController] Error in getUnreadCount:', error);
-    res.status(500).json({ message: error.message });
+    console.error('Unread count error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

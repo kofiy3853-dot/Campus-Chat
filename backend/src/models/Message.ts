@@ -8,12 +8,14 @@ export interface IMessageReaction {
 export interface IMessage extends Document {
   conversation_id: mongoose.Types.ObjectId;
   sender_id: mongoose.Types.ObjectId;
-  recipient_id: mongoose.Types.ObjectId; // Added for easier unread count queries
+  recipient_id: mongoose.Types.ObjectId; // For compatibility
+  receiver: mongoose.Types.ObjectId; // Explicitly requested
   message_text: string;
   message_type: 'text' | 'image' | 'file' | 'voice';
   media_url?: string;
   media_thumbnail?: string; // Thumbnail for images
   delivery_status: 'sent' | 'delivered' | 'read';
+  read: boolean; // Explicitly requested
   timestamp: Date;
   edited_at?: Date;
   is_deleted: boolean;
@@ -25,11 +27,13 @@ const MessageSchema: Schema = new Schema({
   conversation_id: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true },
   sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   recipient_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  receiver: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   message_text: { type: String },
   message_type: { type: String, enum: ['text', 'image', 'file', 'voice'], default: 'text' },
   media_url: { type: String },
   media_thumbnail: { type: String }, // Thumbnail for images
   delivery_status: { type: String, enum: ['sent', 'delivered', 'read'], default: 'sent' },
+  read: { type: Boolean, default: false },
   timestamp: { type: Date, default: Date.now },
   edited_at: { type: Date },
   is_deleted: { type: Boolean, default: false },
