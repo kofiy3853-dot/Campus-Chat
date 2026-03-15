@@ -14,7 +14,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
   const navigate = useNavigate();
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 flex items-center justify-between z-50">
+    <header className="h-16 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 flex items-center justify-between shrink-0">
       <div className="flex items-center gap-2 md:gap-4">
         <button 
           onClick={() => navigate('/dashboard')}
