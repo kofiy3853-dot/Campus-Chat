@@ -28,11 +28,39 @@ export const createGroup = async (req: AuthRequest, res: Response) => {
 
 export const getGroups = async (req: AuthRequest, res: Response) => {
   try {
+    const userId = req.user.id;
     const groups = await Group.find({
-      members: req.user.id,
+      members: userId,
     }).populate('members', 'name profile_picture status');
 
-    res.json(groups);
+    // Fetch unread notification counts for these groups
+    const unreadNotifications = await Notification.aggregate([
+      {
+        $match: {
+          user_id: new mongoose.Types.ObjectId(userId as string),
+          type: 'message',
+          read: false,
+          'data.group_id': { $exists: true }
+        }
+      },
+      {
+        $group: {
+          _id: '$data.group_id',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const groupsWithUnread = groups.map(group => {
+      const groupObj = group.toObject();
+      const unread = unreadNotifications.find(n => n._id === group._id.toString());
+      return {
+        ...groupObj,
+        unread_count: unread ? unread.count : 0
+      };
+    });
+
+    res.json(groupsWithUnread);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

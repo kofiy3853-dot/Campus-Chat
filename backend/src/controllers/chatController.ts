@@ -32,7 +32,26 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
         $group: {
           _id: "$conversation_id",
           last_message: { $first: "$$ROOT" },
-          last_message_time: { $first: "$timestamp" }
+          last_message_time: { $first: "$timestamp" },
+          unread_count: {
+            $sum: {
+              $cond: [
+                { 
+                  $and: [
+                    { $eq: ["$read", false] },
+                    { 
+                      $or: [
+                        { $eq: ["$receiver", userId] },
+                        { $eq: ["$recipient_id", userId] }
+                      ]
+                    }
+                  ]
+                },
+                1,
+                0
+              ]
+            }
+          }
         }
       },
       {
@@ -48,17 +67,25 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
     const conversationIds = conversationSummaries.map(c => c._id);
 
     // Fetch the actual Conversation documents and populate participants
-    // We do this separately to maintain the complex population logic of the Conversation model
     const conversations = await Conversation.find({
       _id: { $in: conversationIds }
     })
     .populate('participants', 'name email profile_picture status last_seen')
     .populate('last_message');
 
-    // Sort the final results to match our aggregation order
-    const sortedConversations = conversationIds.map(id => 
-      conversations.find(c => c._id.toString() === id.toString())
-    ).filter(Boolean);
+    // Merge unread_count into the conversation objects
+    const sortedConversations = conversationSummaries.map(summary => {
+      const conv = conversations.find(c => c._id.toString() === summary._id.toString());
+      if (!conv) return null;
+      
+      const convObj = conv.toObject();
+      return {
+        ...convObj,
+        unread_count: summary.unread_count
+      };
+    }).filter(Boolean);
+
+    res.json(sortedConversations);
 
     res.json(sortedConversations);
   } catch (error: any) {
