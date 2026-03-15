@@ -112,12 +112,24 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      
+      // Prefer more universal formats for mobile compatibility (especially iOS/Capacitor)
+      const mimeType = [
+        'audio/aac',
+        'audio/mp4',
+        'audio/mpeg',
+        'audio/webm',
+        'audio/ogg'
+      ].find(type => MediaRecorder.isTypeSupported(type)) || 'audio/webm';
+
+      console.log(`[ChatInput] Recording with mimeType: ${mimeType}`);
+      const recorder = new MediaRecorder(stream, { mimeType });
       audioChunksRef.current = [];
       recorder.ondataavailable = e => audioChunksRef.current.push(e.data);
       recorder.onstop = async () => {
-        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+        const blob = new Blob(audioChunksRef.current, { type: mimeType });
+        const extension = mimeType.split('/')[1].split(';')[0] || 'webm';
+        const file = new File([blob], `voice-${Date.now()}.${extension}`, { type: mimeType });
         stream.getTracks().forEach(t => t.stop());
         await uploadFile(file);
       };
