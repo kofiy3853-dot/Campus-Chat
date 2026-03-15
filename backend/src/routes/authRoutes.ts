@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { register, login, getProfile, updateProfile, searchUsers, uploadProfilePicture } from '../controllers/authController';
+import { register, login, getProfile, updateProfile, searchUsers, uploadProfilePicture, getUserProfile } from '../controllers/authController';
 import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();

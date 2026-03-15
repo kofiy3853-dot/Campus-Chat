@@ -8,9 +8,10 @@ interface ChatHeaderProps {
   user: any;
   isTyping: boolean;
   onSearchToggle?: () => void;
+  onProfileClick?: () => void;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle }) => {
+const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle, onProfileClick }) => {
   const navigate = useNavigate();
 
   return (
@@ -23,7 +24,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <div className="relative group cursor-pointer">
+        <div className="flex items-center gap-2 md:gap-3 cursor-pointer group" onClick={onProfileClick}>
+          <div className="relative">
           <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl md:rounded-2xl overflow-hidden border-2 border-gray-100 group-hover:border-sky-300 bg-gray-50 flex items-center justify-center transition-none">
             {user?.isGroup ? (
                 <Users className="w-5 h-5 md:w-6 md:h-6 text-sky-400" />
@@ -54,6 +56,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
           </p>
         </div>
       </div>
+    </div>
 
       <div className="flex items-center gap-1 md:gap-2">
         <button 
@@ -66,7 +69,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
         <button aria-label="Voice call" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl hidden md:block transition-none"><Phone className="w-5 h-5" /></button>
         <button aria-label="Video call" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl hidden md:block transition-none"><Video className="w-5 h-5" /></button>
         <div className="w-px h-6 bg-gray-100 mx-1 md:mx-2 hidden md:block"></div>
-        <button aria-label="More options" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"><MoreVertical className="w-4.5 h-4.5 md:w-5 md:h-5" /></button>
+        <button 
+          aria-label="More options" 
+          onClick={onProfileClick}
+          className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
+        >
+          <MoreVertical className="w-4.5 h-4.5 md:w-5 md:h-5" />
+        </button>
       </div>
     </header>
   );

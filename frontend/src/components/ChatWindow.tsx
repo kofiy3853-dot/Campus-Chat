@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader2, MessageSquare, Edit2, Trash2 } from 'lucide-react';
+import { Trash2, Loader2, Search, Edit3, X, MoreVertical, Shield, UserX, Flag, Pin, CheckCircle2 } from 'lucide-react';
+import ProfileView from './ProfileView';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { useUnread } from '../context/UnreadContext';
@@ -21,6 +22,7 @@ const ChatWindow = () => {
   const [conversation, setConversation] = useState<any>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
   const [activeMessage, setActiveMessage] = useState<any>(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -316,6 +318,13 @@ const ChatWindow = () => {
         user={otherUser} 
         isTyping={isTyping} 
         onSearchToggle={() => setIsSearchOpen(!isSearchOpen)} 
+        onProfileClick={() => setIsProfileOpen(true)}
+      />
+
+      <ProfileView 
+        isOpen={isProfileOpen} 
+        onClose={() => setIsProfileOpen(false)} 
+        targetId={otherUser?._id}
       />
 
       {/* Search Bar */}

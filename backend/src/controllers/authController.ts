@@ -216,3 +216,15 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getUserProfile = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password_hash -blocked_users -notification_preferences -email');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

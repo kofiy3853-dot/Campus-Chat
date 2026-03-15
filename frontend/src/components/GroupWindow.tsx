@@ -8,6 +8,7 @@ import api from '../services/api';
 import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
+import ProfileView from './ProfileView';
 
 const GroupWindow = () => {
   const { id } = useParams();
@@ -19,6 +20,7 @@ const GroupWindow = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [group, setGroup] = useState<any>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const markAsRead = async () => {
@@ -207,6 +209,15 @@ const GroupWindow = () => {
             memberCount: group?.members?.length || 0
         }} 
         isTyping={false} 
+        onProfileClick={() => setIsProfileOpen(true)}
+      />
+
+      <ProfileView 
+        isOpen={isProfileOpen} 
+        onClose={() => setIsProfileOpen(false)} 
+        targetId={id!}
+        isGroup={true}
+        groupData={group}
       />
 
       {/* Messages */}
