@@ -41,6 +41,7 @@ router.post('/upload', protect, upload.single('file'), (req: AuthRequest, res: R
   res.json({ url, type, originalName: req.file.originalname });
 });
 
+router.get('/test', (req, res) => res.json({ message: 'Chat routes are working' }));
 router.get('/conversations', protect, getConversations);
 router.post('/conversations', protect, createConversation);
 router.get('/messages/:conversationId', protect, getMessages);
@@ -52,7 +53,7 @@ router.post('/messages/:messageId/reaction', protect, addMessageReaction);
 router.post('/block/:userId', protect, blockUser);
 router.get('/blocked-users', protect, getBlockedUsers);
 router.post('/conversations/:conversationId/read', protect, markMessagesAsRead);
-router.get('/unread/count', protect, getUnreadCount);
+router.get('/unread-count', protect, getUnreadCount);
 
 export default router;
 

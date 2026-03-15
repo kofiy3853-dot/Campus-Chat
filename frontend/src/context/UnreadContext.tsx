@@ -24,7 +24,7 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       // Fetch both unread counts in parallel
       const [chatRes, notifRes] = await Promise.all([
-        api.get('/api/chat/unread/count'),
+        api.get('/api/chat/unread-count'),
         api.get('/api/notifications/unread-count')
       ]);
       
