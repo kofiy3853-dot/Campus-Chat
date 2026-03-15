@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Search, Plus, Users, MessageSquare } from 'lucide-react';
+import { Search, Plus, Users, MessageSquare, Check, CheckCheck } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
@@ -210,19 +210,20 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
               key={item._id}
               to={isGroup ? `/dashboard/groups/${item._id}` : `/dashboard/chat/${item._id}`}
               className={({ isActive }) => clsx(
-                "flex items-center gap-3 md:gap-4 p-2.5 md:p-4 rounded-xl md:rounded-2xl group relative transition-colors",
+                "flex items-center gap-4 p-4 rounded-2xl group relative transition-all duration-200 border border-transparent",
                 isActive 
-                  ? "bg-sky-50 shadow-sm" 
-                  : "hover:bg-gray-50"
+                  ? "bg-sky-50/80 shadow-sm border-sky-100/50" 
+                  : "hover:bg-gray-50/80"
               )}
             >
+              {/* Left Column: Avatar */}
               <div className="relative shrink-0">
                 {isGroup ? (
-                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-sky-50 flex items-center justify-center text-base md:text-lg font-bold text-sky-500 border border-sky-100">
+                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-500 flex items-center justify-center text-lg font-bold text-white shadow-lg shadow-sky-200">
                     {name?.[0] || '?'}
                   </div>
                 ) : (
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-gray-100 group-hover:border-gray-200 bg-gray-100">
+                  <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white group-hover:border-sky-100 bg-gray-100 shadow-md transition-colors">
                       <img 
                         src={getMediaUrl(otherParticipant?.profile_picture) || `https://ui-avatars.com/api/?name=${otherParticipant?.name}`} 
                         alt={otherParticipant?.name} 
@@ -231,36 +232,48 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                   </div>
                 )}
                 {status === 'online' && (
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-[2.5px] md:border-[3px] border-white"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-3 border-white shadow-sm animate-pulse-slow"></div>
                 )}
               </div>
 
+              {/* Middle Column: Chat Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-baseline mb-0.5 md:mb-1">
-                  <h4 className={clsx(
-                    "font-bold truncate text-sm md:text-base text-gray-800"
-                  )}>{name}</h4>
-                  <span className="text-[10px] text-gray-400 font-medium">
-                    {item.last_message_time ? new Date(item.last_message_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-xs text-gray-500 truncate leading-snug">
-                    {item.last_message && (item.last_message.sender_id?._id === user?._id || item.last_message.sender_id === user?._id) ? "You: " : ""}
+                <h4 className="font-bold truncate text-base text-gray-800 mb-1 group-hover:text-sky-600 transition-colors">
+                  {name}
+                </h4>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {item.last_message && (item.last_message.sender_id?._id === user?._id || item.last_message.sender_id === user?._id) && (
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span className="text-[11px] font-bold text-sky-500/80 uppercase tracking-tight">You:</span>
+                      {item.last_message.delivery_status === 'read' ? (
+                        <CheckCheck className="w-3 h-3 text-sky-400" strokeWidth={3} />
+                      ) : (
+                        <Check className="w-3 h-3 text-gray-300" strokeWidth={3} />
+                      )}
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500 truncate leading-snug font-medium">
                     {item.last_message?.message_text || (isGroup ? `${item.members?.length || 0} members` : 'Start a conversation')}
                   </p>
-                  {item.unread_count > 0 && (
-                    <span className="bg-sky-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center shadow-lg shadow-sky-500/20">
-                      {item.unread_count}
-                    </span>
-                  )}
                 </div>
               </div>
 
-              {/* Active Indicator Bar Overlay */}
+              {/* Right Column: Meta */}
+              <div className="flex flex-col items-end gap-2 shrink-0">
+                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                  {item.last_message_time ? new Date(item.last_message_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                </span>
+                {item.unread_count > 0 && (
+                  <span className="bg-sky-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-lg min-w-[20px] text-center shadow-lg shadow-sky-500/30 animate-in fade-in zoom-in duration-300">
+                    {item.unread_count}
+                  </span>
+                )}
+              </div>
+
+              {/* Active Indicator */}
               <div className={clsx(
-                "absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-sky-400 rounded-r-full opacity-0",
-                "group-[.active]:opacity-100"
+                "absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-sky-500 rounded-r-full transition-all duration-300",
+                "opacity-0 scale-y-50 group-[.active]:opacity-100 group-[.active]:scale-y-100"
               )} />
             </NavLink>
           );
