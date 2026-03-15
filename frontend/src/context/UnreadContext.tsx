@@ -10,10 +10,36 @@ interface UnreadContextType {
 }
 
 const playNotificationSound = () => {
-  const audio = new Audio("/sounds/notification.mp3");
-  audio.play().catch((err) => {
-    console.log("Sound blocked by browser or missing file:", err);
-  });
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    
+    // Create a smooth, pleasant double chime ("Ding-Ding")
+    const playTone = (freq: number, startTime: number, duration: number) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      
+      // Soft attack, smooth decay
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(0.15, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    };
+
+    playTone(1318.51, ctx.currentTime, 0.4); // E6
+    playTone(1760.00, ctx.currentTime + 0.15, 0.6); // A6
+  } catch (err) {
+    console.log("Audio playback failed:", err);
+  }
 };
 
 const UnreadContext = createContext<UnreadContextType | undefined>(undefined);
