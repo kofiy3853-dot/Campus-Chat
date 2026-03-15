@@ -14,7 +14,7 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
   const [playbackRate, setPlaybackRate] = useState(1);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [waveformBars] = useState(() => 
-    Array.from({ length: 30 }, () => Math.random() * 0.8 + 0.2)
+    Array.from({ length: 22 }, () => Math.random() * 0.8 + 0.2)
   );
 
   useEffect(() => {
@@ -70,23 +70,23 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
 
   return (
     <div className={clsx(
-      "flex items-center gap-2 py-1 px-1 rounded-2xl transition-all duration-300",
-      "w-full max-w-[280px]"
+      "flex items-center gap-1.5 py-0.5 px-0.5 rounded-2xl transition-all duration-300",
+      "w-full max-w-[220px]"
     )}>
       {/* Play/Pause Button */}
       <button
         onClick={togglePlay}
         className={clsx(
-          "w-7 h-7 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95",
+          "w-6 h-6 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95",
           isMe ? "bg-white text-sky-500" : "bg-sky-500 text-white shadow-md shadow-sky-200/50"
         )}
       >
-        {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
+        {isPlaying ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 ml-0.5" />}
       </button>
 
       {/* Waveform and Progress */}
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-        <div className="flex items-center gap-[2px] h-5 px-1">
+      <div className="flex-1 min-w-0 flex flex-col gap-0">
+        <div className="flex items-center gap-[1.5px] h-4 px-1">
           {waveformBars.map((height, i) => {
             const barProgress = i / waveformBars.length;
             const isActive = progress > barProgress;
@@ -105,7 +105,7 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
           })}
         </div>
         <div className={clsx(
-          "flex justify-between items-center text-[10px] font-bold tracking-tight uppercase px-1",
+          "flex justify-between items-center text-[9px] font-bold tracking-tight uppercase px-0.5",
           isMe ? "text-white/70" : "text-slate-400"
         )}>
           <span>{formatTime(currentTime)}</span>
@@ -117,7 +117,7 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
       <button
         onClick={handleSpeedToggle}
         className={clsx(
-          "px-1.5 py-0.5 rounded-lg text-[9px] font-black transition-all active:scale-95 shrink-0",
+          "px-1 py-0.5 rounded-lg text-[8px] font-black transition-all active:scale-95 shrink-0",
           isMe 
             ? "bg-white/20 text-white hover:bg-white/30" 
             : "bg-slate-100 text-slate-500 hover:bg-slate-200"
