@@ -175,14 +175,6 @@ const GroupWindow = () => {
     </div>
   );
 
-  if (loading) return (
-    <div className="flex-1 flex items-center justify-center bg-white">
-        <div className="flex flex-col items-center gap-4 text-gray-400 font-medium">
-            Loading...
-        </div>
-    </div>
-  );
-
   if (error) return (
     <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
         <Users className="w-16 h-16 mb-4 opacity-10" />
@@ -222,14 +214,20 @@ const GroupWindow = () => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-32 md:pb-32 space-y-6 scrollbar-hide bg-slate-50/30">
-        <div className="flex flex-col justify-end min-h-full space-y-1">
-            <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
-                <div className="w-20 h-20 rounded-[2rem] bg-gray-50 flex items-center justify-center mb-4 border border-gray-100 text-3xl font-bold text-sky-400 shadow-xl shadow-sky-400/5">
-                    {group?.group_name?.[0] || '?'}
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-1">{group?.group_name || 'Group Hub'}</h3>
-                <p className="text-sm font-medium opacity-60">This is the beginning of the {group?.group_name || 'shared'} story.</p>
-            </div>
+        {loading ? (
+          <div className="h-full flex flex-col items-center justify-center gap-4 text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+             <Loader2 className="w-8 h-8 animate-spin text-sky-500 mb-2" />
+             Synchronizing Hub...
+          </div>
+        ) : (
+          <div className="flex flex-col justify-end min-h-full space-y-1">
+              <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
+                  <div className="w-20 h-20 rounded-[2rem] bg-gray-50 flex items-center justify-center mb-4 border border-gray-100 text-3xl font-bold text-sky-400 shadow-xl shadow-sky-400/5">
+                      {group?.group_name?.[0] || '?'}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">{group?.group_name || 'Group Hub'}</h3>
+                  <p className="text-sm font-medium opacity-60">This is the beginning of the {group?.group_name || 'shared'} story.</p>
+              </div>
             
             {messages.map((msg, index) => {
                 const senderId = typeof msg.sender_id === 'object' ? msg.sender_id?._id : msg.sender_id;
@@ -249,7 +247,8 @@ const GroupWindow = () => {
                 );
             })}
             <div ref={messagesEndRef} />
-        </div>
+          </div>
+        )}
       </div>
 
       <ChatInput onSend={handleSend} onTyping={handleTyping} />

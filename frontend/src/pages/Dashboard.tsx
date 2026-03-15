@@ -41,7 +41,7 @@ const Dashboard = () => {
         "flex-1 flex flex-col h-full overflow-hidden bg-white",
         (isListView && !isLanding && !isProfileOrNotifications) ? 'hidden md:flex' : 'flex w-full'
       )}>
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-400 font-bold animate-pulse">Loading feature...</div>}>
+        <Suspense fallback={null}>
           <Routes>
             <Route path="chat/:id" element={<ChatWindow />} />
             <Route path="groups/:id" element={<GroupWindow />} />

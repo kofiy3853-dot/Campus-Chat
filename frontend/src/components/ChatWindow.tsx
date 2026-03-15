@@ -280,9 +280,7 @@ const ChatWindow = () => {
         <h3 className="text-xl font-bold text-gray-800 mb-2">Select a Conversation</h3>
         <p className="max-w-xs text-center">Pick a friend or start a new chat to begin messaging.</p>
     </div>
-  );
-
-  if (error) return (
+  );  if (error) return (
     <div className="flex-1 flex flex-col items-center justify-center bg-white p-8 text-center">
       <div className="w-20 h-20 bg-red-50 text-red-500 rounded-[2.5rem] flex items-center justify-center mb-6 border border-red-100">
         <Loader2 className="w-10 h-10 animate-spin opacity-20" />
@@ -298,16 +296,7 @@ const ChatWindow = () => {
     </div>
   );
 
-  if (loading) return (
-    <div className="flex-1 flex items-center justify-center bg-white">
-      <div className="flex flex-col items-center gap-4 text-slate-400 font-bold uppercase tracking-widest text-xs">
-        <Loader2 className="w-8 h-8 animate-spin text-sky-500 mb-2" />
-        Loading Messages
-      </div>
-    </div>
-  );
-
-  const otherUser = conversation?.participants.find((p: any) => p._id !== user?._id);
+  const otherUser = conversation?.participants?.find((p: any) => p._id !== user?._id);
 
   const displayMessages = searchResults || messages;
 
@@ -341,33 +330,40 @@ const ChatWindow = () => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-32 md:pb-32 space-y-6 scrollbar-hide bg-slate-50/30">
-        <div className="flex flex-col justify-end min-h-full space-y-1">
-          {displayMessages.length === 0 && (
-               <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
-                   <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
-                       <span className="text-3xl">👋</span>
-                   </div>
-                   <p className="text-sm font-medium uppercase tracking-widest bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100">
-                     {searchResults ? 'No search results found' : `Start of your conversation with ${otherUser?.name || 'Friend'}`}
-                   </p>
-               </div>
-           )}
-           {displayMessages.map((msg, index) => (
-            <ChatMessage 
-              key={msg._id || index} 
-              message={msg} 
-              isMe={msg.sender_id?._id === user?._id || msg.sender_id === user?._id} 
-              onReaction={onReaction}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onMenuOpen={(message, position) => {
-                setActiveMessage(message);
-                setMenuPosition(position);
-              }}
-            />
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
+        {loading ? (
+          <div className="h-full flex flex-col items-center justify-center gap-4 text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+            <Loader2 className="w-8 h-8 animate-spin text-sky-500 mb-2" />
+            Synchronizing...
+          </div>
+        ) : (
+          <div className="flex flex-col justify-end min-h-full space-y-1">
+            {displayMessages.length === 0 && (
+                <div className="flex-1 flex flex-col items-center justify-center text-gray-400 mb-10">
+                    <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
+                        <span className="text-3xl">👋</span>
+                    </div>
+                    <p className="text-sm font-medium uppercase tracking-widest bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100">
+                      {searchResults ? 'No search results found' : `Start of your conversation with ${otherUser?.name || 'Friend'}`}
+                    </p>
+                </div>
+            )}
+            {displayMessages.map((msg, index) => (
+              <ChatMessage 
+                key={msg._id || index} 
+                message={msg} 
+                isMe={msg.sender_id?._id === user?._id || msg.sender_id === user?._id} 
+                onReaction={onReaction}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onMenuOpen={(message, position) => {
+                  setActiveMessage(message);
+                  setMenuPosition(position);
+                }}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
       </div>
 
       <ChatInput 

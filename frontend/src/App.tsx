@@ -9,12 +9,13 @@ import { ChatProvider } from './context/ChatContext';
 import { SocketProvider } from './context/SocketContext';
 import { UnreadProvider } from './context/UnreadContext';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { App as CapApp } from '@capacitor/app';
 import './App.css';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   
-  if (loading) return <div>Loading...</div>;
+  if (loading) return null;
   if (!user) return <Navigate to="/login" />;
   
   return <>{children}</>;
@@ -31,6 +32,19 @@ function App() {
       }
     };
     hideSplash();
+
+    // Hardware back button listener
+    const backListener = CapApp.addListener('backButton', ({ canGoBack }) => {
+      if (canGoBack) {
+        window.history.back();
+      } else {
+        CapApp.exitApp();
+      }
+    });
+
+    return () => {
+      backListener.then(l => l.remove());
+    };
   }, []);
 
   return (
@@ -41,7 +55,7 @@ function App() {
             <UnreadProvider>
               <ChatProvider>
                 <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
-                  <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-950 font-bold text-sky-400">Loading Campus-Networking...</div>}>
+                  <Suspense fallback={null}>
                     <Routes>
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
