@@ -88,29 +88,56 @@ const onlineUsers = new Map<string, Set<string>>();
 io.on('connection', async (socket) => {
   const userId = socket.handshake.query.userId as string;
 
-  if (userId && userId !== 'null' && userId !== 'undefined') {
-    if (!onlineUsers.has(userId)) {
-      onlineUsers.set(userId, new Set());
-    }
-    onlineUsers.get(userId)?.add(socket.id);
+  const handleUserOnline = async (uId: string) => {
+    if (!uId || uId === 'null' || uId === 'undefined') return;
     
-    console.log(`[Socket] User ${userId} connected (${socket.id}). Active tabs: ${onlineUsers.get(userId)?.size}`);
+    if (!onlineUsers.has(uId)) {
+      onlineUsers.set(uId, new Set());
+    }
+    onlineUsers.get(uId)?.add(socket.id);
+    
+    console.log(`[Socket] User ${uId} connected (${socket.id}). Active tabs: ${onlineUsers.get(uId)?.size}`);
     
     // Broadcast updated online list
     io.emit('onlineUsers', Array.from(onlineUsers.keys()));
     
     // Join notification room
-    socket.join(`notification:${userId}`);
+    socket.join(`notification:${uId}`);
 
     // Update DB
-    User.findByIdAndUpdate(userId, { status: 'online', last_seen: new Date() }, { new: true }).then(user => {
+    User.findByIdAndUpdate(uId, { status: 'online', last_seen: new Date() }, { new: true }).then(user => {
         if (user) {
-            io.emit('user_status_change', { userId, status: 'online', last_seen: user.last_seen });
+            io.emit('user_status_change', { userId: uId, status: 'online', last_seen: user.last_seen });
         }
     }).catch(e => {
         console.error('[Socket] User status update error:', e.message);
     });
+  };
+
+  if (userId && userId !== 'null' && userId !== 'undefined') {
+    handleUserOnline(userId);
   }
+
+  socket.on('userOnline', (uId: string) => {
+    handleUserOnline(uId);
+  });
+
+  // Support for explicit offline/logout
+  socket.on('userOffline', (uId: string) => {
+    const userSockets = onlineUsers.get(uId);
+    if (userSockets) {
+      userSockets.delete(socket.id);
+      if (userSockets.size === 0) {
+        onlineUsers.delete(uId);
+        User.findByIdAndUpdate(uId, { status: 'offline', last_seen: new Date() }).then(user => {
+          if (user) {
+            io.emit('user_status_change', { userId: uId, status: 'offline', last_seen: user.last_seen });
+          }
+        }).catch(() => {});
+      }
+    }
+    io.emit('onlineUsers', Array.from(onlineUsers.keys()));
+  });
 
   // --- Real-time Events ---
   socket.on('join_room', (roomId: string) => {
