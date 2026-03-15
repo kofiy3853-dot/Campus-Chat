@@ -50,7 +50,7 @@ const Register = () => {
           <div className="p-2 bg-primary-600 rounded-lg shadow-sm">
             <UserPlus className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-white text-2xl font-bold tracking-tight">Campus Chat</h1>
+          <h1 className="text-white text-2xl font-bold tracking-tight">Campus-Networking</h1>
         </div>
         
         <div className="relative z-10 max-w-xl">
@@ -59,7 +59,7 @@ const Register = () => {
         </div>
         
         <div className="relative z-10">
-          <p className="text-slate-500 text-sm font-medium">© {new Date().getFullYear()} Campus Chat. All rights reserved.</p>
+          <p className="text-slate-500 text-sm font-medium">© {new Date().getFullYear()} Campus-Networking. All rights reserved.</p>
         </div>
       </div>
 
@@ -70,7 +70,7 @@ const Register = () => {
             <div className="p-2 bg-primary-600 rounded-lg shadow-sm">
               <UserPlus className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-slate-900 text-3xl font-bold tracking-tight">Campus Chat</h1>
+            <h1 className="text-slate-900 text-3xl font-bold tracking-tight">Campus-Networking</h1>
           </div>
 
           <div className="mb-10 text-center lg:text-left">

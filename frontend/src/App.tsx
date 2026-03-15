@@ -28,7 +28,7 @@ function App() {
             <UnreadProvider>
               <ChatProvider>
                 <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
-                  <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-950 font-bold text-sky-400">Loading Campus Chat...</div>}>
+                  <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-950 font-bold text-sky-400">Loading Campus-Networking...</div>}>
                     <Routes>
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />

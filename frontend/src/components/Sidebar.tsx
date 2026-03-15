@@ -60,15 +60,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
         {isOpen ? (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-sky-400 rounded-xl flex items-center justify-center font-bold text-lg text-white">
-              C
+              N
             </div>
             <span className="font-bold text-xl tracking-tight text-gray-800">
-              CampusChat
+              Campus-Networking
             </span>
           </div>
         ) : (
           <div className="w-10 h-10 bg-sky-400 rounded-xl flex items-center justify-center mx-auto font-bold text-lg text-white">
-            C
+            N
           </div>
         )}
       </div>

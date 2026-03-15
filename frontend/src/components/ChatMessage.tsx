@@ -151,7 +151,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           ) : (
             <div className="space-y-2">
               <p className={clsx(
-                "text-[15px] leading-[1.6] whitespace-pre-wrap font-medium tracking-tight",
+                "text-[14px] leading-[1.6] whitespace-pre-wrap font-medium tracking-tight",
                 message.is_deleted && "italic opacity-60 line-through"
               )}>
                 {message.is_deleted ? 'This message was deleted' : message.message_text}
