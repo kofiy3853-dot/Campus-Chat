@@ -217,7 +217,7 @@ if (MONGODB_URI === 'your_mongodb_uri') {
 }
 
 app.get('/', (req, res) => {
-  res.send('Campus Chat API is running...');
+  res.send('Campus Chat API is running... (v1.0.1)');
 });
 
 // Serve uploaded files statically

@@ -56,34 +56,36 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 // Get all posts (paginated, with filters)
 export const getAllPosts = async (req: AuthRequest, res: Response) => {
   try {
-    const page_str = (req.query.page as string) || '1';
-    const limit_str = (req.query.limit as string) || '10';
-    const { status, category, search } = req.query as any;
+    const page = parseInt((req.query.page as string) || '1');
+    const limit = parseInt((req.query.limit as string) || '10');
+    const statusFilter = (req.query.status as string) || '';
+    const categoryFilter = (req.query.category as string) || '';
+    const searchFilter = (req.query.search as string) || '';
 
-    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
+    const skip = (page - 1) * limit;
 
     const query: any = { is_deleted: false };
 
-    if (status && ['lost', 'found'].includes(status)) {
-      query.status = status;
+    if (statusFilter && ['lost', 'found'].includes(statusFilter)) {
+      query.status = statusFilter;
     }
 
-    if (category && ['electronics', 'stationery', 'personal', 'miscellaneous'].includes(category)) {
-      query.category = category;
+    if (categoryFilter && ['electronics', 'stationery', 'personal', 'miscellaneous'].includes(categoryFilter)) {
+      query.category = categoryFilter;
     }
 
-    if (search) {
+    if (searchFilter) {
       query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { 'location.building': { $regex: search, $options: 'i' } },
+        { title: { $regex: searchFilter, $options: 'i' } },
+        { description: { $regex: searchFilter, $options: 'i' } },
+        { 'location.building': { $regex: searchFilter, $options: 'i' } },
       ];
     }
 
     const posts = await LostFoundPost.find(query)
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit_str))
+      .limit(limit)
       .populate('creator', 'name profile_picture');
 
     const total = await LostFoundPost.countDocuments(query);
@@ -91,8 +93,8 @@ export const getAllPosts = async (req: AuthRequest, res: Response) => {
     res.json({
       data: posts,
       pagination: {
-        current_page: parseInt(page_str),
-        total_pages: Math.ceil(total / parseInt(limit_str)),
+        current_page: page,
+        total_pages: Math.ceil(total / limit),
         total_count: total,
       },
     });
@@ -260,8 +262,9 @@ export const reportPost = async (req: AuthRequest, res: Response) => {
     }
 
     // Check if user already reported this post
+    const postIdStr = Array.isArray(postId) ? postId[0] : postId;
     const existingReport = await LostFoundReport.findOne({ 
-      post: new mongoose.Types.ObjectId(postId as any), 
+      post: postIdStr, 
       reported_by: userId 
     });
     if (existingReport) {
@@ -269,7 +272,7 @@ export const reportPost = async (req: AuthRequest, res: Response) => {
     }
 
     const report = await LostFoundReport.create({
-      post: new mongoose.Types.ObjectId(postId as string),
+      post: postIdStr,
       reported_by: userId,
       reason,
       description,
@@ -286,9 +289,10 @@ export const reportPost = async (req: AuthRequest, res: Response) => {
 export const incrementContactCount = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
+    const postIdStr = Array.isArray(postId) ? postId[0] : postId;
 
     const post = await LostFoundPost.findByIdAndUpdate(
-      new mongoose.Types.ObjectId(postId as string),
+      postIdStr,
       { $inc: { contact_count: 1 } },
       { new: true }
     ).populate('creator', 'name profile_picture email');

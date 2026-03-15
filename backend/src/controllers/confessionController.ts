@@ -67,15 +67,16 @@ export const toggleLike = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const userId = req.user._id;
 
-    const existing = await ConfessionReaction.findOne({ confessionId: id as any, userId, type: 'like' });
+    const confessionId = Array.isArray(id) ? id[0] : id;
+    const existing = await ConfessionReaction.findOne({ confessionId, userId, type: 'like' });
 
     if (existing) {
       await existing.deleteOne();
-      await Confession.findByIdAndUpdate(id as any, { $inc: { likesCount: -1 } });
+      await Confession.findByIdAndUpdate(confessionId, { $inc: { likesCount: -1 } });
       return res.json({ liked: false });
     } else {
-      await ConfessionReaction.create({ confessionId: id as any, userId, type: 'like' });
-      await Confession.findByIdAndUpdate(id as any, { $inc: { likesCount: 1 } });
+      await ConfessionReaction.create({ confessionId, userId, type: 'like' });
+      await Confession.findByIdAndUpdate(confessionId, { $inc: { likesCount: 1 } });
       return res.json({ liked: true });
     }
   } catch (err: any) {
@@ -89,19 +90,20 @@ export const reportConfession = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const userId = req.user._id;
 
-    const existing = await ConfessionReaction.findOne({ confessionId: id as any, userId, type: 'report' });
+    const confessionId = Array.isArray(id) ? id[0] : id;
+    const existing = await ConfessionReaction.findOne({ confessionId, userId, type: 'report' });
     if (existing) return res.status(400).json({ message: 'You have already reported this.' });
 
-    await ConfessionReaction.create({ confessionId: id as any, userId, type: 'report' });
+    await ConfessionReaction.create({ confessionId, userId, type: 'report' });
     const confession = await Confession.findByIdAndUpdate(
-      id as any,
+      confessionId,
       { $inc: { reportCount: 1 } },
       { new: true }
     );
 
     // Auto-hide if 5+ reports
     if (confession && confession.reportCount >= 5) {
-      await Confession.findByIdAndUpdate(id, { isHidden: true });
+      await Confession.findByIdAndUpdate(confessionId, { isHidden: true });
     }
 
     res.json({ message: 'Reported successfully.' });
@@ -113,7 +115,8 @@ export const reportConfession = async (req: AuthRequest, res: Response) => {
 // GET /api/confessions/:id/comments
 export const getComments = async (req: AuthRequest, res: Response) => {
   try {
-    const comments = await ConfessionComment.find({ confessionId: req.params.id as any })
+    const confessionId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const comments = await ConfessionComment.find({ confessionId })
       .sort({ createdAt: 1 })
       .lean();
 
@@ -132,8 +135,9 @@ export const addComment = async (req: AuthRequest, res: Response) => {
   if (text.length > 300) return res.status(400).json({ message: 'Comment must be 300 characters or less.' });
 
   try {
-    await ConfessionComment.create({ confessionId: req.params.id as any, userId: req.user._id, text: text.trim() });
-    await Confession.findByIdAndUpdate(req.params.id as any, { $inc: { commentsCount: 1 } });
+    const confessionId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    await ConfessionComment.create({ confessionId, userId: req.user._id, text: text.trim() });
+    await Confession.findByIdAndUpdate(confessionId, { $inc: { commentsCount: 1 } });
     res.status(201).json({ message: 'Comment added.' });
   } catch (err: any) {
     res.status(500).json({ message: err.message });

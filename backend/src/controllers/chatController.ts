@@ -383,7 +383,7 @@ export const markMessagesAsReadBySender = async (req: AuthRequest, res: Response
 // Get unread messages count for the current user
 export const getUnreadCount = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const count = await Message.countDocuments({
       receiver: userId,
       read: false,

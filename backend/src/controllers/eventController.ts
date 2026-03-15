@@ -63,20 +63,20 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
 // POST /api/events/:id/join
 export const joinEvent = async (req: AuthRequest, res: Response) => {
   try {
-    const eventId = req.params.id;
+    const eventId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const userId = req.user._id;
 
-    const event = await Event.findById(eventId as any);
+    const event = await Event.findById(eventId);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
     if (event.maxAttendees && event.attendeesCount >= event.maxAttendees) {
       return res.status(400).json({ message: 'Event is full' });
     }
 
-    const alreadyJoined = await EventAttendee.findOne({ eventId: eventId as any, userId });
+    const alreadyJoined = await EventAttendee.findOne({ eventId, userId });
     if (alreadyJoined) return res.status(400).json({ message: 'Already joined this event' });
 
-    await EventAttendee.create({ eventId: eventId as any, userId });
+    await EventAttendee.create({ eventId, userId });
     event.attendeesCount += 1;
     await event.save();
 
@@ -89,13 +89,13 @@ export const joinEvent = async (req: AuthRequest, res: Response) => {
 // POST /api/events/:id/leave
 export const leaveEvent = async (req: any, res: Response) => {
   try {
-    const eventId = req.params.id;
+    const eventId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const userId = req.user._id;
 
-    const result = await EventAttendee.findOneAndDelete({ eventId: eventId as any, userId });
+    const result = await EventAttendee.findOneAndDelete({ eventId, userId });
     if (!result) return res.status(400).json({ message: 'Not joined this event' });
 
-    const event = await Event.findById(eventId as any);
+    const event = await Event.findById(eventId);
     if (event) {
       event.attendeesCount = Math.max(0, event.attendeesCount - 1);
       await event.save();

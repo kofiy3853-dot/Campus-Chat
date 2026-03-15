@@ -55,8 +55,10 @@ export const createPoll = async (req: AuthRequest, res: Response) => {
 // Get poll feed (paginated)
 export const getPollFeed = async (req: AuthRequest, res: Response) => {
   try {
-    const page_str = (req.query.page as string) || '1'; const limit_str = (req.query.limit as string) || '10'; const sort = (req.query.sort as string) || 'newest';
-    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
+    const page = parseInt((req.query.page as string) || '1');
+    const limit = parseInt((req.query.limit as string) || '10');
+    const sort = (req.query.sort as string) || 'newest';
+    const skip = (page - 1) * limit;
 
     const now = new Date();
     
@@ -76,7 +78,7 @@ export const getPollFeed = async (req: AuthRequest, res: Response) => {
     const polls = await Poll.find({ is_deleted: false, status: { $ne: 'closed' } })
       .sort(sortQuery)
       .skip(skip)
-      .limit(parseInt(limit_str))
+      .limit(limit)
       .populate('creator', 'name profile_picture');
 
     const total = await Poll.countDocuments({ is_deleted: false, status: { $ne: 'closed' } });
@@ -96,8 +98,8 @@ export const getPollFeed = async (req: AuthRequest, res: Response) => {
     res.json({
       data: pollsWithVoteStatus,
       pagination: {
-        current_page: parseInt(page_str),
-        total_pages: Math.ceil(total / parseInt(limit_str)),
+        current_page: page,
+        total_pages: Math.ceil(total / limit),
         total_count: total,
       },
     });
@@ -322,13 +324,14 @@ export const deletePoll = async (req: AuthRequest, res: Response) => {
 export const getUserPolls = async (req: any, res: Response) => {
   try {
     const { userId } = req.params;
-    const page_str = (req.query.page as string) || '1'; const limit_str = (req.query.limit as string) || '10';
-    const skip = (parseInt(page_str) - 1) * parseInt(limit_str);
+    const page = parseInt((req.query.page as string) || '1');
+    const limit = parseInt((req.query.limit as string) || '10');
+    const skip = (page - 1) * limit;
 
     const polls = await Poll.find({ creator: userId, is_deleted: false })
       .sort({ created_at: -1 })
       .skip(skip)
-      .limit(parseInt(limit_str))
+      .limit(limit)
       .populate('creator', 'name profile_picture');
 
     const total = await Poll.countDocuments({ creator: userId, is_deleted: false });
@@ -336,8 +339,8 @@ export const getUserPolls = async (req: any, res: Response) => {
     res.json({
       data: polls,
       pagination: {
-        current_page: parseInt(page_str),
-        total_pages: Math.ceil(total / parseInt(limit_str)),
+        current_page: page,
+        total_pages: Math.ceil(total / limit),
         total_count: total,
       },
     });
