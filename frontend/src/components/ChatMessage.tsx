@@ -112,7 +112,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         onContextMenu={(e) => {
           if (message.is_deleted) return;
           e.preventDefault();
-          onMenuOpen?.(message, { x: e.clientX, y: e.clientY });
+          const rect = e.currentTarget.getBoundingClientRect();
+          onMenuOpen?.(message, { 
+            x: rect.left + rect.width / 2, 
+            y: rect.top - 50 
+          });
         }}
       >
         {/* Sender Name in groups */}

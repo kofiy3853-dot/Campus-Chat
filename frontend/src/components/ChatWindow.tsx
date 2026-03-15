@@ -342,10 +342,10 @@ const ChatWindow = () => {
       {/* Action Menu */}
       {activeMessage && (
         <div 
-          className="fixed z-[101] bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-3 min-w-[220px] animate-in fade-in zoom-in duration-200"
+          className="fixed z-[101] bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-3 min-w-[220px] animate-in fade-in zoom-in duration-200 -translate-x-1/2"
           style={{ 
-            left: `${Math.min(menuPosition.x, window.innerWidth - 240)}px`, 
-            top: `${Math.min(menuPosition.y, window.innerHeight - 300)}px` 
+            left: `${Math.max(120, Math.min(menuPosition.x, window.innerWidth - 120))}px`, 
+            top: `${Math.max(20, Math.min(menuPosition.y, window.innerHeight - 320))}px` 
           }}
         >
           {/* Reaction Quick Picker */}
