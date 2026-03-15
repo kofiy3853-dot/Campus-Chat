@@ -31,29 +31,37 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [refreshUnreadCount]);
 
   useEffect(() => {
-    if (!socket || !user) return;
+    if (!socket || !user) {
+      console.log('UnreadContext: Socket or user missing', { hasSocket: !!socket, hasUser: !!user });
+      return;
+    }
 
-    const handleNewMessage = (msg: any) => {
-      // If we are not in the conversation, increment (simple fallback)
-      // The notification system is the source of truth now
+    console.log('UnreadContext: Initializing socket listeners for user', user._id);
+
+    const handleNewMessage = () => {
+      console.log('UnreadContext: receive_message/receive_group_message event received');
+      refreshUnreadCount();
     };
 
     const handleMessagesRead = () => {
+      console.log('UnreadContext: messages_read event received');
       refreshUnreadCount();
     };
 
     const handleNotification = (notification: any) => {
-      if (notification.type === 'message') {
-        refreshUnreadCount();
-      }
+      console.log('UnreadContext: notification event received', notification);
+      // Refresh for any notification to be safe, especially messages
+      refreshUnreadCount();
     };
 
     socket.on('receive_message', handleNewMessage);
+    socket.on('receive_group_message', handleNewMessage);
     socket.on('messages_read', handleMessagesRead);
     socket.on('notification', handleNotification);
 
     return () => {
       socket.off('receive_message', handleNewMessage);
+      socket.off('receive_group_message', handleNewMessage);
       socket.off('messages_read', handleMessagesRead);
       socket.off('notification', handleNotification);
     };

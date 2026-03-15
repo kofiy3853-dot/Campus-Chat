@@ -136,7 +136,6 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
         <div className="flex items-center justify-between">
           <h2 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">Messages</h2>
           <div className="flex gap-2 items-center">
-            <NotificationCenter />
             <button 
               onClick={() => {
                 if (activeTab === 'groups') {

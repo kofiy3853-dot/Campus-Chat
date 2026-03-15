@@ -19,14 +19,15 @@ import {
   MapPin
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useUnread } from '../context/UnreadContext';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
 import { clsx } from 'clsx';
 import Skeleton from './Skeleton';
-import NotificationCenter from './NotificationCenter';
 
 const LandingDashboard: React.FC = () => {
   const { user } = useAuth();
+  const { unread } = useUnread();
   const navigate = useNavigate();
   const [recentChats, setRecentChats] = useState<any[]>([]);
   const [groups, setGroups] = useState<any[]>([]);
@@ -106,7 +107,11 @@ const LandingDashboard: React.FC = () => {
             className="p-2.5 bg-slate-50 text-slate-400 hover:text-sky-500 rounded-2xl relative border border-slate-100 transition-all hover:scale-105 active:scale-95"
           >
             <Bell className="w-5 h-5" />
-            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            {unread > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+                {unread > 99 ? '99+' : unread}
+              </span>
+            )}
           </button>
           <button title="Profile" onClick={() => navigate('/dashboard/profile')} className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-slate-50 shadow-sm transition-all hover:scale-105 active:scale-95">
             <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=0EA5E9&color=fff`} alt="Profile" className="w-full h-full object-cover" />
