@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Smile, ImageIcon, Mic, Send, Paperclip, X, StopCircle,
-  FileText, Calendar, Contact, FolderOpen, ChevronUp,
+  FileText, Calendar, Contact, FolderOpen, ChevronUp, Edit2
 } from 'lucide-react';
 import api from '../services/api';
 
 interface ChatInputProps {
   onSend: (text: string, mediaUrl?: string, mediaType?: string) => void;
   onTyping: () => void;
+  editingValue?: string;
+  onCancelEdit?: () => void;
 }
 
 // Built-in emoji set
@@ -26,7 +28,7 @@ const ATTACH_OPTIONS = [
   { id: 'contact',  label: 'Contact',  icon: Contact,    accept: '.vcf', desc: 'vCard contact (.vcf)' },
 ];
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, onCancelEdit }) => {
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [showAttach, setShowAttach] = useState(false);
@@ -41,6 +43,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
   const audioChunksRef = useRef<Blob[]>([]);
   const emojiRef = useRef<HTMLDivElement>(null);
   const attachRef = useRef<HTMLDivElement>(null);
+
+  // Sync text with editing value
+  useEffect(() => {
+    if (editingValue !== undefined) {
+      setText(editingValue);
+    }
+  }, [editingValue]);
 
   // Close popups on outside click
   useEffect(() => {
@@ -127,6 +136,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping }) => {
 
   return (
     <footer className="p-2.5 md:p-6 bg-white/90 backdrop-blur-xl border-t border-gray-100">
+      {/* Edit Mode Indicator */}
+      {editingValue !== undefined && (
+        <div className="max-w-6xl mx-auto mb-3 flex items-center justify-between px-4 py-2 bg-amber-50 border border-amber-100 rounded-xl animate-in slide-in-from-bottom-2 duration-200">
+          <div className="flex items-center gap-2 text-amber-600">
+            <Edit2 className="w-4 h-4" />
+            <span className="text-sm font-bold">Editing message</span>
+          </div>
+          <button 
+            onClick={onCancelEdit}
+            className="p-1 hover:bg-amber-100 rounded-lg text-amber-500 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* File preview bar */}
       {previewFile && (
         <div className="max-w-6xl mx-auto mb-3 flex items-center gap-3 px-3 md:px-4 py-2 md:py-2.5 bg-gray-50 rounded-xl md:rounded-2xl border border-gray-100">

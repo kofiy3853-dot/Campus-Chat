@@ -24,6 +24,7 @@ const ChatWindow = () => {
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
   const [activeMessage, setActiveMessage] = useState<any>(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [editingMessage, setEditingMessage] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const markAsRead = useCallback(async () => {
@@ -178,6 +179,20 @@ const ChatWindow = () => {
 
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
     try {
+      if (editingMessage) {
+        const { data } = await api.put(`/api/chat/messages/${editingMessage._id}`, { 
+          message_text: messageText 
+        });
+        setMessages(prev => prev.map(m => m._id === editingMessage._id ? data : m));
+        socket?.emit('message_edited', { 
+          messageId: editingMessage._id, 
+          message_text: messageText, 
+          roomId: id 
+        });
+        setEditingMessage(null);
+        return;
+      }
+
       const otherParticipant = conversation?.participants.find((p: any) => p._id !== user?._id);
       
       if (!otherParticipant) {
@@ -196,7 +211,7 @@ const ChatWindow = () => {
       setMessages(prev => [...prev, data]);
       socket?.emit('typing_stop', { roomId: id, userId: user?._id });
     } catch (err) {
-      console.error('Error sending message:', err);
+      console.error('Error sending/editing message:', err);
     }
   };
 
@@ -328,8 +343,12 @@ const ChatWindow = () => {
         </div>
       </div>
 
-      {/* Input component */}
-      <ChatInput onSend={handleSend} onTyping={handleTyping} />
+      <ChatInput 
+        onSend={handleSend} 
+        onTyping={handleTyping} 
+        editingValue={editingMessage?.message_text}
+        onCancelEdit={() => setEditingMessage(null)}
+      />
 
       {/* Action Menu */}
       {activeMessage && (
@@ -372,6 +391,7 @@ const ChatWindow = () => {
               <button 
                 title="Edit"
                 onClick={() => {
+                  setEditingMessage(activeMessage);
                   setActiveMessage(null);
                 }}
               >
