@@ -11,9 +11,10 @@ interface ChatMessageProps {
   onReaction?: (messageId: string, emoji: string) => void;
   onEdit?: (messageId: string, newText: string) => void;
   onDelete?: (messageId: string) => void;
+  onMenuOpen?: (message: any, position: { x: number, y: number }) => void;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, onEdit, onDelete }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, onEdit, onDelete, onMenuOpen }) => {
   const { user } = useAuth();
   const [showReactions, setShowReactions] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -93,20 +94,27 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   return (
     <div
       className={clsx(
-        "flex w-full mb-6 px-1 md:px-2",
+        "flex w-full mb-6 px-1 md:px-2 transition-all duration-300",
         isMe ? "justify-end" : "justify-start"
       )}
     >
       {!isMe && (
-        <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl overflow-hidden mr-3 shrink-0 border-2 border-white bg-slate-100 self-end mb-1 shadow-md cursor-pointer">
+        <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl overflow-hidden mr-3 shrink-0 border-2 border-white bg-slate-100 self-end mb-1 shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95">
           <img src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}&background=0EA5E9&color=fff`} alt={senderName} className="w-full h-full object-cover" />
         </div>
       )}
       
-      <div className={clsx(
-        "max-w-[85%] md:max-w-[70%] group relative",
-        isMe ? "flex flex-col items-end" : "flex flex-col items-start"
-      )}>
+      <div 
+        className={clsx(
+          "max-w-[85%] md:max-w-[70%] group relative transform-gpu transition-all duration-300",
+          isMe ? "flex flex-col items-end" : "flex flex-col items-start"
+        )}
+        onContextMenu={(e) => {
+          if (message.is_deleted) return;
+          e.preventDefault();
+          onMenuOpen?.(message, { x: e.clientX, y: e.clientY });
+        }}
+      >
         {/* Sender Name in groups */}
         {!isMe && message.sender_id?.name && (
           <span className="text-[11px] font-bold text-slate-400 mb-1.5 ml-1 uppercase tracking-widest leading-none">
@@ -238,58 +246,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
             </div>
           )}
         </div>
-
-        {/* Message Actions (visible on hover) */}
-        {!message.is_deleted && (
-          <div className={clsx(
-            "absolute top-1/2 -translate-y-1/2 flex items-center gap-1 transition-all duration-300 opacity-0 group-hover:opacity-100 z-20",
-            isMe ? "-left-28" : "-right-28"
-          )}>
-            <button
-              onClick={() => setShowReactions(!showReactions)}
-              className="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-sky-500 rounded-2xl shadow-xl shadow-slate-200 active:scale-90 transition-all"
-              title="Add Reaction"
-            >
-              <Smile className="w-4.5 h-4.5" />
-            </button>
-            {isMe && !isEditing && (
-              <>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-sky-500 rounded-2xl shadow-xl shadow-slate-200 active:scale-90 transition-all"
-                  title="Edit Message"
-                >
-                  <Edit2 className="w-4.5 h-4.5" />
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="p-2.5 bg-red-50 border border-red-100 text-red-400 hover:bg-red-500 hover:text-white rounded-2xl shadow-xl shadow-red-200 active:scale-90 transition-all"
-                  title="Delete Message"
-                >
-                  <Trash2 className="w-4.5 h-4.5" />
-                </button>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* Reaction Picker Overlay */}
-        {showReactions && (
-          <div className={clsx(
-            "absolute -top-14 bg-white border border-slate-100 shadow-2xl rounded-[1.5rem] p-2 flex gap-1 z-30 animate-in fade-in zoom-in duration-300",
-            isMe ? "right-0" : "left-0"
-          )}>
-            {reactionEmojis.map((emoji) => (
-              <button
-                key={emoji}
-                onClick={() => handleReaction(emoji)}
-                className="w-10 h-10 flex items-center justify-center text-xl hover:bg-slate-50 rounded-xl hover:scale-110 active:scale-90 transition-all"
-              >
-                {emoji}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {isMe && (

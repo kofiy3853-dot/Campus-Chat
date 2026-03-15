@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MessageSquare, Edit2, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { useUnread } from '../context/UnreadContext';
@@ -22,6 +22,8 @@ const ChatWindow = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
+  const [activeMessage, setActiveMessage] = useState<any>(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const markAsRead = useCallback(async () => {
@@ -168,6 +170,11 @@ const ChatWindow = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   }, [messages]);
 
+  const closeMenu = () => {
+    setActiveMessage(null);
+    setMenuPosition({ x: 0, y: 0 });
+  };
+
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
     try {
       const otherParticipant = conversation?.participants.find((p: any) => p._id !== user?._id);
@@ -307,6 +314,10 @@ const ChatWindow = () => {
               onReaction={onReaction}
               onEdit={onEdit}
               onDelete={onDelete}
+              onMenuOpen={(message, position) => {
+                setActiveMessage(message);
+                setMenuPosition(position);
+              }}
             />
           ))}
           <div ref={messagesEndRef} />
@@ -315,6 +326,91 @@ const ChatWindow = () => {
 
       {/* Input component */}
       <ChatInput onSend={handleSend} onTyping={handleTyping} />
+
+      {/* Action Menu Backdrop */}
+      {activeMessage && (
+        <div 
+          className="fixed inset-0 z-[100] cursor-default"
+          onClick={closeMenu}
+          onContextMenu={(e) => {
+            e.preventDefault();
+            closeMenu();
+          }}
+        />
+      )}
+
+      {/* Action Menu */}
+      {activeMessage && (
+        <div 
+          className="fixed z-[101] bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-3 min-w-[220px] animate-in fade-in zoom-in duration-200"
+          style={{ 
+            left: `${Math.min(menuPosition.x, window.innerWidth - 240)}px`, 
+            top: `${Math.min(menuPosition.y, window.innerHeight - 300)}px` 
+          }}
+        >
+          {/* Reaction Quick Picker */}
+          <div className="flex gap-1 mb-3 bg-slate-50/50 p-2 rounded-2xl border border-slate-100">
+            {['👍', '❤️', '😂', '😮', '😢', '🔥'].map(emoji => (
+              <button
+                key={emoji}
+                onClick={() => {
+                  onReaction(activeMessage._id, emoji);
+                  closeMenu();
+                }}
+                className="w-8 h-8 flex items-center justify-center text-lg hover:bg-white hover:shadow-sm rounded-xl transition-all hover:scale-110 active:scale-90"
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-1">
+            <button 
+              onClick={() => {
+                // Feature: Copy text
+                navigator.clipboard.writeText(activeMessage.message_text);
+                closeMenu();
+              }}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 text-slate-600 hover:text-sky-600 transition-colors text-sm font-bold"
+            >
+              <div className="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center text-sky-500">
+                <MessageSquare className="w-4 h-4" />
+              </div>
+              Copy Message
+            </button>
+
+            {(activeMessage.sender_id?._id === user?._id || activeMessage.sender_id === user?._id) && !activeMessage.is_deleted && (
+              <>
+                <button 
+                  onClick={() => {
+                    // Logic for edit will need to be handled, but for now just a mockup
+                    // since edit UI is usually inline
+                    closeMenu();
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 text-slate-600 hover:text-sky-600 transition-colors text-sm font-bold"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-500">
+                    <Edit2 className="w-4 h-4" />
+                  </div>
+                  Edit Message
+                </button>
+                <button 
+                  onClick={() => {
+                    onDelete(activeMessage._id);
+                    closeMenu();
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-400 hover:text-red-500 transition-colors text-sm font-bold"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-500">
+                    <Trash2 className="w-4 h-4" />
+                  </div>
+                  Delete Message
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
