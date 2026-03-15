@@ -11,16 +11,58 @@ import { logDetailedError } from '../utils/logger';
 
 export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
-    const conversations = await Conversation.find({
-      participants: req.user.id,
-    })
-      .populate('participants', 'name email profile_picture status last_seen')
-      .populate('last_message')
-      .sort({ last_message_time: -1 });
+    const userId = req.user._id;
 
-    res.json(conversations);
+    // Aggregate messages to find all unique conversations for this user
+    // sorted by the latest message timestamp
+    const conversationSummaries = await Message.aggregate([
+      {
+        $match: {
+          $or: [
+            { sender_id: userId },
+            { receiver: userId },
+            { recipient_id: userId }
+          ]
+        }
+      },
+      {
+        $sort: { timestamp: -1 }
+      },
+      {
+        $group: {
+          _id: "$conversation_id",
+          last_message: { $first: "$$ROOT" },
+          last_message_time: { $first: "$timestamp" }
+        }
+      },
+      {
+        $sort: { last_message_time: -1 }
+      }
+    ]);
+
+    if (!conversationSummaries.length) {
+      return res.json([]);
+    }
+
+    // Extract the conversation IDs
+    const conversationIds = conversationSummaries.map(c => c._id);
+
+    // Fetch the actual Conversation documents and populate participants
+    // We do this separately to maintain the complex population logic of the Conversation model
+    const conversations = await Conversation.find({
+      _id: { $in: conversationIds }
+    })
+    .populate('participants', 'name email profile_picture status last_seen')
+    .populate('last_message');
+
+    // Sort the final results to match our aggregation order
+    const sortedConversations = conversationIds.map(id => 
+      conversations.find(c => c._id.toString() === id.toString())
+    ).filter(Boolean);
+
+    res.json(sortedConversations);
   } catch (error: any) {
-    console.error('Error in getConversations:', error);
+    console.error('Error in getConversations (Aggregation):', error);
     res.status(500).json({ message: error.message });
   }
 };
