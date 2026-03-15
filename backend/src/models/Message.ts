@@ -26,13 +26,21 @@ export interface IMessage extends Document {
 const MessageSchema: Schema = new Schema({
   conversation_id: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true },
   sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  recipient_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  receiver: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  recipient_id: { type: Schema.Types.ObjectId, ref: 'User' }, // For compatibility
+  receiver: { type: Schema.Types.ObjectId, ref: 'User' }, // Explicitly requested
   message_text: { type: String },
-  message_type: { type: String, enum: ['text', 'image', 'file', 'voice'], default: 'text' },
+  message_type: { 
+    type: String, 
+    enum: ['text', 'image', 'file', 'voice'], 
+    default: 'text' 
+  },
   media_url: { type: String },
-  media_thumbnail: { type: String }, // Thumbnail for images
-  delivery_status: { type: String, enum: ['sent', 'delivered', 'read'], default: 'sent' },
+  media_thumbnail: { type: String },
+  delivery_status: { 
+    type: String, 
+    enum: ['sent', 'delivered', 'read'], 
+    default: 'sent' 
+  },
   read: { type: Boolean, default: false },
   timestamp: { type: Date, default: Date.now },
   edited_at: { type: Date },
@@ -41,7 +49,7 @@ const MessageSchema: Schema = new Schema({
   reactions: [{
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     emoji: { type: String }
-  }],
+  }]
 }, { timestamps: true });
 
 export default mongoose.model<IMessage>('Message', MessageSchema);
