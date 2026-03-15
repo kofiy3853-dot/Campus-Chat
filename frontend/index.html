@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Campus-Networking | Connect & Collaborate</title>
     <meta name="description" content="Production-level campus messaging platform for students and staff." />
@@ -16,6 +16,12 @@
       window.onunhandledrejection = function(event) {
         alert("Unhandled Promise Rejection: " + event.reason);
       };
+      // Failsafe: Try to hide splash screen as soon as DOM is ready
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen) {
+          window.Capacitor.Plugins.SplashScreen.hide();
+        }
+      });
     </script>
   </head>
   <body>
