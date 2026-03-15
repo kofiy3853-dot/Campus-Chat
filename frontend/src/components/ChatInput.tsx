@@ -71,6 +71,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
       formData.append('file', file);
       const { data } = await api.post('/api/chat/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+      });
       setPreviewFile({ 
         url: data.url, 
         type: explicitType || data.type, 
