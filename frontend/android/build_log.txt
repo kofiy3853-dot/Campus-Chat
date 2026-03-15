@@ -1,0 +1,2085 @@
+﻿Initialized native services in: C:\Users\Me\.gradle\native
+Initialized jansi services in: C:\Users\Me\.gradle\native
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Starting process 'Gradle build daemon'. Working directory: C:\Users\Me\.gradle\daemon\8.14.3 Command: C:\Program Files\JetBrains\CLion 2025.1.3\jbr\bin\java.exe --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -Xmx1536m -Dfile.encoding=UTF-8 -Duser.country=US -Duser.language=en -Duser.variant -cp C:\Users\Me\.gradle\wrapper\dists\gradle-8.14.3-all\10utluxaxniiv4wxiphsi49nj\gradle-8.14.3\lib\gradle-daemon-main-8.14.3.jar -javaagent:C:\Users\Me\.gradle\wrapper\dists\gradle-8.14.3-all\10utluxaxniiv4wxiphsi49nj\gradle-8.14.3\lib\agents\gradle-instrumentation-agent-8.14.3.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.14.3
+Successfully started process 'Gradle build daemon'
+An attempt to start the daemon took 4.806 secs.
+The client will now receive all logging from the daemon (pid: 26424). The daemon log file: C:\Users\Me\.gradle\daemon\8.14.3\daemon-26424.out.log
+Daemon will be stopped at the end of the build 
+Using 8 worker leases.
+Received JVM installation metadata from 'C:\Program Files\JetBrains\CLion 2025.1.3\jbr': {JAVA_HOME=C:\Program Files\JetBrains\CLion 2025.1.3\jbr, JAVA_VERSION=21.0.7, JAVA_VENDOR=JetBrains s.r.o., RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.7+6-b1038.58, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.7+6-b1038.58, VM_VENDOR=JetBrains s.r.o., OS_ARCH=amd64}
+Watching the file system is configured to be enabled if available
+Now considering [C:\Users\Me\Desktop\Campus-Chat\frontend\android] as hierarchies to watch
+File system watching is active
+Starting Build
+Settings evaluated using settings file 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\settings.gradle'.
+Projects loaded. Root project using build file 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\build.gradle'.
+Included projects: [root project 'android', project ':app', project ':capacitor-android', project ':capacitor-cordova-android-plugins']
+
+> Configure project :
+Evaluating root project 'android' using build file 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\build.gradle'.
+
+> Configure project :app
+Evaluating project ':app' using build file 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\build.gradle'.
+Using default execution profile
+google-services.json not found, google-services plugin not applied. Push Notifications won't work
+WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+
+> Configure project :capacitor-android
+Evaluating project ':capacitor-android' using build file 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\build.gradle'.
+Using default execution profile
+
+> Configure project :capacitor-cordova-android-plugins
+Evaluating project ':capacitor-cordova-android-plugins' using build file 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\build.gradle'.
+Using default execution profile
+WARNING: Using flatDir should be avoided because it doesn't support any meta-data formats.
+All projects evaluated.
+Task name matched 'assembleDebug'
+Selected primary task 'assembleDebug' from project :
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Tasks to be executed: [task ':app:preBuild', task ':app:preDebugBuild', task ':app:mergeDebugNativeDebugMetadata', task ':app:javaPreCompileDebug', task ':capacitor-android:preBuild', task ':capacitor-android:preDebugBuild', task ':capacitor-android:writeDebugAarMetadata', task ':capacitor-cordova-android-plugins:preBuild', task ':capacitor-cordova-android-plugins:preDebugBuild', task ':capacitor-cordova-android-plugins:writeDebugAarMetadata', task ':app:checkDebugAarMetadata', task ':capacitor-android:processDebugNavigationResources', task ':capacitor-cordova-android-plugins:processDebugNavigationResources', task ':app:processDebugNavigationResources', task ':app:compileDebugNavigationResources', task ':app:generateDebugResValues', task ':capacitor-android:generateDebugResValues', task ':capacitor-android:generateDebugResources', task ':capacitor-android:packageDebugResources', task ':capacitor-cordova-android-plugins:generateDebugResValues', task ':capacitor-cordova-android-plugins:generateDebugResources', task ':capacitor-cordova-android-plugins:packageDebugResources', task ':app:mapDebugSourceSetPaths', task ':app:generateDebugResources', task ':app:mergeDebugResources', task ':app:packageDebugResources', task ':app:parseDebugLocalResources', task ':app:createDebugCompatibleScreenManifests', task ':app:extractDeepLinksDebug', task ':capacitor-android:extractDeepLinksDebug', task ':capacitor-android:processDebugManifest', task ':capacitor-cordova-android-plugins:extractDeepLinksDebug', task ':capacitor-cordova-android-plugins:processDebugManifest', task ':app:processDebugMainManifest', task ':app:processDebugManifest', task ':app:processDebugManifestForPackage', task ':capacitor-android:compileDebugLibraryResources', task ':capacitor-android:parseDebugLocalResources', task ':capacitor-android:generateDebugRFile', task ':capacitor-cordova-android-plugins:compileDebugLibraryResources', task ':capacitor-cordova-android-plugins:parseDebugLocalResources', task ':capacitor-cordova-android-plugins:generateDebugRFile', task ':app:processDebugResources', task ':capacitor-android:javaPreCompileDebug', task ':capacitor-android:compileDebugJavaWithJavac', task ':capacitor-android:bundleLibCompileToJarDebug', task ':capacitor-cordova-android-plugins:javaPreCompileDebug', task ':capacitor-cordova-android-plugins:compileDebugJavaWithJavac', task ':capacitor-cordova-android-plugins:bundleLibCompileToJarDebug', task ':app:compileDebugJavaWithJavac', task ':app:mergeDebugShaders', task ':app:compileDebugShaders', task ':app:generateDebugAssets', task ':capacitor-android:mergeDebugShaders', task ':capacitor-android:compileDebugShaders', task ':capacitor-android:generateDebugAssets', task ':capacitor-android:mergeDebugAssets', task ':capacitor-cordova-android-plugins:mergeDebugShaders', task ':capacitor-cordova-android-plugins:compileDebugShaders', task ':capacitor-cordova-android-plugins:generateDebugAssets', task ':capacitor-cordova-android-plugins:mergeDebugAssets', task ':app:mergeDebugAssets', task ':app:compressDebugAssets', task ':capacitor-android:bundleLibRuntimeToJarDebug', task ':capacitor-cordova-android-plugins:bundleLibRuntimeToJarDebug', task ':app:desugarDebugFileDependencies', task ':app:dexBuilderDebug', task ':app:mergeDebugGlobalSynthetics', task ':app:processDebugJavaRes', task ':capacitor-android:processDebugJavaRes', task ':capacitor-cordova-android-plugins:processDebugJavaRes', task ':app:mergeDebugJavaResource', task ':app:checkDebugDuplicateClasses', task ':app:mergeExtDexDebug', task ':capacitor-android:bundleLibRuntimeToDirDebug', task ':capacitor-cordova-android-plugins:bundleLibRuntimeToDirDebug', task ':app:mergeLibDexDebug', task ':app:mergeProjectDexDebug', task ':app:mergeDebugJniLibFolders', task ':capacitor-android:mergeDebugJniLibFolders', task ':capacitor-android:mergeDebugNativeLibs', task ':capacitor-android:copyDebugJniLibsProjectOnly', task ':capacitor-cordova-android-plugins:mergeDebugJniLibFolders', task ':capacitor-cordova-android-plugins:mergeDebugNativeLibs', task ':capacitor-cordova-android-plugins:copyDebugJniLibsProjectOnly', task ':app:mergeDebugNativeLibs', task ':app:stripDebugDebugSymbols', task ':app:validateSigningDebug', task ':app:writeDebugAppMetadata', task ':app:writeDebugSigningConfigVersions', task ':app:packageDebug', task ':app:createDebugApkListingFileRedirect', task ':app:assembleDebug', task ':capacitor-android:checkDebugAarMetadata', task ':capacitor-android:stripDebugDebugSymbols', task ':capacitor-android:copyDebugJniLibsProjectAndLocalJars', task ':capacitor-android:extractDebugAnnotations', task ':capacitor-android:extractDeepLinksForAarDebug', task ':capacitor-android:mergeDebugGeneratedProguardFiles', task ':capacitor-android:mergeDebugConsumerProguardFiles', task ':capacitor-android:prepareDebugArtProfile', task ':capacitor-android:prepareLintJarForPublish', task ':capacitor-android:mergeDebugJavaResource', task ':capacitor-android:syncDebugLibJars', task ':capacitor-android:bundleDebugAar', task ':capacitor-android:assembleDebug', task ':capacitor-cordova-android-plugins:checkDebugAarMetadata', task ':capacitor-cordova-android-plugins:stripDebugDebugSymbols', task ':capacitor-cordova-android-plugins:copyDebugJniLibsProjectAndLocalJars', task ':capacitor-cordova-android-plugins:extractDebugAnnotations', task ':capacitor-cordova-android-plugins:extractDeepLinksForAarDebug', task ':capacitor-cordova-android-plugins:mergeDebugGeneratedProguardFiles', task ':capacitor-cordova-android-plugins:mergeDebugConsumerProguardFiles', task ':capacitor-cordova-android-plugins:prepareDebugArtProfile', task ':capacitor-cordova-android-plugins:prepareLintJarForPublish', task ':capacitor-cordova-android-plugins:mergeDebugJavaResource', task ':capacitor-cordova-android-plugins:syncDebugLibJars', task ':capacitor-cordova-android-plugins:bundleDebugAar', task ':capacitor-cordova-android-plugins:assembleDebug']
+Tasks that were excluded: []
+work action Parameters of IdentityTransform (Thread[#101,Execution worker Thread 2,5,main]) started.
+work action Parameters of DexingNoClasspathTransform (Thread[#101,Execution worker Thread 2,5,main]) started.
+work action Parameters of DexingOutputSplitTransform (Thread[#101,Execution worker Thread 2,5,main]) started.
+work action Parameters of ClassesDirToClassesTransform (Thread[#101,Execution worker Thread 2,5,main]) started.
+work action Parameters of DexingOutputSplitTransform (Thread[#101,Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:preBuild (Thread[#101,Execution worker Thread 2,5,main]) started.
+:app:preBuild (Thread[#99,included builds,5,main]) started.
+
+> Task :app:preBuild UP-TO-DATE
+Skipping task ':app:preBuild' as it has no actions.
+Resolve mutations for :app:preDebugBuild (Thread[#99,included builds,5,main]) started.
+:app:preDebugBuild (Thread[#99,included builds,5,main]) started.
+
+> Task :app:preDebugBuild UP-TO-DATE
+Skipping task ':app:preDebugBuild' as it has no actions.
+Resolve mutations for :app:mergeDebugNativeDebugMetadata (Thread[#99,included builds,5,main]) started.
+:app:mergeDebugNativeDebugMetadata (Thread[#99,included builds,5,main]) started.
+
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+Skipping task ':app:mergeDebugNativeDebugMetadata' as it has no source files and no previous output files.
+Resolve mutations for :app:javaPreCompileDebug (Thread[#99,included builds,5,main]) started.
+:app:javaPreCompileDebug (Thread[#99,included builds,5,main]) started.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':app:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':app:javaPreCompileDebug' as it is up-to-date.
+Resolve mutations for :capacitor-android:preBuild (Thread[#99,included builds,5,main]) started.
+:capacitor-android:preBuild (Thread[#99,included builds,5,main]) started.
+
+> Task :capacitor-android:preBuild UP-TO-DATE
+Skipping task ':capacitor-android:preBuild' as it has no actions.
+Resolve mutations for :capacitor-android:preDebugBuild (Thread[#99,included builds,5,main]) started.
+:capacitor-android:preDebugBuild (Thread[#99,included builds,5,main]) started.
+
+> Task :capacitor-android:preDebugBuild UP-TO-DATE
+Skipping task ':capacitor-android:preDebugBuild' as it has no actions.
+Resolve mutations for :capacitor-android:writeDebugAarMetadata (Thread[#99,included builds,5,main]) started.
+:capacitor-android:writeDebugAarMetadata (Thread[#101,Execution worker Thread 2,5,main]) started.
+
+> Task :capacitor-android:writeDebugAarMetadata UP-TO-DATE
+Caching disabled for task ':capacitor-android:writeDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':capacitor-android:writeDebugAarMetadata' as it is up-to-date.
+work action resolve aar-metadata.properties (project :capacitor-android) (Thread[#101,Execution worker Thread 2,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:preBuild (Thread[#99,included builds,5,main]) started.
+:capacitor-cordova-android-plugins:preBuild (Thread[#99,included builds,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:preBuild UP-TO-DATE
+Skipping task ':capacitor-cordova-android-plugins:preBuild' as it has no actions.
+Resolve mutations for :capacitor-cordova-android-plugins:preDebugBuild (Thread[#101,Execution worker Thread 2,5,main]) started.
+:capacitor-cordova-android-plugins:preDebugBuild (Thread[#101,Execution worker Thread 2,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:preDebugBuild UP-TO-DATE
+Skipping task ':capacitor-cordova-android-plugins:preDebugBuild' as it has no actions.
+Resolve mutations for :capacitor-cordova-android-plugins:writeDebugAarMetadata (Thread[#101,Execution worker Thread 2,5,main]) started.
+:capacitor-cordova-android-plugins:writeDebugAarMetadata (Thread[#101,Execution worker Thread 2,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:writeDebugAarMetadata UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:writeDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':capacitor-cordova-android-plugins:writeDebugAarMetadata' as it is up-to-date.
+work action resolve aar-metadata.properties (project :capacitor-cordova-android-plugins) (Thread[#101,Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:checkDebugAarMetadata (Thread[#106,Execution worker Thread 7,5,main]) started.
+:app:checkDebugAarMetadata (Thread[#101,Execution worker Thread 2,5,main]) started.
+
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Caching disabled for task ':app:checkDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':app:checkDebugAarMetadata' as it is up-to-date.
+Resolve mutations for :capacitor-android:processDebugNavigationResources (Thread[#101,Execution worker Thread 2,5,main]) started.
+:capacitor-android:processDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-android:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':capacitor-android:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:processDebugNavigationResources' as it is up-to-date.
+work action resolve debug (project :capacitor-android) (Thread[#100,Execution worker,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:processDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+:capacitor-cordova-android-plugins:processDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:processDebugNavigationResources' as it is up-to-date.
+work action resolve debug (project :capacitor-cordova-android-plugins) (Thread[#100,Execution worker,5,main]) started.
+Resolve mutations for :app:processDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+:app:processDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :app:processDebugNavigationResources UP-TO-DATE
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Caching disabled for task ':app:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':app:processDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :app:compileDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+:app:compileDebugNavigationResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':app:compileDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':app:compileDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :app:generateDebugResValues (Thread[#100,Execution worker,5,main]) started.
+:app:generateDebugResValues (Thread[#100,Execution worker,5,main]) started.
+
+> Task :app:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':app:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :capacitor-android:generateDebugResValues (Thread[#100,Execution worker,5,main]) started.
+:capacitor-android:generateDebugResValues (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-android:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':capacitor-android:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :capacitor-android:generateDebugResources (Thread[#100,Execution worker,5,main]) started.
+:capacitor-android:generateDebugResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-android:generateDebugResources UP-TO-DATE
+Caching disabled for task ':capacitor-android:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:generateDebugResources' as it is up-to-date.
+Resolve mutations for :capacitor-android:packageDebugResources (Thread[#100,Execution worker,5,main]) started.
+:capacitor-android:packageDebugResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-android:packageDebugResources UP-TO-DATE
+Caching disabled for task ':capacitor-android:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:packageDebugResources' as it is up-to-date.
+work action resolve packageDebugResources (project :capacitor-android) (Thread[#100,Execution worker,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:generateDebugResValues (Thread[#100,Execution worker,5,main]) started.
+:capacitor-cordova-android-plugins:generateDebugResValues (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :capacitor-cordova-android-plugins:generateDebugResources (Thread[#105,Execution worker Thread 6,5,main]) started.
+:capacitor-cordova-android-plugins:generateDebugResources (Thread[#105,Execution worker Thread 6,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:generateDebugResources UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:generateDebugResources' as it is up-to-date.
+Resolve mutations for :capacitor-cordova-android-plugins:packageDebugResources (Thread[#105,Execution worker Thread 6,5,main]) started.
+:capacitor-cordova-android-plugins:packageDebugResources (Thread[#105,Execution worker Thread 6,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:packageDebugResources UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:packageDebugResources' as it is up-to-date.
+work action resolve packageDebugResources (project :capacitor-cordova-android-plugins) (Thread[#105,Execution worker Thread 6,5,main]) started.
+Resolve mutations for :app:mapDebugSourceSetPaths (Thread[#105,Execution worker Thread 6,5,main]) started.
+:app:mapDebugSourceSetPaths (Thread[#105,Execution worker Thread 6,5,main]) started.
+
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Caching disabled for task ':app:mapDebugSourceSetPaths' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':app:mapDebugSourceSetPaths' as it is up-to-date.
+Resolve mutations for :app:generateDebugResources (Thread[#100,Execution worker,5,main]) started.
+:app:generateDebugResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :app:generateDebugResources UP-TO-DATE
+Caching disabled for task ':app:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:generateDebugResources' as it is up-to-date.
+Resolve mutations for :app:mergeDebugResources (Thread[#100,Execution worker,5,main]) started.
+:app:mergeDebugResources (Thread[#100,Execution worker,5,main]) started.
+
+> Task :app:mergeDebugResources UP-TO-DATE
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Caching disabled for task ':app:mergeDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:mergeDebugResources' as it is up-to-date.
+Resolve mutations for :app:packageDebugResources (Thread[#100,Execution worker,5,main]) started.
+:app:packageDebugResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :app:packageDebugResources UP-TO-DATE
+Caching disabled for task ':app:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':app:packageDebugResources' as it is up-to-date.
+Resolve mutations for :app:parseDebugLocalResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+:app:parseDebugLocalResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :app:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':app:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':app:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :app:createDebugCompatibleScreenManifests (Thread[#104,Execution worker Thread 5,5,main]) started.
+:app:createDebugCompatibleScreenManifests (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+Caching disabled for task ':app:createDebugCompatibleScreenManifests' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':app:createDebugCompatibleScreenManifests' as it is up-to-date.
+Resolve mutations for :app:extractDeepLinksDebug (Thread[#104,Execution worker Thread 5,5,main]) started.
+:app:extractDeepLinksDebug (Thread[#100,Execution worker,5,main]) started.
+
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':app:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':app:extractDeepLinksDebug' as it is up-to-date.
+Resolve mutations for :capacitor-android:extractDeepLinksDebug (Thread[#100,Execution worker,5,main]) started.
+:capacitor-android:extractDeepLinksDebug (Thread[#100,Execution worker,5,main]) started.
+
+> Task :capacitor-android:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':capacitor-android:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:extractDeepLinksDebug' as it is up-to-date.
+work action resolve navigation.json (project :capacitor-android) (Thread[#100,Execution worker,5,main]) started.
+Resolve mutations for :capacitor-android:processDebugManifest (Thread[#100,Execution worker,5,main]) started.
+:capacitor-android:processDebugManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :capacitor-android:processDebugManifest UP-TO-DATE
+Caching disabled for task ':capacitor-android:processDebugManifest' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:processDebugManifest' as it is up-to-date.
+work action resolve AndroidManifest.xml (project :capacitor-android) (Thread[#104,Execution worker Thread 5,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:extractDeepLinksDebug (Thread[#104,Execution worker Thread 5,5,main]) started.
+:capacitor-cordova-android-plugins:extractDeepLinksDebug (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:extractDeepLinksDebug' as it is up-to-date.
+work action resolve navigation.json (project :capacitor-cordova-android-plugins) (Thread[#104,Execution worker Thread 5,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:processDebugManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+:capacitor-cordova-android-plugins:processDebugManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:processDebugManifest UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:processDebugManifest' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:processDebugManifest' as it is up-to-date.
+work action resolve AndroidManifest.xml (project :capacitor-cordova-android-plugins) (Thread[#104,Execution worker Thread 5,5,main]) started.
+Resolve mutations for :app:processDebugMainManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+:app:processDebugMainManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :app:processDebugMainManifest
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Caching disabled for task ':app:processDebugMainManifest' because:
+  Build cache is disabled
+Task ':app:processDebugMainManifest' is not up-to-date because:
+  Value of input property 'optionalFeatures' has changed for task ':app:processDebugMainManifest'
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\src\main\libs', not found
+Loading library manifest C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml
+Loading library manifest C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\e47013dec160bb8e8e78795049f410c2\transformed\framework-14.0.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\4f5eb2e1ae45a07736e2f6ed862ea36a\transformed\core-splashscreen-1.2.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\bee8f78bb28e6cb788edd05c601f4778\transformed\appcompat-resources-1.7.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\c3f09e8abd8bb01c9314454bd06bb337\transformed\appcompat-1.7.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\ef97883a45eaa5cc79115d450cce1dbe\transformed\coordinatorlayout-1.3.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\754c4f1b691d2a1223e4f8f413992fee\transformed\fragment-1.8.9\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\4ce00e85fb17003296e7add5523825c1\transformed\activity-1.11.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\1e3e5961ccf37b13ee8a7c0a81228664\transformed\cursoradapter-1.0.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\f570623fbaea2df5386d3e48ada25a61\transformed\drawerlayout-1.0.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\25a881cfd51f0b690442a74b496782fd\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\5c150d65e548acad3954bacf90b47f66\transformed\viewpager-1.0.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\596ab941bf00b590daff3ec7eb267457\transformed\customview-1.0.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\c2f70b51baa62bcee94ea5c7e05791a1\transformed\webkit-1.14.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\dbca2f6d95f7d2f69dee86e3f7b328a8\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\98eaa2f86c1e52fdab04ff44c25cd64f\transformed\vectordrawable-1.1.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\6443194ff2cd53b8a19f0de2b31832a0\transformed\core-ktx-1.17.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\c0a22850032ed8caa67b3d94a8173736\transformed\loader-1.0.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\8d83e436f29a9ad9858ae8c630f3448b\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\ab32e4c3e2bf096654fd9e14504854dc\transformed\lifecycle-viewmodel-2.6.2\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\b5655c5df44c26433ffde34d45e6b2a4\transformed\lifecycle-livedata-core-2.6.2\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\ebf9360ba611f1d20f2bddac6f1045ca\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\de2a1b5c01db4d02ef6d13f0f4e2cf96\transformed\lifecycle-viewmodel-savedstate-2.6.2\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\3f2ab0b27a59a3dfe1466c241ece8334\transformed\savedstate-1.2.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\7179ce4c01b9a0b75718a869351620f5\transformed\startup-runtime-1.1.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\b26bfd9a484ffd5014f872ac1684c434\transformed\versionedparcelable-1.1.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\a927f34fced1647a8adc4ec57dcbe539\transformed\interpolator-1.0.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\dcfd9b438b7b1dc562c63a5efe9cf4a0\transformed\tracing-1.2.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\56c299ca5cc1351fb9b11d94695125dc\transformed\core-runtime-2.2.0\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\1d9ef0194f51a6e0da4e440575587814\transformed\annotation-experimental-1.4.1\AndroidManifest.xml
+Loading library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\9275faa7fc56368462609e8a34802ec7\transformed\core-viewtree-1.0.0\AndroidManifest.xml
+Merging main manifest C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml
+
+Merging library manifest C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml
+Merging manifest with lower [:capacitor-android] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [:capacitor-android] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\Desktop\Campus-Chat\frontend\android\capacitor-cordova-android-plugins\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml
+Merging manifest with lower [:capacitor-cordova-android-plugins] AndroidManifest.xml:2:1-11:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [:capacitor-cordova-android-plugins] AndroidManifest.xml:6:5-44
+application defined in both files...
+Merging application with lower [:capacitor-cordova-android-plugins] AndroidManifest.xml:8:5-9:19
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\e47013dec160bb8e8e78795049f410c2\transformed\framework-14.0.1\AndroidManifest.xml
+Merging manifest with lower [org.apache.cordova:framework:14.0.1] AndroidManifest.xml:20:1-27:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [org.apache.cordova:framework:14.0.1] AndroidManifest.xml:25:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\4f5eb2e1ae45a07736e2f6ed862ea36a\transformed\core-splashscreen-1.2.0\AndroidManifest.xml
+Merging manifest with lower [androidx.core:core-splashscreen:1.2.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.core:core-splashscreen:1.2.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\bee8f78bb28e6cb788edd05c601f4778\transformed\appcompat-resources-1.7.1\AndroidManifest.xml
+Merging manifest with lower [androidx.appcompat:appcompat-resources:1.7.1] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.appcompat:appcompat-resources:1.7.1] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\c3f09e8abd8bb01c9314454bd06bb337\transformed\appcompat-1.7.1\AndroidManifest.xml
+Merging manifest with lower [androidx.appcompat:appcompat:1.7.1] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.appcompat:appcompat:1.7.1] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\ef97883a45eaa5cc79115d450cce1dbe\transformed\coordinatorlayout-1.3.0\AndroidManifest.xml
+Merging manifest with lower [androidx.coordinatorlayout:coordinatorlayout:1.3.0] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.coordinatorlayout:coordinatorlayout:1.3.0] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\754c4f1b691d2a1223e4f8f413992fee\transformed\fragment-1.8.9\AndroidManifest.xml
+Merging manifest with lower [androidx.fragment:fragment:1.8.9] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.fragment:fragment:1.8.9] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\4ce00e85fb17003296e7add5523825c1\transformed\activity-1.11.0\AndroidManifest.xml
+Merging manifest with lower [androidx.activity:activity:1.11.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.activity:activity:1.11.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\1e3e5961ccf37b13ee8a7c0a81228664\transformed\cursoradapter-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.cursoradapter:cursoradapter:1.0.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.cursoradapter:cursoradapter:1.0.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\f570623fbaea2df5386d3e48ada25a61\transformed\drawerlayout-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.drawerlayout:drawerlayout:1.0.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.drawerlayout:drawerlayout:1.0.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\25a881cfd51f0b690442a74b496782fd\transformed\emoji2-views-helper-1.3.0\AndroidManifest.xml
+Merging manifest with lower [androidx.emoji2:emoji2-views-helper:1.3.0] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.emoji2:emoji2-views-helper:1.3.0] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml
+Merging manifest with lower [androidx.emoji2:emoji2:1.3.0] AndroidManifest.xml:17:1-35:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.emoji2:emoji2:1.3.0] AndroidManifest.xml:21:5-44
+application defined in both files...
+Merging application with lower [androidx.emoji2:emoji2:1.3.0] AndroidManifest.xml:23:5-33:19
+Adopted [provider: null]
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\5c150d65e548acad3954bacf90b47f66\transformed\viewpager-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.viewpager:viewpager:1.0.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.viewpager:viewpager:1.0.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\596ab941bf00b590daff3ec7eb267457\transformed\customview-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.customview:customview:1.0.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.customview:customview:1.0.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\c2f70b51baa62bcee94ea5c7e05791a1\transformed\webkit-1.14.0\AndroidManifest.xml
+Merging manifest with lower [androidx.webkit:webkit:1.14.0] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.webkit:webkit:1.14.0] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\dbca2f6d95f7d2f69dee86e3f7b328a8\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml
+Merging manifest with lower [androidx.vectordrawable:vectordrawable-animated:1.1.0] AndroidManifest.xml:17:1-24:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.vectordrawable:vectordrawable-animated:1.1.0] AndroidManifest.xml:20:5-22:41
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\98eaa2f86c1e52fdab04ff44c25cd64f\transformed\vectordrawable-1.1.0\AndroidManifest.xml
+Merging manifest with lower [androidx.vectordrawable:vectordrawable:1.1.0] AndroidManifest.xml:17:1-24:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.vectordrawable:vectordrawable:1.1.0] AndroidManifest.xml:20:5-22:41
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\6443194ff2cd53b8a19f0de2b31832a0\transformed\core-ktx-1.17.0\AndroidManifest.xml
+Merging manifest with lower [androidx.core:core-ktx:1.17.0] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.core:core-ktx:1.17.0] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\c0a22850032ed8caa67b3d94a8173736\transformed\loader-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.loader:loader:1.0.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.loader:loader:1.0.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml
+Merging manifest with lower [androidx.core:core:1.17.0] AndroidManifest.xml:17:1-30:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.core:core:1.17.0] AndroidManifest.xml:20:5-44
+Adopted [permission: null]
+Adopted [uses-permission: null]
+application defined in both files...
+Merging application with lower [androidx.core:core:1.17.0] AndroidManifest.xml:28:5-89
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\8d83e436f29a9ad9858ae8c630f3448b\transformed\lifecycle-livedata-2.6.2\AndroidManifest.xml
+Merging manifest with lower [androidx.lifecycle:lifecycle-livedata:2.6.2] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.lifecycle:lifecycle-livedata:2.6.2] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\ab32e4c3e2bf096654fd9e14504854dc\transformed\lifecycle-viewmodel-2.6.2\AndroidManifest.xml
+Merging manifest with lower [androidx.lifecycle:lifecycle-viewmodel:2.6.2] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.lifecycle:lifecycle-viewmodel:2.6.2] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml
+Merging manifest with lower [androidx.lifecycle:lifecycle-process:2.6.2] AndroidManifest.xml:17:1-35:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.lifecycle:lifecycle-process:2.6.2] AndroidManifest.xml:21:5-44
+application defined in both files...
+Merging application with lower [androidx.lifecycle:lifecycle-process:2.6.2] AndroidManifest.xml:23:5-33:19
+provider#androidx.startup.InitializationProvider defined in both files...
+Merging provider#androidx.startup.InitializationProvider with lower [androidx.lifecycle:lifecycle-process:2.6.2] AndroidManifest.xml:24:9-32:20
+Adopted [meta-data: null]
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\b5655c5df44c26433ffde34d45e6b2a4\transformed\lifecycle-livedata-core-2.6.2\AndroidManifest.xml
+Merging manifest with lower [androidx.lifecycle:lifecycle-livedata-core:2.6.2] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.lifecycle:lifecycle-livedata-core:2.6.2] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\ebf9360ba611f1d20f2bddac6f1045ca\transformed\lifecycle-runtime-2.6.2\AndroidManifest.xml
+Merging manifest with lower [androidx.lifecycle:lifecycle-runtime:2.6.2] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.lifecycle:lifecycle-runtime:2.6.2] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\de2a1b5c01db4d02ef6d13f0f4e2cf96\transformed\lifecycle-viewmodel-savedstate-2.6.2\AndroidManifest.xml
+Merging manifest with lower [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\3f2ab0b27a59a3dfe1466c241ece8334\transformed\savedstate-1.2.1\AndroidManifest.xml
+Merging manifest with lower [androidx.savedstate:savedstate:1.2.1] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.savedstate:savedstate:1.2.1] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml
+Merging manifest with lower [androidx.profileinstaller:profileinstaller:1.4.0] AndroidManifest.xml:17:1-55:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.profileinstaller:profileinstaller:1.4.0] AndroidManifest.xml:21:5-44
+application defined in both files...
+Merging application with lower [androidx.profileinstaller:profileinstaller:1.4.0] AndroidManifest.xml:23:5-53:19
+provider#androidx.startup.InitializationProvider defined in both files...
+Merging provider#androidx.startup.InitializationProvider with lower [androidx.profileinstaller:profileinstaller:1.4.0] AndroidManifest.xml:24:9-32:20
+Adopted [meta-data: null]
+Adopted [receiver: null]
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\7179ce4c01b9a0b75718a869351620f5\transformed\startup-runtime-1.1.1\AndroidManifest.xml
+Merging manifest with lower [androidx.startup:startup-runtime:1.1.1] AndroidManifest.xml:17:1-33:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.startup:startup-runtime:1.1.1] AndroidManifest.xml:21:5-23:41
+application defined in both files...
+Merging application with lower [androidx.startup:startup-runtime:1.1.1] AndroidManifest.xml:25:5-31:19
+provider#androidx.startup.InitializationProvider defined in both files...
+Merging provider#androidx.startup.InitializationProvider with lower [androidx.startup:startup-runtime:1.1.1] AndroidManifest.xml:26:9-30:34
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\b26bfd9a484ffd5014f872ac1684c434\transformed\versionedparcelable-1.1.1\AndroidManifest.xml
+Merging manifest with lower [androidx.versionedparcelable:versionedparcelable:1.1.1] AndroidManifest.xml:17:1-27:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.versionedparcelable:versionedparcelable:1.1.1] AndroidManifest.xml:20:5-22:41
+application defined in both files...
+Merging application with lower [androidx.versionedparcelable:versionedparcelable:1.1.1] AndroidManifest.xml:24:5-25:19
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\a927f34fced1647a8adc4ec57dcbe539\transformed\interpolator-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.interpolator:interpolator:1.0.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.interpolator:interpolator:1.0.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\dcfd9b438b7b1dc562c63a5efe9cf4a0\transformed\tracing-1.2.0\AndroidManifest.xml
+Merging manifest with lower [androidx.tracing:tracing:1.2.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.tracing:tracing:1.2.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\56c299ca5cc1351fb9b11d94695125dc\transformed\core-runtime-2.2.0\AndroidManifest.xml
+Merging manifest with lower [androidx.arch.core:core-runtime:2.2.0] AndroidManifest.xml:17:1-22:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.arch.core:core-runtime:2.2.0] AndroidManifest.xml:20:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\1d9ef0194f51a6e0da4e440575587814\transformed\annotation-experimental-1.4.1\AndroidManifest.xml
+Merging manifest with lower [androidx.annotation:annotation-experimental:1.4.1] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.annotation:annotation-experimental:1.4.1] AndroidManifest.xml:5:5-44
+Merging library manifest C:\Users\Me\.gradle\caches\8.14.3\transforms\9275faa7fc56368462609e8a34802ec7\transformed\core-viewtree-1.0.0\AndroidManifest.xml
+Merging manifest with lower [androidx.core:core-viewtree:1.0.0] AndroidManifest.xml:2:1-7:12
+uses-sdk defined in both files...
+Merging uses-sdk with lower [androidx.core:core-viewtree:1.0.0] AndroidManifest.xml:5:5-44
+Merging result: SUCCESS
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.campuschat.app"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="36" />
+10
+11    <!-- Permissions -->
+12
+13    <uses-permission android:name="android.permission.INTERNET" />
+13-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:40:5-67
+13-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:40:22-64
+14
+15    <permission
+15-->[androidx.core:core:1.17.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:22:5-24:47
+16        android:name="com.campuschat.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.17.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.17.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="com.campuschat.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.17.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.17.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:4:5-36:19
+22        android:allowBackup="true"
+22-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:5:9-35
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.17.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\11094a199bb7945826b161d8a9c17beb\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
+24        android:debuggable="true"
+25        android:extractNativeLibs="false"
+26        android:icon="@mipmap/ic_launcher"
+26-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:6:9-43
+27        android:label="@string/app_name"
+27-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:7:9-41
+28        android:roundIcon="@mipmap/ic_launcher_round"
+28-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:8:9-54
+29        android:supportsRtl="true"
+29-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:9:9-35
+30        android:theme="@style/AppTheme" >
+30-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:10:9-40
+31        <activity
+31-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:12:9-25:20
+32            android:name="com.campuschat.app.MainActivity"
+32-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:14:13-41
+33            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+33-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:13:13-148
+34            android:exported="true"
+34-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:18:13-36
+35            android:label="@string/title_activity_main"
+35-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:15:13-56
+36            android:launchMode="singleTask"
+36-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:17:13-44
+37            android:theme="@style/AppTheme.NoActionBarLaunch" >
+37-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:16:13-62
+38            <intent-filter>
+38-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:20:13-23:29
+39                <action android:name="android.intent.action.MAIN" />
+39-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:21:17-69
+39-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:21:25-66
+40
+41                <category android:name="android.intent.category.LAUNCHER" />
+41-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:22:17-77
+41-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:22:27-74
+42            </intent-filter>
+43        </activity>
+44
+45        <provider
+46            android:name="androidx.core.content.FileProvider"
+46-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:28:13-62
+47            android:authorities="com.campuschat.app.fileprovider"
+47-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:29:13-64
+48            android:exported="false"
+48-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:30:13-37
+49            android:grantUriPermissions="true" >
+49-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:31:13-47
+50            <meta-data
+50-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:32:13-34:64
+51                android:name="android.support.FILE_PROVIDER_PATHS"
+51-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:33:17-67
+52                android:resource="@xml/file_paths" />
+52-->C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\src\main\AndroidManifest.xml:34:17-51
+53        </provider>
+54        <provider
+54-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+55            android:name="androidx.startup.InitializationProvider"
+55-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+56            android:authorities="com.campuschat.app.androidx-startup"
+56-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+57            android:exported="false" >
+57-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+58            <meta-data
+58-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+59                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+59-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+60                android:value="androidx.startup" />
+60-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\353d69426d62513a7e19e841051a3a44\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+61            <meta-data
+61-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Me\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+62                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+62-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Me\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+63                android:value="androidx.startup" />
+63-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Me\.gradle\caches\8.14.3\transforms\14a3b51da1167f75215e7e32d2231e74\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+64            <meta-data
+64-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:29:13-31:52
+65                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+65-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:30:17-85
+66                android:value="androidx.startup" />
+66-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:31:17-49
+67        </provider>
+68
+69        <receiver
+69-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:34:9-52:20
+70            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+70-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:35:13-76
+71            android:directBootAware="false"
+71-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:36:13-44
+72            android:enabled="true"
+72-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:37:13-35
+73            android:exported="true"
+73-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:38:13-36
+74            android:permission="android.permission.DUMP" >
+74-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:39:13-57
+75            <intent-filter>
+75-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:40:13-42:29
+76                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:17-91
+76-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:41:25-88
+77            </intent-filter>
+78            <intent-filter>
+78-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:43:13-45:29
+79                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+79-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:17-85
+79-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:44:25-82
+80            </intent-filter>
+81            <intent-filter>
+81-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:46:13-48:29
+82                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:17-88
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:47:25-85
+83            </intent-filter>
+84            <intent-filter>
+84-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:49:13-51:29
+85                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+85-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:17-95
+85-->[androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Me\.gradle\caches\8.14.3\transforms\f95ab50c54d3211c648684c462933e30\transformed\profileinstaller-1.4.0\AndroidManifest.xml:50:25-92
+86            </intent-filter>
+87        </receiver>
+88    </application>
+89
+90</manifest>
+
+Merged manifest saved to C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\build\intermediates\merged_manifest\debug\processDebugMainManifest\AndroidManifest.xml
+Resolve mutations for :app:processDebugManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+:app:processDebugManifest (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :app:processDebugManifest
+Caching disabled for task ':app:processDebugManifest' because:
+  Build cache is disabled
+Task ':app:processDebugManifest' is not up-to-date because:
+  Input property 'mainMergedManifest' file C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\build\intermediates\merged_manifest\debug\processDebugMainManifest\AndroidManifest.xml has changed.
+Resolve mutations for :app:processDebugManifestForPackage (Thread[#100,Execution worker,5,main]) started.
+:app:processDebugManifestForPackage (Thread[#100,Execution worker,5,main]) started.
+Resolve mutations for :capacitor-android:compileDebugLibraryResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+:capacitor-android:compileDebugLibraryResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :capacitor-android:compileDebugLibraryResources UP-TO-DATE
+Caching disabled for task ':capacitor-android:compileDebugLibraryResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:compileDebugLibraryResources' as it is up-to-date.
+work action resolve out (project :capacitor-android) (Thread[#104,Execution worker Thread 5,5,main]) started.
+Resolve mutations for :capacitor-android:parseDebugLocalResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+:capacitor-android:parseDebugLocalResources (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :capacitor-android:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':capacitor-android:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :capacitor-android:generateDebugRFile (Thread[#104,Execution worker Thread 5,5,main]) started.
+:capacitor-android:generateDebugRFile (Thread[#104,Execution worker Thread 5,5,main]) started.
+
+> Task :capacitor-android:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':capacitor-android:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:generateDebugRFile' as it is up-to-date.
+work action resolve package-aware-r.txt (project :capacitor-android) (Thread[#105,Execution worker Thread 6,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:compileDebugLibraryResources (Thread[#102,Execution worker Thread 3,5,main]) started.
+:capacitor-cordova-android-plugins:compileDebugLibraryResources (Thread[#102,Execution worker Thread 3,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:compileDebugLibraryResources UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:compileDebugLibraryResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:compileDebugLibraryResources' as it is up-to-date.
+work action resolve out (project :capacitor-cordova-android-plugins) (Thread[#102,Execution worker Thread 3,5,main]) started.
+Resolve mutations for :capacitor-cordova-android-plugins:parseDebugLocalResources (Thread[#102,Execution worker Thread 3,5,main]) started.
+:capacitor-cordova-android-plugins:parseDebugLocalResources (Thread[#102,Execution worker Thread 3,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :capacitor-cordova-android-plugins:generateDebugRFile (Thread[#102,Execution worker Thread 3,5,main]) started.
+:capacitor-cordova-android-plugins:generateDebugRFile (Thread[#102,Execution worker Thread 3,5,main]) started.
+
+> Task :capacitor-cordova-android-plugins:generateDebugRFile UP-TO-DATE
+Caching disabled for task ':capacitor-cordova-android-plugins:generateDebugRFile' because:
+  Build cache is disabled
+Skipping task ':capacitor-cordova-android-plugins:generateDebugRFile' as it is up-to-date.
+work action resolve package-aware-r.txt (project :capacitor-cordova-android-plugins) (Thread[#102,Execution worker Thread 3,5,main]) started.
+Resolve mutations for :capacitor-android:javaPreCompileDebug (Thread[#102,Execution worker Thread 3,5,main]) started.
+:capacitor-android:javaPreCompileDebug (Thread[#102,Execution worker Thread 3,5,main]) started.
+
+> Task :capacitor-android:javaPreCompileDebug UP-TO-DATE
+Caching disabled for task ':capacitor-android:javaPreCompileDebug' because:
+  Build cache is disabled
+Skipping task ':capacitor-android:javaPreCompileDebug' as it is up-to-date.
+Resolve mutations for :capacitor-android:compileDebugJavaWithJavac (Thread[#99,included builds,5,main]) started.
+:capacitor-android:compileDebugJavaWithJavac (Thread[#99,included builds,5,main]) started.
+
+> Task :capacitor-android:compileDebugJavaWithJavac FAILED
+file or directory 'C:\Users\Me\Desktop\Campus-Chat\frontend\node_modules\@capacitor\android\capacitor\libs', not found
+Caching disabled for JdkImageTransform: C:\Users\Me\AppData\Local\Android\Sdk\platforms\android-36\core-for-system-modules.jar because:
+  Build cache is disabled
+
+> Task :app:processDebugManifestForPackage
+Custom actions are attached to task ':app:processDebugManifestForPackage'.
+Caching disabled for task ':app:processDebugManifestForPackage' because:
+  Build cache is disabled
+Task ':app:processDebugManifestForPackage' is not up-to-date because:
+  Input property 'mergedManifests' file C:\Users\Me\Desktop\Campus-Chat\frontend\android\app\build\intermediates\merged_manifests\debug\processDebugManifest\AndroidManifest.xml has changed.
+./gradlew : 
+At line:1 char:88
++ ... nd/android; ./gradlew assembleDebug 
+--no-daemon --stacktrace --info 2 ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:St 
+   ring) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task 
+':capacitor-android:compileDebugJavaWithJavac'.
+> Could not resolve all files for configuration 
+':capacitor-android:androidJdkImage'.
+   > Failed to transform 
+core-for-system-modules.jar to match attributes 
+{artifactType=_internal_android_jdk_image, 
+org.gradle.libraryelements=jar, 
+org.gradle.usage=java-runtime}.
+      > Execution failed for JdkImageTransform: C
+:\Users\Me\AppData\Local\Android\Sdk\platforms\an
+droid-36\core-for-system-modules.jar.
+         > jlink executable C:\Program 
+Files\JetBrains\CLion 2025.1.3\jbr\bin\jlink.exe 
+does not exist.
+
+* Try:
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: 
+Execution failed for task 
+':capacitor-android:compileDebugJavaWithJavac'.
+	at org.gradle.api.internal.tasks.execution.Catch
+ExceptionTaskExecuter.execute(CatchExceptionTaskE
+xecuter.java:38)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.executeTask(EventFiringTaskE
+xecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.call(EventFiringTaskExecuter
+.java:55)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.call(EventFiringTaskExecuter
+.java:52)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter.execute(EventFiringTaskExecute
+r.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecut
+or.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$InvokeNodeExecutorsAction.execute(Def
+aultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$InvokeNodeExecutorsAction.execute(Def
+aultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.la
+mbda$execute$0(DefaultTaskExecutionGraph.java:314
+)
+	at org.gradle.internal.operations.CurrentBuildOp
+erationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.ex
+ecute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.ex
+ecute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+$ExecutorWorker.execute(DefaultPlanExecutor.java:
+459)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+.process(DefaultPlanExecutor.java:111)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph.executeWithServices(DefaultTaskExecut
+ionGraph.java:138)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph.execute(DefaultTaskExecutionGraph.jav
+a:123)
+	at org.gradle.execution.SelectedTaskExecutionAct
+ion.execute(SelectedTaskExecutionAction.java:35)
+	at org.gradle.execution.DryRunBuildExecutionActi
+on.execute(DryRunBuildExecutionAction.java:51)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor$ExecuteTasks.call(BuildOperationF
+iringBuildWorkerExecutor.java:54)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor$ExecuteTasks.call(BuildOperationF
+iringBuildWorkerExecutor.java:43)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor.execute(BuildOperationFiringBuild
+WorkerExecutor.java:40)
+	at org.gradle.internal.build.DefaultBuildLifecyc
+leController.lambda$executeTasks$10(DefaultBuildL
+ifecycleController.java:313)
+	at org.gradle.internal.model.StateTransitionCont
+roller.doTransition(StateTransitionController.jav
+a:266)
+	at org.gradle.internal.model.StateTransitionCont
+roller.lambda$tryTransition$8(StateTransitionCont
+roller.java:177)
+	at org.gradle.internal.work.DefaultSynchronizer.
+withLock(DefaultSynchronizer.java:46)
+	at org.gradle.internal.model.StateTransitionCont
+roller.tryTransition(StateTransitionController.ja
+va:177)
+	at org.gradle.internal.build.DefaultBuildLifecyc
+leController.executeTasks(DefaultBuildLifecycleCo
+ntroller.java:304)
+	at org.gradle.internal.build.DefaultBuildWorkGra
+phController$DefaultBuildWorkGraph.runWork(Defaul
+tBuildWorkGraphController.java:220)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.withLocks(DefaultWorkerLeaseService.java:26
+3)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.runAsWorkerThread(DefaultWorkerLeaseService
+.java:127)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller.doRun(DefaultBuildController.java:181)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller.access$000(DefaultBuildController.java:50
+)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller$BuildOpRunnable.lambda$run$0(DefaultBuild
+Controller.java:198)
+	at org.gradle.internal.operations.CurrentBuildOp
+erationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller$BuildOpRunnable.run(DefaultBuildControlle
+r.java:198)
+	at org.gradle.internal.concurrent.ExecutorPolicy
+$CatchAndRecordFailures.onExecute(ExecutorPolicy.
+java:64)
+	at org.gradle.internal.concurrent.AbstractManage
+dExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.api.internal.artifacts.ivys
+ervice.TypedResolveException: Could not resolve 
+all files for configuration 
+':capacitor-android:androidJdkImage'.
+	at org.gradle.api.internal.artifacts.ResolveExce
+ptionMapper.mapFailure(ResolveExceptionMapper.jav
+a:73)
+	at org.gradle.api.internal.artifacts.ResolveExce
+ptionMapper.mapFailures(ResolveExceptionMapper.ja
+va:65)
+	at org.gradle.api.internal.artifacts.configurati
+ons.DefaultConfiguration$DefaultResolutionHost.co
+nsolidateFailures(DefaultConfiguration.java:1931)
+	at org.gradle.api.internal.artifacts.configurati
+ons.ResolutionHost.rethrowFailuresAndReportProble
+ms(ResolutionHost.java:75)
+	at org.gradle.api.internal.artifacts.configurati
+ons.ResolutionBackedFileCollection.maybeThrowReso
+lutionFailures(ResolutionBackedFileCollection.jav
+a:86)
+	at org.gradle.api.internal.artifacts.configurati
+ons.ResolutionBackedFileCollection.visitContents(
+ResolutionBackedFileCollection.java:76)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.getFiles(AbstractFileCollection.java:124)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection$FileCollectionElementsFactory.create(Abstr
+actFileCollection.java:226)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection$FileCollectionElementsFactory.create(Abstr
+actFileCollection.java:214)
+	at org.gradle.api.internal.provider.BuildableBac
+kedProvider.calculateOwnValue(BuildableBackedProv
+ider.java:94)
+	at org.gradle.api.internal.provider.AbstractMini
+malProvider.calculateValue(AbstractMinimalProvide
+r.java:117)
+	at org.gradle.api.internal.provider.TransformBac
+kedProvider.calculateOwnValue(TransformBackedProv
+ider.java:82)
+	at org.gradle.api.internal.provider.AbstractMini
+malProvider.getOrNull(AbstractMinimalProvider.jav
+a:107)
+	at org.gradle.api.internal.provider.ProviderReso
+lutionStrategy$1.resolve(ProviderResolutionStrate
+gy.java:27)
+	at org.gradle.api.internal.file.collections.Prov
+iderBackedFileCollection.visitChildren(ProviderBa
+ckedFileCollection.java:63)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.visitContents(CompositeFileCollection.jav
+a:112)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.visitStructure(AbstractFileCollection.java
+:361)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.lambda$visitContents$0(CompositeFileColle
+ction.java:112)
+	at org.gradle.api.internal.file.collections.Unpa
+ckingVisitor.add(UnpackingVisitor.java:76)
+	at org.gradle.api.internal.file.collections.Unpa
+ckingVisitor.add(UnpackingVisitor.java:91)
+	at org.gradle.api.internal.file.DefaultFileColle
+ctionFactory$ResolvingFileCollection.visitChildre
+n(DefaultFileCollectionFactory.java:306)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.visitContents(CompositeFileCollection.jav
+a:112)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.visitStructure(AbstractFileCollection.java
+:361)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.lambda$visitContents$0(CompositeFileColle
+ction.java:112)
+	at org.gradle.api.internal.tasks.PropertyFileCol
+lection.visitChildren(PropertyFileCollection.java
+:48)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.visitContents(CompositeFileCollection.jav
+a:112)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.visitStructure(AbstractFileCollection.java
+:361)
+	at org.gradle.internal.fingerprint.impl.DefaultF
+ileCollectionSnapshotter.snapshot(DefaultFileColl
+ectionSnapshotter.java:47)
+	at org.gradle.internal.execution.impl.DefaultInp
+utFingerprinter$InputCollectingVisitor.visitInput
+FileProperty(DefaultInputFingerprinter.java:133)
+	at org.gradle.api.internal.tasks.execution.TaskE
+xecution.visitRegularInputs(TaskExecution.java:32
+4)
+	at org.gradle.internal.execution.impl.DefaultInp
+utFingerprinter.fingerprintInputProperties(Defaul
+tInputFingerprinter.java:63)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.captureExecutionSt
+ateWithOutputs(AbstractCaptureStateBeforeExecutio
+nStep.java:109)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.lambda$captureExec
+utionState$0(AbstractCaptureStateBeforeExecutionS
+tep.java:74)
+	at org.gradle.internal.execution.steps.BuildOper
+ationStep$1.call(BuildOperationStep.java:37)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.internal.execution.steps.BuildOper
+ationStep.operation(BuildOperationStep.java:34)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.captureExecutionSt
+ate(AbstractCaptureStateBeforeExecutionStep.java:
+69)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.execute(AbstractCa
+ptureStateBeforeExecutionStep.java:62)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.execute(AbstractCa
+ptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractS
+kipEmptyWorkStep.executeWithNonEmptySources(Abstr
+actSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractS
+kipEmptyWorkStep.execute(AbstractSkipEmptyWorkSte
+p.java:61)
+	at org.gradle.internal.execution.steps.AbstractS
+kipEmptyWorkStep.execute(AbstractSkipEmptyWorkSte
+p.java:36)
+	at org.gradle.internal.execution.steps.legacy.Ma
+rkSnapshottingInputsStartedStep.execute(MarkSnaps
+hottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPrevi
+ousExecutionStateStep.execute(LoadPreviousExecuti
+onStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPrevi
+ousExecutionStateStep.execute(LoadPreviousExecuti
+onStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleSta
+leOutputsStep.execute(HandleStaleOutputsStep.java
+:75)
+	at org.gradle.internal.execution.steps.HandleSta
+leOutputsStep.execute(HandleStaleOutputsStep.java
+:41)
+	at org.gradle.internal.execution.steps.AssignMut
+ableWorkspaceStep.lambda$execute$0(AssignMutableW
+orkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskE
+xecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMut
+ableWorkspaceStep.execute(AssignMutableWorkspaceS
+tep.java:31)
+	at org.gradle.internal.execution.steps.AssignMut
+ableWorkspaceStep.execute(AssignMutableWorkspaceS
+tep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePip
+elineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePip
+elineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.lambda$execute$2(Execu
+teWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.execute(ExecuteWorkBui
+ldOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.execute(ExecuteWorkBui
+ldOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyS
+tep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyS
+tep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExe
+cutionEngine$1.execute(DefaultExecutionEngine.jav
+a:64)
+	at org.gradle.api.internal.tasks.execution.Execu
+teActionsTaskExecuter.executeIfValid(ExecuteActio
+nsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.Execu
+teActionsTaskExecuter.execute(ExecuteActionsTaskE
+xecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.Probl
+emsTaskPathTrackingTaskExecuter.execute(ProblemsT
+askPathTrackingTaskExecuter.java:41)
+	at org.gradle.api.internal.tasks.execution.Final
+izePropertiesTaskExecuter.execute(FinalizePropert
+iesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.Resol
+veTaskExecutionModeExecuter.execute(ResolveTaskEx
+ecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipT
+askWithNoActionsExecuter.execute(SkipTaskWithNoAc
+tionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipO
+nlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.
+java:74)
+	at org.gradle.api.internal.tasks.execution.Catch
+ExceptionTaskExecuter.execute(CatchExceptionTaskE
+xecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.executeTask(EventFiringTaskE
+xecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.call(EventFiringTaskExecuter
+.java:55)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.call(EventFiringTaskExecuter
+.java:52)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter.execute(EventFiringTaskExecute
+r.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecut
+or.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$InvokeNodeExecutorsAction.execute(Def
+aultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$InvokeNodeExecutorsAction.execute(Def
+aultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.la
+mbda$execute$0(DefaultTaskExecutionGraph.java:314
+)
+	at org.gradle.internal.operations.CurrentBuildOp
+erationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.ex
+ecute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.ex
+ecute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+$ExecutorWorker.execute(DefaultPlanExecutor.java:
+459)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+.process(DefaultPlanExecutor.java:111)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph.executeWithServices(DefaultTaskExecut
+ionGraph.java:138)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph.execute(DefaultTaskExecutionGraph.jav
+a:123)
+	at org.gradle.execution.SelectedTaskExecutionAct
+ion.execute(SelectedTaskExecutionAction.java:35)
+	at org.gradle.execution.DryRunBuildExecutionActi
+on.execute(DryRunBuildExecutionAction.java:51)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor$ExecuteTasks.call(BuildOperationF
+iringBuildWorkerExecutor.java:54)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor$ExecuteTasks.call(BuildOperationF
+iringBuildWorkerExecutor.java:43)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor.execute(BuildOperationFiringBuild
+WorkerExecutor.java:40)
+	at org.gradle.internal.build.DefaultBuildLifecyc
+leController.lambda$executeTasks$10(DefaultBuildL
+ifecycleController.java:313)
+	at org.gradle.internal.model.StateTransitionCont
+roller.doTransition(StateTransitionController.jav
+a:266)
+	at org.gradle.internal.model.StateTransitionCont
+roller.lambda$tryTransition$8(StateTransitionCont
+roller.java:177)
+	at org.gradle.internal.work.DefaultSynchronizer.
+withLock(DefaultSynchronizer.java:46)
+	at org.gradle.internal.model.StateTransitionCont
+roller.tryTransition(StateTransitionController.ja
+va:177)
+	at org.gradle.internal.build.DefaultBuildLifecyc
+leController.executeTasks(DefaultBuildLifecycleCo
+ntroller.java:304)
+	at org.gradle.internal.build.DefaultBuildWorkGra
+phController$DefaultBuildWorkGraph.runWork(Defaul
+tBuildWorkGraphController.java:220)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.withLocks(DefaultWorkerLeaseService.java:26
+3)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.runAsWorkerThread(DefaultWorkerLeaseService
+.java:127)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller.doRun(DefaultBuildController.java:181)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller.access$000(DefaultBuildController.java:50
+)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller$BuildOpRunnable.lambda$run$0(DefaultBuild
+Controller.java:198)
+	at org.gradle.internal.operations.CurrentBuildOp
+erationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller$BuildOpRunnable.run(DefaultBuildControlle
+r.java:198)
+	at org.gradle.internal.concurrent.ExecutorPolicy
+$CatchAndRecordFailures.onExecute(ExecutorPolicy.
+java:64)
+	at org.gradle.internal.concurrent.AbstractManage
+dExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.api.internal.artifacts.tran
+sform.TransformException: Failed to transform 
+core-for-system-modules.jar to match attributes 
+{artifactType=_internal_android_jdk_image, 
+org.gradle.libraryelements=jar, 
+org.gradle.usage=java-runtime}.
+	at org.gradle.api.internal.artifacts.transform.T
+ransformingAsyncArtifactListener$TransformedArtif
+act.lambda$visit$4(TransformingAsyncArtifactListe
+ner.java:242)
+	at org.gradle.internal.Try$Failure.ifSuccessfulO
+rElse(Try.java:293)
+	at org.gradle.api.internal.artifacts.transform.T
+ransformingAsyncArtifactListener$TransformedArtif
+act.visit(TransformingAsyncArtifactListener.java:
+234)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ParallelResolveArtifactSet
+$VisitingSet$StartVisitAction.visitResults(Parall
+elResolveArtifactSet.java:100)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ParallelResolveArtifactSet
+$VisitingSet.visit(ParallelResolveArtifactSet.jav
+a:69)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ResolvedArtifactSetResolve
+r$1.run(ResolvedArtifactSetResolver.java:68)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$1.execute(DefaultBuildOperationRunn
+er.java:30)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$1.execute(DefaultBuildOperationRunn
+er.java:27)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.run(DefaultBuildOperationRunner.jav
+a:48)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ResolvedArtifactSetResolve
+r.visitArtifacts(ResolvedArtifactSetResolver.java
+:65)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ResolvedArtifactSetResolve
+r.lambda$visitInUnmanagedWorkerThread$0(ResolvedA
+rtifactSetResolver.java:61)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.runAsUnmanagedWorkerThread(DefaultWorkerLea
+seService.java:139)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ResolvedArtifactSetResolve
+r.visitInUnmanagedWorkerThread(ResolvedArtifactSe
+tResolver.java:61)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.DefaultSelectedArtifactSet
+.visitArtifacts(DefaultSelectedArtifactSet.java:5
+9)
+	at org.gradle.api.internal.artifacts.configurati
+ons.ResolutionResultProviderBackedSelectedArtifac
+tSet.visitArtifacts(ResolutionResultProviderBacke
+dSelectedArtifactSet.java:52)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.SelectedArtifactSet.visitF
+iles(SelectedArtifactSet.java:34)
+	at org.gradle.api.internal.artifacts.configurati
+ons.ResolutionBackedFileCollection.visitContents(
+ResolutionBackedFileCollection.java:75)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.getFiles(AbstractFileCollection.java:124)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection$FileCollectionElementsFactory.create(Abstr
+actFileCollection.java:226)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection$FileCollectionElementsFactory.create(Abstr
+actFileCollection.java:214)
+	at org.gradle.api.internal.provider.BuildableBac
+kedProvider.calculateOwnValue(BuildableBackedProv
+ider.java:94)
+	at org.gradle.api.internal.provider.AbstractMini
+malProvider.calculateValue(AbstractMinimalProvide
+r.java:117)
+	at org.gradle.api.internal.provider.TransformBac
+kedProvider.calculateOwnValue(TransformBackedProv
+ider.java:82)
+	at org.gradle.api.internal.provider.AbstractMini
+malProvider.getOrNull(AbstractMinimalProvider.jav
+a:107)
+	at org.gradle.api.internal.provider.ProviderReso
+lutionStrategy$1.resolve(ProviderResolutionStrate
+gy.java:27)
+	at org.gradle.api.internal.file.collections.Prov
+iderBackedFileCollection.visitChildren(ProviderBa
+ckedFileCollection.java:63)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.visitContents(CompositeFileCollection.jav
+a:112)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.visitStructure(AbstractFileCollection.java
+:361)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.lambda$visitContents$0(CompositeFileColle
+ction.java:112)
+	at org.gradle.api.internal.file.collections.Unpa
+ckingVisitor.add(UnpackingVisitor.java:76)
+	at org.gradle.api.internal.file.collections.Unpa
+ckingVisitor.add(UnpackingVisitor.java:91)
+	at org.gradle.api.internal.file.DefaultFileColle
+ctionFactory$ResolvingFileCollection.visitChildre
+n(DefaultFileCollectionFactory.java:306)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.visitContents(CompositeFileCollection.jav
+a:112)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.visitStructure(AbstractFileCollection.java
+:361)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.lambda$visitContents$0(CompositeFileColle
+ction.java:112)
+	at org.gradle.api.internal.tasks.PropertyFileCol
+lection.visitChildren(PropertyFileCollection.java
+:48)
+	at org.gradle.api.internal.file.CompositeFileCol
+lection.visitContents(CompositeFileCollection.jav
+a:112)
+	at org.gradle.api.internal.file.AbstractFileColl
+ection.visitStructure(AbstractFileCollection.java
+:361)
+	at org.gradle.internal.fingerprint.impl.DefaultF
+ileCollectionSnapshotter.snapshot(DefaultFileColl
+ectionSnapshotter.java:47)
+	at org.gradle.internal.execution.impl.DefaultInp
+utFingerprinter$InputCollectingVisitor.visitInput
+FileProperty(DefaultInputFingerprinter.java:133)
+	at org.gradle.api.internal.tasks.execution.TaskE
+xecution.visitRegularInputs(TaskExecution.java:32
+4)
+	at org.gradle.internal.execution.impl.DefaultInp
+utFingerprinter.fingerprintInputProperties(Defaul
+tInputFingerprinter.java:63)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.captureExecutionSt
+ateWithOutputs(AbstractCaptureStateBeforeExecutio
+nStep.java:109)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.lambda$captureExec
+utionState$0(AbstractCaptureStateBeforeExecutionS
+tep.java:74)
+	at org.gradle.internal.execution.steps.BuildOper
+ationStep$1.call(BuildOperationStep.java:37)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.internal.execution.steps.BuildOper
+ationStep.operation(BuildOperationStep.java:34)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.captureExecutionSt
+ate(AbstractCaptureStateBeforeExecutionStep.java:
+69)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.execute(AbstractCa
+ptureStateBeforeExecutionStep.java:62)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.execute(AbstractCa
+ptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractS
+kipEmptyWorkStep.executeWithNonEmptySources(Abstr
+actSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractS
+kipEmptyWorkStep.execute(AbstractSkipEmptyWorkSte
+p.java:61)
+	at org.gradle.internal.execution.steps.AbstractS
+kipEmptyWorkStep.execute(AbstractSkipEmptyWorkSte
+p.java:36)
+	at org.gradle.internal.execution.steps.legacy.Ma
+rkSnapshottingInputsStartedStep.execute(MarkSnaps
+hottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPrevi
+ousExecutionStateStep.execute(LoadPreviousExecuti
+onStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPrevi
+ousExecutionStateStep.execute(LoadPreviousExecuti
+onStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleSta
+leOutputsStep.execute(HandleStaleOutputsStep.java
+:75)
+	at org.gradle.internal.execution.steps.HandleSta
+leOutputsStep.execute(HandleStaleOutputsStep.java
+:41)
+	at org.gradle.internal.execution.steps.AssignMut
+ableWorkspaceStep.lambda$execute$0(AssignMutableW
+orkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskE
+xecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMut
+ableWorkspaceStep.execute(AssignMutableWorkspaceS
+tep.java:31)
+	at org.gradle.internal.execution.steps.AssignMut
+ableWorkspaceStep.execute(AssignMutableWorkspaceS
+tep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePip
+elineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePip
+elineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.lambda$execute$2(Execu
+teWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.execute(ExecuteWorkBui
+ldOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.execute(ExecuteWorkBui
+ldOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyS
+tep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyS
+tep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExe
+cutionEngine$1.execute(DefaultExecutionEngine.jav
+a:64)
+	at org.gradle.api.internal.tasks.execution.Execu
+teActionsTaskExecuter.executeIfValid(ExecuteActio
+nsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.Execu
+teActionsTaskExecuter.execute(ExecuteActionsTaskE
+xecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.Probl
+emsTaskPathTrackingTaskExecuter.execute(ProblemsT
+askPathTrackingTaskExecuter.java:41)
+	at org.gradle.api.internal.tasks.execution.Final
+izePropertiesTaskExecuter.execute(FinalizePropert
+iesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.Resol
+veTaskExecutionModeExecuter.execute(ResolveTaskEx
+ecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipT
+askWithNoActionsExecuter.execute(SkipTaskWithNoAc
+tionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipO
+nlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.
+java:74)
+	at org.gradle.api.internal.tasks.execution.Catch
+ExceptionTaskExecuter.execute(CatchExceptionTaskE
+xecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.executeTask(EventFiringTaskE
+xecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.call(EventFiringTaskExecuter
+.java:55)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter$1.call(EventFiringTaskExecuter
+.java:52)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.api.internal.tasks.execution.Event
+FiringTaskExecuter.execute(EventFiringTaskExecute
+r.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecut
+or.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$InvokeNodeExecutorsAction.execute(Def
+aultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$InvokeNodeExecutorsAction.execute(Def
+aultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.la
+mbda$execute$0(DefaultTaskExecutionGraph.java:314
+)
+	at org.gradle.internal.operations.CurrentBuildOp
+erationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.ex
+ecute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph$BuildOperationAwareExecutionAction.ex
+ecute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+$ExecutorWorker.execute(DefaultPlanExecutor.java:
+459)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.execution.plan.DefaultPlanExecutor
+.process(DefaultPlanExecutor.java:111)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph.executeWithServices(DefaultTaskExecut
+ionGraph.java:138)
+	at org.gradle.execution.taskgraph.DefaultTaskExe
+cutionGraph.execute(DefaultTaskExecutionGraph.jav
+a:123)
+	at org.gradle.execution.SelectedTaskExecutionAct
+ion.execute(SelectedTaskExecutionAction.java:35)
+	at org.gradle.execution.DryRunBuildExecutionActi
+on.execute(DryRunBuildExecutionAction.java:51)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor$ExecuteTasks.call(BuildOperationF
+iringBuildWorkerExecutor.java:54)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor$ExecuteTasks.call(BuildOperationF
+iringBuildWorkerExecutor.java:43)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.execution.BuildOperationFiringBuil
+dWorkerExecutor.execute(BuildOperationFiringBuild
+WorkerExecutor.java:40)
+	at org.gradle.internal.build.DefaultBuildLifecyc
+leController.lambda$executeTasks$10(DefaultBuildL
+ifecycleController.java:313)
+	at org.gradle.internal.model.StateTransitionCont
+roller.doTransition(StateTransitionController.jav
+a:266)
+	at org.gradle.internal.model.StateTransitionCont
+roller.lambda$tryTransition$8(StateTransitionCont
+roller.java:177)
+	at org.gradle.internal.work.DefaultSynchronizer.
+withLock(DefaultSynchronizer.java:46)
+	at org.gradle.internal.model.StateTransitionCont
+roller.tryTransition(StateTransitionController.ja
+va:177)
+	at org.gradle.internal.build.DefaultBuildLifecyc
+leController.executeTasks(DefaultBuildLifecycleCo
+ntroller.java:304)
+	at org.gradle.internal.build.DefaultBuildWorkGra
+phController$DefaultBuildWorkGraph.runWork(Defaul
+tBuildWorkGraphController.java:220)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.withLocks(DefaultWorkerLeaseService.java:26
+3)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.runAsWorkerThread(DefaultWorkerLeaseService
+.java:127)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller.doRun(DefaultBuildController.java:181)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller.access$000(DefaultBuildController.java:50
+)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller$BuildOpRunnable.lambda$run$0(DefaultBuild
+Controller.java:198)
+	at org.gradle.internal.operations.CurrentBuildOp
+erationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.composite.internal.DefaultBuildCon
+troller$BuildOpRunnable.run(DefaultBuildControlle
+r.java:198)
+	at org.gradle.internal.concurrent.ExecutorPolicy
+$CatchAndRecordFailures.onExecute(ExecutorPolicy.
+java:64)
+	at org.gradle.internal.concurrent.AbstractManage
+dExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.api.internal.artifacts.tran
+sform.TransformException: Execution failed for 
+JdkImageTransform: C:\Users\Me\AppData\Local\Andr
+oid\Sdk\platforms\android-36\core-for-system-modu
+les.jar.
+	at org.gradle.api.internal.artifacts.transform.D
+efaultTransformInvocationFactory.lambda$createInv
+ocation$1(DefaultTransformInvocationFactory.java:
+167)
+	at org.gradle.internal.Try$Failure.mapFailure(Tr
+y.java:284)
+	at org.gradle.api.internal.artifacts.transform.D
+efaultTransformInvocationFactory.lambda$createInv
+ocation$2(DefaultTransformInvocationFactory.java:
+167)
+	at org.gradle.internal.Deferrable$1.applyAndRequ
+ireNonNull(Deferrable.java:63)
+	at org.gradle.internal.Deferrable$1.completeAndG
+et(Deferrable.java:59)
+	at org.gradle.internal.Deferrable$1.completeAndG
+et(Deferrable.java:59)
+	at org.gradle.api.internal.artifacts.transform.T
+ransformingAsyncArtifactListener$TransformedArtif
+act.finalizeValue(TransformingAsyncArtifactListen
+er.java:208)
+	at org.gradle.api.internal.artifacts.transform.T
+ransformingAsyncArtifactListener$TransformedArtif
+act.run(TransformingAsyncArtifactListener.java:14
+6)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationExecutor$QueueWorker.execute(DefaultBuildO
+perationExecutor.java:161)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue$WorkerRunnable.runOperation(DefaultB
+uildOperationQueue.java:272)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue$WorkerRunnable.doRunBatch(DefaultBui
+ldOperationQueue.java:253)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue$WorkerRunnable.lambda$runBatch$0(Def
+aultBuildOperationQueue.java:238)
+	at org.gradle.internal.resources.AbstractResourc
+eLockRegistry.whileDisallowingLockChanges(Abstrac
+tResourceLockRegistry.java:50)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.whileDisallowingProjectLockChanges(DefaultW
+orkerLeaseService.java:235)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue$WorkerRunnable.lambda$runBatch$1(Def
+aultBuildOperationQueue.java:238)
+	at org.gradle.internal.work.DefaultWorkerLeaseSe
+rvice.runAsWorkerThread(DefaultWorkerLeaseService
+.java:125)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue$WorkerRunnable.runBatch(DefaultBuild
+OperationQueue.java:224)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue$WorkerRunnable.run(DefaultBuildOpera
+tionQueue.java:192)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationQueue.waitForCompletion(DefaultBuildOperat
+ionQueue.java:105)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationExecutor.executeInParallel(DefaultBuildOpe
+rationExecutor.java:106)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationExecutor.runAll(DefaultBuildOperationExecu
+tor.java:65)
+	at org.gradle.api.internal.artifacts.ivyservice.
+resolveengine.artifact.ParallelResolveArtifactSet
+$VisitingSet.visit(ParallelResolveArtifactSet.jav
+a:66)
+	... 136 more
+Caused by: java.lang.IllegalArgumentException: 
+jlink executable C:\Program 
+Files\JetBrains\CLion 2025.1.3\jbr\bin\jlink.exe 
+does not exist.
+	at com.google.common.base.Preconditions.checkArg
+ument(Preconditions.java:218)
+	at com.android.build.gradle.internal.dependency.
+JdkTools$jlinkVersion$2.invoke(JdkImageTransformD
+elegate.kt:152)
+	at com.android.build.gradle.internal.dependency.
+JdkTools$jlinkVersion$2.invoke(JdkImageTransformD
+elegate.kt:150)
+	at kotlin.SynchronizedLazyImpl.getValue(LazyJVM.
+kt:74)
+	at com.android.build.gradle.internal.dependency.
+JdkTools.getJlinkVersion(JdkImageTransformDelegat
+e.kt:150)
+	at com.android.build.gradle.internal.dependency.
+JdkImageTransformDelegate.makeJmodFile$gradle_cor
+e(JdkImageTransformDelegate.kt:125)
+	at com.android.build.gradle.internal.dependency.
+JdkImageTransformDelegate.run(JdkImageTransformDe
+legate.kt:58)
+	at com.android.build.gradle.internal.dependency.
+JdkImageTransform.transform(JdkImageTransform.kt:
+80)
+	at org.gradle.api.internal.artifacts.transform.D
+efaultTransform.transform(DefaultTransform.java:2
+82)
+	at org.gradle.api.internal.artifacts.transform.A
+bstractTransformExecution$2.call(AbstractTransfor
+mExecution.java:154)
+	at org.gradle.api.internal.artifacts.transform.A
+bstractTransformExecution$2.call(AbstractTransfor
+mExecution.java:145)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.api.internal.artifacts.transform.A
+bstractTransformExecution.executeWithinTransforme
+rListener(AbstractTransformExecution.java:145)
+37 actionable tasks: 4 executed, 33 up-to-date
+Watched directory hierarchies: [C:\Users\Me\Desktop\Campus-Chat\frontend\android]
+	at org.gradle.api.internal.artifacts.transform.A
+bstractTransformExecution.execute(AbstractTransfo
+rmExecution.java:138)
+	at org.gradle.internal.execution.steps.ExecuteSt
+ep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteSt
+ep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteSt
+ep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteSt
+ep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.internal.execution.steps.ExecuteSt
+ep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteSt
+ep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExe
+cutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutSt
+ep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutSt
+ep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreate
+OutputParentsStep.execute(PreCreateOutputParentsS
+tep.java:50)
+	at org.gradle.internal.execution.steps.PreCreate
+OutputParentsStep.execute(PreCreateOutputParentsS
+tep.java:28)
+	at org.gradle.internal.execution.steps.Broadcast
+ChangingOutputsStep.execute(BroadcastChangingOutp
+utsStep.java:61)
+	at org.gradle.internal.execution.steps.Broadcast
+ChangingOutputsStep.execute(BroadcastChangingOutp
+utsStep.java:26)
+	at org.gradle.internal.execution.steps.NoInputCh
+angesStep.execute(NoInputChangesStep.java:30)
+	at org.gradle.internal.execution.steps.NoInputCh
+angesStep.execute(NoInputChangesStep.java:21)
+	at org.gradle.internal.execution.steps.CaptureOu
+tputsAfterExecutionStep.execute(CaptureOutputsAft
+erExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOu
+tputsAfterExecutionStep.execute(CaptureOutputsAft
+erExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.BuildCach
+eStep.executeWithoutCache(BuildCacheStep.java:189
+)
+	at org.gradle.internal.execution.steps.BuildCach
+eStep.lambda$execute$1(BuildCacheStep.java:75)
+	at org.gradle.internal.Either$Right.fold(Either.
+java:175)
+	at org.gradle.internal.execution.caching.Caching
+State.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCach
+eStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCach
+eStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.NeverUpTo
+DateStep.execute(NeverUpToDateStep.java:34)
+	at org.gradle.internal.execution.steps.NeverUpTo
+DateStep.execute(NeverUpToDateStep.java:22)
+	at org.gradle.internal.execution.steps.legacy.Ma
+rkSnapshottingInputsFinishedStep.execute(MarkSnap
+shottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.Ma
+rkSnapshottingInputsFinishedStep.execute(MarkSnap
+shottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveNo
+nIncrementalCachingStateStep.executeDelegate(Reso
+lveNonIncrementalCachingStateStep.java:50)
+	at org.gradle.internal.execution.steps.AbstractR
+esolveCachingStateStep.execute(AbstractResolveCac
+hingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractR
+esolveCachingStateStep.execute(AbstractResolveCac
+hingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ValidateS
+tep.execute(ValidateStep.java:107)
+	at org.gradle.internal.execution.steps.ValidateS
+tep.execute(ValidateStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.execute(AbstractCa
+ptureStateBeforeExecutionStep.java:64)
+	at org.gradle.internal.execution.steps.AbstractC
+aptureStateBeforeExecutionStep.execute(AbstractCa
+ptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.legacy.Ma
+rkSnapshottingInputsStartedStep.execute(MarkSnaps
+hottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.AssignImm
+utableWorkspaceStep.lambda$executeInTemporaryWork
+space$3(AssignImmutableWorkspaceStep.java:209)
+	at org.gradle.internal.execution.workspace.impl.
+CacheBasedImmutableWorkspaceProvider$1.withTempor
+aryWorkspace(CacheBasedImmutableWorkspaceProvider
+.java:116)
+	at org.gradle.internal.execution.steps.AssignImm
+utableWorkspaceStep.executeInTemporaryWorkspace(A
+ssignImmutableWorkspaceStep.java:199)
+	at org.gradle.internal.execution.steps.AssignImm
+utableWorkspaceStep.lambda$execute$0(AssignImmuta
+bleWorkspaceStep.java:121)
+	at org.gradle.internal.execution.steps.AssignImm
+utableWorkspaceStep.execute(AssignImmutableWorksp
+aceStep.java:121)
+	at org.gradle.internal.execution.steps.AssignImm
+utableWorkspaceStep.execute(AssignImmutableWorksp
+aceStep.java:90)
+	at org.gradle.internal.execution.steps.ChoosePip
+elineStep.execute(ChoosePipelineStep.java:38)
+	at org.gradle.internal.execution.steps.ChoosePip
+elineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.lambda$execute$0(Execu
+teWorkBuildOperationFiringStep.java:53)
+	at org.gradle.internal.execution.steps.BuildOper
+ationStep$1.call(BuildOperationStep.java:37)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:210)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$CallableBuildOperationWorker.execut
+e(DefaultBuildOperationRunner.java:205)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:67)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner$2.execute(DefaultBuildOperationRunn
+er.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:167)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.execute(DefaultBuildOperationRunner
+.java:60)
+	at org.gradle.internal.operations.DefaultBuildOp
+erationRunner.call(DefaultBuildOperationRunner.ja
+va:54)
+	at org.gradle.internal.execution.steps.BuildOper
+ationStep.operation(BuildOperationStep.java:34)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.lambda$execute$1(Execu
+teWorkBuildOperationFiringStep.java:51)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.execute(ExecuteWorkBui
+ldOperationFiringStep.java:51)
+	at org.gradle.internal.execution.steps.ExecuteWo
+rkBuildOperationFiringStep.execute(ExecuteWorkBui
+ldOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.executeInCache(IdentityCacheStep.java:80
+)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.lambda$executeDeferred$0(IdentityCacheSt
+ep.java:60)
+	at org.gradle.cache.Cache.lambda$get$0(Cache.jav
+a:31)
+	at org.gradle.cache.ManualEvictionInMemoryCache.
+get(ManualEvictionInMemoryCache.java:30)
+	at org.gradle.cache.internal.DefaultCrossBuildIn
+MemoryCacheFactory$CrossBuildCacheRetainingDataFr
+omPreviousBuild.get(DefaultCrossBuildInMemoryCach
+eFactory.java:303)
+	at org.gradle.cache.Cache.get(Cache.java:31)
+	at org.gradle.internal.execution.steps.IdentityC
+acheStep.lambda$executeDeferred$1(IdentityCacheSt
+ep.java:58)
+	at org.gradle.internal.Deferrable$3.completeAndG
+et(Deferrable.java:117)
+	... 158 more
+
+
+BUILD FAILED in 47s
