@@ -123,6 +123,17 @@ const DiscoverPage: React.FC = () => {
     }
   };
 
+  const handleConnect = async (userId: string) => {
+    try {
+      // For now, simulate connection request with a toast or success state
+      // In a real app, this would call /api/friends/request
+      console.log('Connecting with user:', userId);
+      // We could use a toast here if we had one, for now just logged
+    } catch (error) {
+      console.error('Error connecting:', error);
+    }
+  };
+
   const startChat = async (userId: string) => {
     try {
       const { data } = await api.post('/api/chat/conversations', { participantId: userId });
@@ -330,14 +341,24 @@ const DiscoverPage: React.FC = () => {
                         )}
                       </div>
                       <h4 className="font-black text-slate-800 truncate mb-1 px-2">{person.name}</h4>
-                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-4 truncate px-2">{person.student_id}</p>
+                      <p className="text-[10px] text-sky-500 font-black uppercase tracking-widest mb-4 truncate px-2">
+                        {person.department || 'Student'}
+                      </p>
                       
-                      <button 
-                        onClick={() => startChat(person._id)}
-                        className="w-full py-2 bg-sky-50 text-sky-600 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-500 hover:text-white transition-all"
-                      >
-                        <MessageSquare className="w-3 h-3" /> Message
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button 
+                          onClick={() => handleConnect(person._id)}
+                          className="w-full py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-500 hover:shadow-lg hover:shadow-sky-200 transition-all"
+                        >
+                          <UserPlus className="w-3 h-3" /> Connect
+                        </button>
+                        <button 
+                          onClick={() => startChat(person._id)}
+                          className="w-full py-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:text-sky-500 hover:border-sky-100 transition-all"
+                        >
+                          <MessageSquare className="w-3 h-3" /> Message
+                        </button>
+                      </div>
                     </div>
                   ))
                 ) : (

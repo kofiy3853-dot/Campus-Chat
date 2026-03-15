@@ -1,7 +1,6 @@
 import React from 'react';
 import { Phone, Video, MoreVertical, Search, Users, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import NotificationCenter from './NotificationCenter';
 import { getMediaUrl } from '../utils/imageUrl';
 import { formatLastSeen } from '../utils/time';
 
@@ -57,7 +56,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle 
       </div>
 
       <div className="flex items-center gap-1 md:gap-2">
-        <NotificationCenter />
         <button 
           aria-label="Search in chat" 
           onClick={onSearchToggle}
