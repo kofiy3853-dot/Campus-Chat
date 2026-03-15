@@ -8,7 +8,7 @@ import User from '../models/User';
 // Create a lost/found post
 export const createPost = async (req: AuthRequest, res: Response) => {
   try {
-    const { title, description, category, status, location, date, image_url, image_thumbnail } = req.body;
+    const { title, description, category, status, location, date, image_url, image_thumbnail, contact_number } = req.body;
     const userId = req.user._id;
 
     // Validation
@@ -41,6 +41,7 @@ export const createPost = async (req: AuthRequest, res: Response) => {
       date: new Date(date),
       image_url: image_url || null,
       image_thumbnail: image_thumbnail || null,
+      contact_number: contact_number || null,
       creator: userId,
     });
 
@@ -126,7 +127,7 @@ export const getPost = async (req: AuthRequest, res: Response) => {
 export const updatePost = async (req: AuthRequest, res: Response) => {
   try {
     const { postId } = req.params;
-    const { title, description, category, status, location, date, image_url, image_thumbnail, is_resolved } = req.body;
+    const { title, description, category, status, location, date, image_url, image_thumbnail, is_resolved, contact_number } = req.body;
     const userId = req.user._id;
 
     const post = await LostFoundPost.findById(postId);
@@ -168,6 +169,7 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
     if (date) post.date = new Date(date);
     if (image_url !== undefined) post.image_url = image_url;
     if (image_thumbnail !== undefined) post.image_thumbnail = image_thumbnail;
+    if (contact_number !== undefined) post.contact_number = contact_number;
 
     // Handle resolution
     if (is_resolved !== undefined) {
@@ -305,6 +307,7 @@ export const incrementContactCount = async (req: AuthRequest, res: Response) => 
       message: 'Contact recorded',
       post,
       poster_email: (post.creator as any).email,
+      contact_number: post.contact_number,
     });
   } catch (error: any) {
     console.error('Error incrementing contact:', error);

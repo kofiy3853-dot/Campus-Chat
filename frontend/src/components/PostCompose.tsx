@@ -18,6 +18,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
   const [building, setBuilding] = useState('');
   const [room, setRoom] = useState('');
   const [date, setDate] = useState(new Date().toISOString().slice(0, 16));
+  const [contactNumber, setContactNumber] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [imageThumbnail, setImageThumbnail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
 
     try {
       setLoading(true);
-      const response = await api.post('/api/lost-found', {
+      const payload = {
         title: title.trim(),
         description: description.trim(),
         category,
@@ -86,7 +87,9 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
         date,
         image_url: imageUrl || null,
         image_thumbnail: imageThumbnail || null,
-      });
+        contact_number: contactNumber.trim() || undefined,
+      };
+      const response = await api.post('/api/lost-found', payload);
 
       onPostCreated?.(response.data);
 
@@ -98,6 +101,7 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
       setBuilding('');
       setRoom('');
       setDate(new Date().toISOString().slice(0, 16));
+      setContactNumber('');
       setImageUrl('');
       setImageThumbnail('');
       onClose();
@@ -220,17 +224,16 @@ const PostCompose: React.FC<PostComposeProps> = ({ isOpen, onClose, onPostCreate
               />
             </div>
           </div>
-
-          {/* Date */}
+          
+          {/* Contact Number */}
           <div>
-            <label className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Date & Time</label>
+            <label className="block text-[11px] font-black uppercase text-slate-400 tracking-widest mb-2">Contact Number (Optional)</label>
             <input
-              type="datetime-local"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              title="Select date and time"
-              placeholder="Select date and time"
-              className="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-sky-500/20"
+              type="text"
+              value={contactNumber}
+              onChange={(e) => setContactNumber(e.target.value)}
+              placeholder="e.g., +234 812 345 6789"
+              className="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20"
             />
           </div>
 

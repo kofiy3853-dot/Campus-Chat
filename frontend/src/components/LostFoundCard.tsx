@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import { Flag, Trash2, MessageSquare, CheckCircle, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { getMediaUrl } from '../utils/imageUrl';
@@ -14,6 +15,7 @@ interface LostFoundCardProps {
 
 const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve, onContact }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [reportReason, setReportReason] = useState('');
@@ -65,7 +67,19 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
       setLoading(true);
       const response = await api.post(`/api/lost-found/${post._id}/contact`);
       onContact?.(post._id);
-      alert(`Contact request recorded! You can reach the poster.`);
+      
+      const posterEmail = response.data.poster_email;
+      const posterNumber = response.data.contact_number;
+      
+      let message = `You can reach the poster at:\n\nEmail: ${posterEmail}`;
+      if (posterNumber) {
+        message += `\nPhone: ${posterNumber}`;
+      }
+      message += `\n\nWould you like to open a direct chat with them?`;
+
+      if (confirm(message)) {
+        navigate(`/dashboard/chat/${post.creator?._id || post.creator}`);
+      }
     } catch (error: any) {
       console.error('Error contacting:', error);
       alert(error.response?.data?.message || 'Failed to record contact');

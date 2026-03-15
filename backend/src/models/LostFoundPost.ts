@@ -20,6 +20,7 @@ export interface ILostFoundPost extends Document {
   resolved_date?: Date;
   is_deleted: boolean;
   contact_count: number;
+  contact_number?: string;
 }
 
 const lostFoundPostSchema = new Schema<ILostFoundPost>(
@@ -91,6 +92,11 @@ const lostFoundPostSchema = new Schema<ILostFoundPost>(
     contact_count: {
       type: Number,
       default: 0,
+    },
+    contact_number: {
+      type: String,
+      trim: true,
+      default: null,
     },
   },
   { timestamps: true }
