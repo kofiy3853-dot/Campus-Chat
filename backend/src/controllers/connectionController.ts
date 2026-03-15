@@ -116,3 +116,23 @@ export const getConnectionStatus = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getAcceptedConnections = async (req: AuthRequest, res: Response) => {
+  const userId = req.user.id;
+
+  try {
+    const connections = await Connection.find({
+      $or: [{ sender: userId }, { recipient: userId }],
+      status: 'accepted'
+    }).populate('sender recipient', 'name email profile_picture student_id department level');
+
+    const connectedUsers = connections.map(conn => {
+      const otherUser = conn.sender._id.toString() === userId ? conn.recipient : conn.sender;
+      return otherUser;
+    });
+
+    res.json(connectedUsers);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};

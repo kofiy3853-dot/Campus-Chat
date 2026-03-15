@@ -16,9 +16,26 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedMembers, setSelectedMembers] = useState<any[]>([]);
+  const [connectedUsers, setConnectedUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingSuggested, setLoadingSuggested] = useState(false);
   const [creating, setCreating] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchConnected = async () => {
+      setLoadingSuggested(true);
+      try {
+        const { data } = await api.get('/api/connections/accepted');
+        setConnectedUsers(data);
+      } catch (error) {
+        console.error('Error fetching connections:', error);
+      } finally {
+        setLoadingSuggested(false);
+      }
+    };
+    if (isOpen) fetchConnected();
+  }, [isOpen]);
 
   useEffect(() => {
     const searchUsers = async () => {
@@ -46,6 +63,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
   }, [searchQuery, selectedMembers]);
 
   const addMember = (user: any) => {
+    if (selectedMembers.some(m => m._id === user._id)) return;
     setSelectedMembers([...selectedMembers, user]);
     setSearchQuery('');
     setSearchResults([]);
@@ -143,7 +161,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Member Selection */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex items-center justify-between px-1">
               <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Add Members</label>
               <span className="text-[10px] font-bold text-slate-300">{selectedMembers.length} selected</span>
@@ -151,7 +169,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
 
             {/* Selected Members Chips */}
             {selectedMembers.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-2 p-1">
                 {selectedMembers.map((member) => (
                   <div 
                     key={member._id}
@@ -177,14 +195,47 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
               </div>
             )}
 
+            {/* Suggested Contacts (Users user is chatting with) */}
+            {connectedUsers.length > 0 && !searchQuery && (
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] ml-1">Suggested from your chats</h4>
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-1 px-1">
+                  {connectedUsers.filter(u => !selectedMembers.some(m => m._id === u._id)).map((connectedUser) => (
+                    <button
+                      key={connectedUser._id}
+                      onClick={() => addMember(connectedUser)}
+                      className="flex flex-col items-center gap-2 group shrink-0"
+                    >
+                      <div className="relative">
+                        <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-slate-100 group-hover:border-sky-500 transition-all p-0.5">
+                          <img 
+                            src={getMediaUrl(connectedUser.profile_picture) || `https://ui-avatars.com/api/?name=${connectedUser.name}`} 
+                            alt="" 
+                            className="w-full h-full object-cover rounded-[0.8rem]"
+                          />
+                        </div>
+                        <div className="absolute -top-1 -right-1 bg-sky-500 text-white p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                          <Plus className="w-3 h-3" />
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-500 max-w-[60px] truncate">{connectedUser.name.split(' ')[0]}</span>
+                    </button>
+                  ))}
+                  {connectedUsers.filter(u => !selectedMembers.some(m => m._id === u._id)).length === 0 && (
+                    <p className="text-[10px] text-slate-300 font-bold uppercase py-4">All contacts added</p>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Search Input */}
             <div className="relative group/search">
-              <div className="absolute inset-0 bg-sky-500/5 blur-xl group-focus-within/search:opacity-100 opacity-0 transition-opacity rounded-3xl"></div>
-              <div className="relative flex items-center bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 focus-within:bg-white focus-within:border-sky-200 transition-all duration-300">
+              <div className="absolute inset-x-0 bottom-0 h-0.5 bg-slate-100 group-focus-within/search:bg-sky-500 transition-colors"></div>
+              <div className="relative flex items-center py-4 focus-within:bg-white transition-all duration-300">
                 <Search className={clsx("w-5 h-5 mr-3 transition-colors", loading ? "text-sky-500 animate-pulse" : "text-slate-400 group-focus-within/search:text-sky-500")} />
                 <input 
                   type="text" 
-                  placeholder="Search students to invite..."
+                  placeholder="Search and add other students..."
                   className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-slate-700 placeholder:text-slate-300"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -193,36 +244,41 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
 
               {/* Search Results Dropdown */}
               {searchQuery.length >= 2 && (
-                <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto scrollbar-hide animate-in slide-in-from-top-2 duration-300">
+                <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-slate-100 rounded-[2rem] shadow-2xl z-50 overflow-hidden max-h-72 overflow-y-auto scrollbar-hide animate-in slide-in-from-top-2 duration-300">
                   {loading ? (
-                    <div className="p-8 text-center">
-                      <Loader2 className="w-6 h-6 text-sky-500 animate-spin mx-auto mb-2" />
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Searching...</p>
+                    <div className="p-10 text-center">
+                      <Loader2 className="w-8 h-8 text-sky-500 animate-spin mx-auto mb-3" />
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Searching Database...</p>
                     </div>
                   ) : searchResults.length > 0 ? (
-                    <div className="p-2 space-y-1">
+                    <div className="p-3 space-y-1">
                       {searchResults.map((user) => (
                         <button
                           key={user._id}
                           onClick={() => addMember(user)}
-                          className="w-full flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl transition-colors group/item"
+                          className="w-full flex items-center gap-4 p-4 hover:bg-slate-50 rounded-2xl transition-all group/item"
                         >
-                          <div className="w-10 h-10 rounded-full overflow-hidden border border-slate-100 group-hover/item:border-sky-200">
-                            <img src={getMediaUrl(user.profile_picture) || `https://ui-avatars.com/api/?name=${user.name}`} alt="" />
+                          <div className="w-12 h-12 rounded-2xl overflow-hidden border border-slate-100 group-hover/item:border-sky-200 transition-colors">
+                            <img src={getMediaUrl(user.profile_picture) || `https://ui-avatars.com/api/?name=${user.name}`} alt="" className="w-full h-full object-cover" />
                           </div>
                           <div className="flex-1 text-left">
-                            <h4 className="text-sm font-bold text-slate-700">{user.name}</h4>
-                            <p className="text-[10px] text-slate-400 font-medium">{user.student_id} • {user.department}</p>
+                            <div className="flex items-center gap-2">
+                              <h4 className="text-sm font-black text-slate-700">{user.name}</h4>
+                              {user.connection_status === 'accepted' && (
+                                <span className="text-[8px] bg-sky-100 text-sky-600 px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider">Connected</span>
+                              )}
+                            </div>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{user.student_id} • {user.department}</p>
                           </div>
-                          <div className="p-1.5 bg-slate-50 group-hover/item:bg-sky-500 rounded-lg transition-colors">
-                            <UserPlus className="w-4 h-4 text-slate-300 group-hover/item:text-white" />
+                          <div className="w-10 h-10 flex items-center justify-center bg-slate-50 group-hover/item:bg-sky-500 group-hover/item:text-white rounded-xl transition-all text-slate-300">
+                            <Plus className="w-5 h-5" />
                           </div>
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <div className="p-8 text-center">
-                      <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">No students found</p>
+                    <div className="p-10 text-center">
+                      <p className="text-xs font-black text-slate-300 uppercase tracking-widest">No students matched your search</p>
                     </div>
                   )}
                 </div>
@@ -234,22 +290,25 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
         {/* Footer */}
         <div className="p-6 md:p-8 bg-slate-50/50 border-t border-slate-100">
           <button 
-            disabled={creating || !groupName.trim()}
+            disabled={creating || !groupName.trim() || selectedMembers.length === 0}
             onClick={handleCreate}
-            className="w-full bg-slate-800 hover:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.15em] text-sm shadow-xl shadow-slate-200 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+            className="w-full bg-slate-900 shadow-xl shadow-slate-200 hover:bg-black disabled:opacity-20 disabled:cursor-not-allowed text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs transition-all active:scale-[0.98] flex items-center justify-center gap-3"
           >
             {creating ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Creating Group...
+                Generating Hub...
               </>
             ) : (
               <>
-                <Plus className="w-5 h-5" />
-                Launch Group
+                <Users className="w-5 h-5" />
+                Establish Group
               </>
             )}
           </button>
+          <p className="text-center text-[10px] text-slate-300 font-bold uppercase tracking-widest mt-4">
+            Members will receive an invitation to join
+          </p>
         </div>
       </div>
     </div>
