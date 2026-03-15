@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import api from '../services/api';
+import { getMediaUrl } from '../utils/imageUrl';
 
 interface ChatInputProps {
   onSend: (text: string, mediaUrl?: string, mediaType?: string) => void;
@@ -179,10 +180,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
       {previewFile && (
         <div className="max-w-6xl mx-auto mb-3 flex items-center gap-3 px-3 md:px-4 py-2 md:py-2.5 bg-gray-50 rounded-xl md:rounded-2xl border border-gray-100">
           {previewFile.type === 'image' && (
-            <img src={previewFile.url} alt="preview" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shrink-0" />
+            <img src={getMediaUrl(previewFile.url)} alt="preview" className="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shrink-0" />
           )}
           {previewFile.type === 'voice' && (
-            <audio controls src={previewFile.url} className="h-9 md:h-10 flex-1" />
+            <audio controls src={getMediaUrl(previewFile.url)} className="h-9 md:h-10 flex-1" />
           )}
           {(previewFile.type === 'file' || !['image','voice'].includes(previewFile.type)) && (
             <div className="flex items-center gap-2 flex-1 min-w-0">
