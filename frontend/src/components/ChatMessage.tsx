@@ -59,8 +59,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
       
       await api.delete(endpoint);
       onDelete?.(message._id);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting message:', error);
+      alert(`Deletion failed: ${error.response?.data?.message || error.message}`);
     }
   };
 

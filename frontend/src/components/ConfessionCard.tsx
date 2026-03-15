@@ -58,8 +58,9 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
     try {
       await api.delete(`/api/confessions/${confession._id}`);
       onDelete(confession._id);
-    } catch {
-      // silent
+    } catch (error: any) {
+      console.error('Error deleting confession:', error);
+      alert(`Deletion failed: ${error.response?.data?.message || error.message}`);
     }
   };
 
