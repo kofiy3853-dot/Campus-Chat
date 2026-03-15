@@ -66,11 +66,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle,
         >
           <Search className="w-4.5 h-4.5 md:w-5 md:h-5" />
         </button>
-        <button aria-label="Voice call" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl hidden md:block transition-none"><Phone className="w-5 h-5" /></button>
-        <button aria-label="Video call" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl hidden md:block transition-none"><Video className="w-5 h-5" /></button>
+        <button aria-label="Voice call" title="Voice call" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl hidden md:block transition-none"><Phone className="w-5 h-5" /></button>
+        <button aria-label="Video call" title="Video call" className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl hidden md:block transition-none"><Video className="w-5 h-5" /></button>
         <div className="w-px h-6 bg-gray-100 mx-1 md:mx-2 hidden md:block"></div>
         <button 
           aria-label="More options" 
+          title="More options" 
           onClick={onProfileClick}
           className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
         >

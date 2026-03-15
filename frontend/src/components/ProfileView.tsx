@@ -67,6 +67,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
         <div className="relative h-48 bg-gradient-to-br from-sky-400 to-sky-600 shrink-0">
           <button 
             onClick={onClose}
+            aria-label="Close profile"
+            title="Close profile"
             className="absolute top-4 left-4 p-2 bg-black/20 text-white rounded-full hover:bg-black/40 transition-colors z-10"
           >
             <X className="w-5 h-5" />
