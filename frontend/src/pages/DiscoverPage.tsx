@@ -61,6 +61,7 @@ const DiscoverPage: React.FC = () => {
   const navigate = useNavigate();
   const [groups, setGroups] = useState<Group[]>([]);
   const [people, setPeople] = useState<any[]>([]);
+  const [trendingGroups, setTrendingGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'groups' | 'people'>('all');
@@ -75,6 +76,7 @@ const DiscoverPage: React.FC = () => {
         api.get('/api/auth/search?query=a') // Initial general search for people
       ]);
       setGroups(groupsRes.data || []);
+      setTrendingGroups((groupsRes.data || []).slice(0, 3)); // Use top 3 as trending for now
       setPeople((peopleRes.data || []).slice(0, 6));
     } catch (error) {
       console.error('Error fetching discovery data:', error);
@@ -347,6 +349,79 @@ const DiscoverPage: React.FC = () => {
               </div>
             </section>
           )}
+
+          {/* Trending Groups Section - Always Visible */}
+          <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+            <div className="flex items-center gap-3 mb-8 px-1">
+              <div className="w-12 h-12 rounded-[1.25rem] bg-amber-50 flex items-center justify-center border border-amber-100 shadow-sm shadow-amber-100/50">
+                <TrendingUp className="w-6 h-6 text-amber-500" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-slate-800 tracking-tight">Trending Communities</h2>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Don't miss out on the buzz</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {loading ? (
+                [1, 2, 3].map(i => <Skeleton key={i} className="h-56 rounded-[2.5rem]" />)
+              ) : trendingGroups.length > 0 ? (
+                trendingGroups.map((group) => (
+                  <div 
+                    key={group._id}
+                    className="group relative bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 hover:border-orange-100 transition-all duration-500 overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50/50 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-orange-500/10 transition-colors"></div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="w-14 h-14 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-orange-200 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                          {group.group_name[0]}
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className="text-[10px] font-black text-orange-500 bg-orange-50 px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-orange-100/50">
+                            <Sparkles className="w-3 h-3 fill-orange-500" /> Trending
+                          </span>
+                        </div>
+                      </div>
+
+                      <h3 className="text-lg font-black text-slate-800 mb-2 group-hover:text-orange-600 transition-colors">{group.group_name}</h3>
+                      <p className="text-xs text-slate-500 font-medium mb-6 line-clamp-2 leading-relaxed">
+                        {group.description || "Join this buzzing community of students and stay ahead of the game."}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                           <div className="flex -space-x-2">
+                            {(group.members || []).slice(0, 3).map((m: any, idx: number) => (
+                              <div key={idx} className="w-7 h-7 rounded-full border-2 border-white ring-1 ring-slate-100 overflow-hidden">
+                                <img src={getMediaUrl(m.profile_picture) || `https://ui-avatars.com/api/?name=${m.name || 'U'}`} alt="" className="w-full h-full object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            {group.members?.length || 0} active members
+                          </span>
+                        </div>
+                        <button 
+                          onClick={() => joinGroup(group._id)}
+                          title={`Join ${group.group_name}`}
+                          aria-label={`Join ${group.group_name}`}
+                          className="p-3 bg-slate-900 text-white rounded-2xl hover:bg-orange-500 hover:scale-110 active:scale-95 transition-all duration-300 shadow-lg shadow-slate-200 hover:shadow-orange-200"
+                        >
+                          <UserPlus className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full py-12 text-center bg-slate-50/50 border border-dashed border-slate-200 rounded-[2.5rem]">
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Looking for trending groups...</p>
+                </div>
+              )}
+            </div>
+          </section>
 
         </div>
       </main>
