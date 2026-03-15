@@ -13,82 +13,47 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user._id;
 
-    // Aggregate messages to find all unique conversations for this user
-    // sorted by the latest message timestamp
-    const conversationSummaries = await Message.aggregate([
+    // 1. Fetch all conversations the user is part of
+    const conversations = await Conversation.find({ participants: userId })
+      .populate('participants', 'name email profile_picture status last_seen')
+      .populate('last_message')
+      .sort({ last_message_time: -1 });
+
+    // 2. Fetch unread message counts for this user in all their conversations
+    const unreadCounts = await Message.aggregate([
       {
         $match: {
           $or: [
-            { sender_id: userId },
-            { receiver: userId },
+            { receiver: userId }, 
             { recipient_id: userId }
-          ]
+          ],
+          read: false
         }
-      },
-      {
-        $sort: { timestamp: -1 }
       },
       {
         $group: {
           _id: "$conversation_id",
-          last_message: { $first: "$$ROOT" },
-          last_message_time: { $first: "$timestamp" },
-          unread_count: {
-            $sum: {
-              $cond: [
-                { 
-                  $and: [
-                    { $eq: ["$read", false] },
-                    { 
-                      $or: [
-                        { $eq: ["$receiver", userId] },
-                        { $eq: ["$recipient_id", userId] }
-                      ]
-                    }
-                  ]
-                },
-                1,
-                0
-              ]
-            }
-          }
+          unread_count: { $sum: 1 }
         }
-      },
-      {
-        $sort: { last_message_time: -1 }
       }
     ]);
 
-    if (!conversationSummaries.length) {
-      return res.json([]);
-    }
-
-    // Extract the conversation IDs
-    const conversationIds = conversationSummaries.map(c => c._id);
-
-    // Fetch the actual Conversation documents and populate participants
-    const conversations = await Conversation.find({
-      _id: { $in: conversationIds }
-    })
-    .populate('participants', 'name email profile_picture status last_seen')
-    .populate('last_message');
-
-    // Merge unread_count into the conversation objects
-    const sortedConversations = conversationSummaries.map(summary => {
-      if (!summary._id) return null; // Skip messages without a conversation_id
-      const conv = conversations.find(c => c._id.toString() === summary._id.toString());
-      if (!conv) return null;
-      
+    // 3. Map the unread counts onto the conversation objects
+    const sortedConversations = conversations.map(conv => {
       const convObj = conv.toObject();
+      const unreadMatch = unreadCounts.find(
+        (u) => String(u._id) === String(convObj._id)
+      );
+      
       return {
         ...convObj,
-        unread_count: summary.unread_count
+        unread_count: unreadMatch ? unreadMatch.unread_count : 0
       };
-    }).filter(Boolean);
+    });
 
     res.json(sortedConversations);
   } catch (error: any) {
-    console.error('Error in getConversations (Aggregation):', error);
+    console.error('Error in getConversations:', error);
     res.status(500).json({ message: error.message });
   }
 };
