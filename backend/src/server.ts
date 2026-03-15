@@ -84,6 +84,7 @@ import notificationRoutes from './routes/notificationRoutes';
 import pollRoutes from './routes/pollRoutes';
 import lostFoundRoutes from './routes/lostFoundRoutes';
 import marketplaceRoutes from './routes/marketplaceRoutes';
+import connectionRoutes from './routes/connectionRoutes';
 import { generalRateLimiter } from './middleware/rateLimitMiddleware';
 
 // Presence tracking (in-memory — Upstash HTTP doesn't support TCP pub/sub)
@@ -264,6 +265,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/polls', pollRoutes);
 app.use('/api/lost-found', lostFoundRoutes);
 app.use('/api/marketplace', marketplaceRoutes);
+app.use('/api/connections', connectionRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

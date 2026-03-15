@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   Sparkles,
   SearchX,
-  Plus
+  Plus,
+  Bell
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -20,6 +21,7 @@ import { clsx } from 'clsx';
 import Skeleton from '../components/Skeleton';
 import { getMediaUrl } from '../utils/imageUrl';
 import CreateGroupModal from '../components/CreateGroupModal';
+import ConnectionRequests from '../components/ConnectionRequests';
 
 interface Group {
   _id: string;
@@ -67,6 +69,17 @@ const DiscoverPage: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<'all' | 'groups' | 'people'>('all');
   const [searching, setSearching] = useState(false);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+  const [isRequestsOpen, setIsRequestsOpen] = useState(false);
+  const [requestCount, setRequestCount] = useState(0);
+
+  const fetchRequestCount = async () => {
+    try {
+      const { data } = await api.get('/api/connections/incoming');
+      setRequestCount(data.length);
+    } catch (error) {
+      console.error('Error fetching request count:', error);
+    }
+  };
 
   const fetchDiscoveryData = async () => {
     try {
@@ -109,6 +122,7 @@ const DiscoverPage: React.FC = () => {
 
   useEffect(() => {
     fetchDiscoveryData();
+    fetchRequestCount();
   }, []);
 
   const joinGroup = async (groupId: string) => {
@@ -125,21 +139,31 @@ const DiscoverPage: React.FC = () => {
 
   const handleConnect = async (userId: string) => {
     try {
-      // For now, simulate connection request with a toast or success state
-      // In a real app, this would call /api/friends/request
-      console.log('Connecting with user:', userId);
-      // We could use a toast here if we had one, for now just logged
-    } catch (error) {
+      setSearching(true);
+      await api.post('/api/connections/request', { recipientId: userId });
+      // Update local state to show pending
+      setPeople(prev => prev.map(p => 
+        p._id === userId ? { ...p, connection_status: 'pending', is_sender: true } : p
+      ));
+    } catch (error: any) {
       console.error('Error connecting:', error);
+      alert(error.response?.data?.message || 'Failed to send connect request');
+    } finally {
+      setSearching(false);
     }
   };
 
-  const startChat = async (userId: string) => {
+  const startChat = async (userId: string, connectionStatus: string) => {
+    if (connectionStatus !== 'accepted') {
+      alert('You must be connected with this student before you can message them.');
+      return;
+    }
     try {
       const { data } = await api.post('/api/chat/conversations', { participantId: userId });
       navigate(`/dashboard/chat/${data._id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error starting chat:', error);
+      alert(error.response?.data?.message || 'Failed to start chat');
     }
   };
 
@@ -156,6 +180,19 @@ const DiscoverPage: React.FC = () => {
               <p className="text-sm text-slate-400 font-medium">Find groups and people on campus</p>
             </div>
             <div className="hidden md:flex items-center gap-2">
+                <button 
+                  onClick={() => setIsRequestsOpen(true)}
+                  title="Connection Requests"
+                  className="relative p-2.5 bg-white border border-slate-100 text-slate-400 hover:text-sky-500 hover:border-sky-100 rounded-xl transition-all mr-2"
+                >
+                  <Bell className="w-5 h-5" />
+                  {requestCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white">
+                      {requestCount}
+                    </span>
+                  )}
+                </button>
+                <div className="w-px h-6 bg-slate-100 mx-2"></div>
                 <button 
                   onClick={() => setActiveFilter('all')}
                   title="Show all"
@@ -347,15 +384,41 @@ const DiscoverPage: React.FC = () => {
                       </p>
                       
                       <div className="flex flex-col gap-2">
+                        {person.connection_status === 'none' ? (
+                          <button 
+                            onClick={() => handleConnect(person._id)}
+                            className="w-full py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-500 hover:shadow-lg hover:shadow-sky-200 transition-all"
+                          >
+                            <UserPlus className="w-3 h-3" /> Connect
+                          </button>
+                        ) : person.connection_status === 'pending' ? (
+                          <button 
+                            disabled
+                            className="w-full py-2.5 bg-slate-100 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 cursor-default"
+                          >
+                            <Clock className="w-3 h-3" /> Pending
+                          </button>
+                        ) : person.connection_status === 'accepted' ? (
+                          <div className="w-full py-2.5 bg-green-50 text-green-600 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                            <CheckCircle2 className="w-3 h-3" /> Connected
+                          </div>
+                        ) : (
+                           <button 
+                            onClick={() => handleConnect(person._id)}
+                            className="w-full py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-500 hover:shadow-lg hover:shadow-sky-200 transition-all"
+                          >
+                            <UserPlus className="w-3 h-3" /> Reconnect
+                          </button>
+                        )}
+
                         <button 
-                          onClick={() => handleConnect(person._id)}
-                          className="w-full py-2.5 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-500 hover:shadow-lg hover:shadow-sky-200 transition-all"
-                        >
-                          <UserPlus className="w-3 h-3" /> Connect
-                        </button>
-                        <button 
-                          onClick={() => startChat(person._id)}
-                          className="w-full py-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:text-sky-500 hover:border-sky-100 transition-all"
+                          onClick={() => startChat(person._id, person.connection_status)}
+                          className={clsx(
+                            "w-full py-2.5 border rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all",
+                            person.connection_status === 'accepted' 
+                              ? "bg-white border-sky-100 text-sky-500 hover:bg-sky-50" 
+                              : "bg-slate-50 border-transparent text-slate-300 cursor-not-allowed"
+                          )}
                         >
                           <MessageSquare className="w-3 h-3" /> Message
                         </button>
@@ -449,6 +512,15 @@ const DiscoverPage: React.FC = () => {
       <CreateGroupModal 
         isOpen={isCreateGroupOpen}
         onClose={() => setIsCreateGroupOpen(false)}
+      />
+
+      <ConnectionRequests 
+        isOpen={isRequestsOpen}
+        onClose={() => setIsRequestsOpen(false)}
+        onUpdate={() => {
+          fetchRequestCount();
+          fetchDiscoveryData();
+        }}
       />
     </div>
   );

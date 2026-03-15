@@ -158,6 +158,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 };
 export const searchUsers = async (req: AuthRequest, res: Response) => {
   const query = req.query.query as string;
+  const currentUserId = req.user.id;
 
   if (!query) {
     return res.json([]);
@@ -170,11 +171,37 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
         { student_id: { $regex: query, $options: 'i' } },
         { email: { $regex: query, $options: 'i' } },
       ],
+      _id: { $ne: currentUserId } // Exclude current user from search
     })
       .select('-password_hash')
       .limit(10);
 
-    res.json(users);
+    // Fetch connection status for each user
+    const Connection = mongoose.model('Connection');
+    const userIds = users.map(u => u._id);
+    
+    const connections = await Connection.find({
+      $or: [
+        { sender: currentUserId, recipient: { $in: userIds } },
+        { recipient: currentUserId, sender: { $in: userIds } }
+      ]
+    });
+
+    const usersWithStatus = users.map(user => {
+      const conn = connections.find(c => 
+        (c.sender.toString() === currentUserId && c.recipient.toString() === user._id.toString()) ||
+        (c.recipient.toString() === currentUserId && c.sender.toString() === user._id.toString())
+      );
+      
+      return {
+        ...user.toObject(),
+        connection_status: conn ? conn.status : 'none',
+        connection_id: conn ? conn._id : null,
+        is_sender: conn ? conn.sender.toString() === currentUserId : false
+      };
+    });
+
+    res.json(usersWithStatus);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
