@@ -342,73 +342,61 @@ const ChatWindow = () => {
       {/* Action Menu */}
       {activeMessage && (
         <div 
-          className="fixed z-[101] bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-3 min-w-[220px] animate-in fade-in zoom-in duration-200 -translate-x-1/2"
+          className="message-menu"
           style={{ 
-            left: `${Math.max(120, Math.min(menuPosition.x, window.innerWidth - 120))}px`, 
-            top: `${Math.max(20, Math.min(menuPosition.y, window.innerHeight - 320))}px` 
+            top: `${Math.max(20, Math.min(menuPosition.y, window.innerHeight - 100))}px`, 
+            left: `${Math.max(100, Math.min(menuPosition.x, window.innerWidth - 100))}px` 
           }}
         >
-          {/* Reaction Quick Picker */}
-          <div className="flex gap-1 mb-3 bg-slate-50/50 p-2 rounded-2xl border border-slate-100">
-            {['👍', '❤️', '😂', '😮', '😢', '🔥'].map(emoji => (
+          {/* Quick Reactions */}
+          <div className="flex gap-0.5 mr-2 pr-2 border-r border-slate-100">
+            {['👍', '❤️', '🔥'].map(emoji => (
               <button
                 key={emoji}
                 onClick={() => {
                   onReaction(activeMessage._id, emoji);
                   closeMenu();
                 }}
-                className="w-8 h-8 flex items-center justify-center text-lg hover:bg-white hover:shadow-sm rounded-xl transition-all hover:scale-110 active:scale-90"
+                className="hover:scale-125 hover:rotate-3"
               >
                 {emoji}
               </button>
             ))}
           </div>
 
-          <div className="space-y-1">
-            <button 
-              onClick={() => {
-                // Feature: Copy text
-                navigator.clipboard.writeText(activeMessage.message_text);
-                closeMenu();
-              }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 text-slate-600 hover:text-sky-600 transition-colors text-sm font-bold"
-            >
-              <div className="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center text-sky-500">
-                <MessageSquare className="w-4 h-4" />
-              </div>
-              Copy Message
-            </button>
+          <button 
+            title="React"
+            onClick={() => {
+              onReaction(activeMessage._id, '😀');
+              closeMenu();
+            }}
+          >
+            😀
+          </button>
 
-            {(activeMessage.sender_id?._id === user?._id || activeMessage.sender_id === user?._id) && !activeMessage.is_deleted && (
-              <>
-                <button 
-                  onClick={() => {
-                    // Logic for edit will need to be handled, but for now just a mockup
-                    // since edit UI is usually inline
-                    closeMenu();
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-sky-50 text-slate-600 hover:text-sky-600 transition-colors text-sm font-bold"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-500">
-                    <Edit2 className="w-4 h-4" />
-                  </div>
-                  Edit Message
-                </button>
-                <button 
-                  onClick={() => {
-                    onDelete(activeMessage._id);
-                    closeMenu();
-                  }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-400 hover:text-red-500 transition-colors text-sm font-bold"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center text-red-500">
-                    <Trash2 className="w-4 h-4" />
-                  </div>
-                  Delete Message
-                </button>
-              </>
-            )}
-          </div>
+          {(activeMessage.sender_id?._id === user?._id || activeMessage.sender_id === user?._id) && !activeMessage.is_deleted && (
+            <>
+              <button 
+                title="Edit"
+                onClick={() => {
+                  // Pass data back if needed, but for now just a placeholder
+                  closeMenu();
+                }}
+              >
+                ✏️
+              </button>
+              <button 
+                className="delete"
+                title="Delete"
+                onClick={() => {
+                  onDelete(activeMessage._id);
+                  closeMenu();
+                }}
+              >
+                🗑
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>
