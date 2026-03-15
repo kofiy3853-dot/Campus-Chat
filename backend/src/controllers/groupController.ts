@@ -4,7 +4,9 @@ import { AuthRequest } from '../types/express';
 import Group from '../models/Group';
 import Message from '../models/Message';
 import GroupMessage from '../models/GroupMessage';
+import Notification from '../models/Notification';
 import { io } from '../server';
+import { createNotification } from './notificationController';
 
 export const createGroup = async (req: AuthRequest, res: Response) => {
   const { group_name, description, members } = req.body;
@@ -76,10 +78,17 @@ export const getGroupMessages = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You are not authorized to view messages from this group' });
     }
 
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+
     const messages = await GroupMessage.find({ group_id: groupId })
       .populate('sender_id', 'name profile_picture')
-      .sort({ timestamp: 1 });
-    res.json(messages);
+      .sort({ timestamp: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json(messages.reverse());
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -102,13 +111,32 @@ export const sendGroupMessage = async (req: any, res: Response) => {
     });
 
     // Populate sender info for real-time broadcast
-    const populatedMessage = await GroupMessage.findById(message._id)
+    const populatedMessage: any = await GroupMessage.findById(message._id)
       .populate('sender_id', 'name profile_picture');
     
-    await Group.findByIdAndUpdate(groupId, {
+    const group = await Group.findByIdAndUpdate(groupId, {
       last_message: message._id,
       last_message_time: new Date(),
     });
+
+    if (group) {
+      // Trigger notifications for all group members except sender
+      const notificationTitle = `New message in ${group.group_name}`;
+      const notificationBody = `${populatedMessage?.sender_id?.name || 'Someone'}: ${message_text || 'Sent an attachment'}`;
+      
+      group.members.forEach((memberId: any) => {
+        if (memberId.toString() !== req.user.id.toString()) {
+          createNotification(
+            memberId.toString(),
+            'message',
+            notificationTitle,
+            notificationBody,
+            { group_id: groupId.toString() },
+            req.user.id
+          );
+        }
+      });
+    }
 
     res.status(201).json(populatedMessage);
   } catch (error: any) {
@@ -134,6 +162,7 @@ export const discoverGroups = async (req: AuthRequest, res: Response) => {
     .sort({ createdAt: -1 })
     .limit(10);
 
+    res.set('Cache-Control', 'public, max-age=60');
     res.json(groups);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -150,6 +179,7 @@ export const searchGroups = async (req: AuthRequest, res: Response) => {
       ],
     } as any).populate('members', 'name profile_picture');
 
+    res.set('Cache-Control', 'public, max-age=60');
     res.json(groups);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -206,6 +236,32 @@ export const addGroupMessageReaction = async (req: AuthRequest, res: Response) =
 
     res.json(message);
   } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Mark group messages as read
+export const markGroupMessagesAsRead = async (req: AuthRequest, res: Response) => {
+  const { groupId } = req.params;
+
+  try {
+    if (!mongoose.isValidObjectId(groupId)) {
+      return res.status(400).json({ message: 'Invalid group ID' });
+    }
+
+    // Mark corresponding notifications as read
+    await Notification.updateMany(
+      {
+        user_id: req.user._id,
+        'data.group_id': groupId.toString(),
+        read: false,
+      },
+      { read: true, read_at: new Date() }
+    );
+
+    res.json({ message: 'Group messages marked as read' });
+  } catch (error: any) {
+    console.error(`[GroupController] Error in markGroupMessagesAsRead for ${groupId}:`, error.message);
     res.status(500).json({ message: error.message });
   }
 };

@@ -7,7 +7,8 @@ import {
   sendGroupMessage,
   discoverGroups,
   searchGroups,
-  addGroupMessageReaction
+  addGroupMessageReaction,
+  markGroupMessagesAsRead
 } from '../controllers/groupController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -20,6 +21,6 @@ router.get('/search', protect, searchGroups);
 router.post('/join', protect, joinGroup);
 router.get('/messages/:groupId', protect, getGroupMessages);
 router.post('/send', protect, sendGroupMessage);
-router.post('/messages/:messageId/reaction', protect, addGroupMessageReaction);
+router.post('/messages/:groupId/read', protect, markGroupMessagesAsRead);
 
 export default router;

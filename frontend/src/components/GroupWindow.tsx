@@ -19,6 +19,18 @@ const GroupWindow = () => {
   const [group, setGroup] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const markAsRead = async () => {
+    if (!id || id === 'null') return;
+    try {
+      await api.post(`/api/groups/messages/${id}/read`);
+      // Optionally notify other tabs/users if needed, but for now just clear local unread count via context
+      // The ChatContext will refresh on notification events, but here we can force a refresh if we had a reference to it.
+      // Actually, markAsRead on backend clears notifications, so we just need to ensure the badge updates.
+    } catch (err) {
+      console.error('Error marking group messages as read:', err);
+    }
+  };
+
   useEffect(() => {
     const fetchGroupData = async () => {
       if (id === 'mock-1') {
@@ -37,6 +49,7 @@ const GroupWindow = () => {
         const currentGroup = groupRes.data.find((g: any) => g._id === id);
         if (!currentGroup) throw new Error('Group not found');
         setGroup(currentGroup);
+        markAsRead();
       } catch (err: any) {
         console.error('Error fetching group data:', err);
         setError(err.response?.data?.message || 'Failed to load group');
@@ -61,6 +74,11 @@ const GroupWindow = () => {
         const newMessages = [...prev, message];
         return newMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
       });
+
+      // Mark as read if from someone else
+      if (message.sender_id?._id !== user?._id && message.sender_id !== user?._id) {
+        markAsRead();
+      }
     };
 
     socket.on('receive_group_message', messageHandler);

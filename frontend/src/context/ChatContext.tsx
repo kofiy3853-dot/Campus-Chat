@@ -49,12 +49,21 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       refreshUnreadCount();
     };
 
+    const handleNotification = (notification: any) => {
+      // Refresh count if we get a new message-related notification
+      if (notification.type === 'message') {
+        refreshUnreadCount();
+      }
+    };
+
     socket.on('receive_message', handleNewMessage);
     socket.on('messages_read', handleMessagesRead);
+    socket.on('notification', handleNotification);
 
     return () => {
       socket.off('receive_message', handleNewMessage);
       socket.off('messages_read', handleMessagesRead);
+      socket.off('notification', handleNotification);
     };
   }, [socket, user]);
 

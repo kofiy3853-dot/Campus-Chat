@@ -171,7 +171,12 @@ export const createNotification = async (
       .populate('sender_id', 'name profile_picture');
 
     // Broadcast real-time notification via Socket.IO
-    io.to(`notification:${userId}`).emit('notification', populatedNotification);
+    if (io) {
+      console.log(`[Notification] Emitting to notification:${userId} for type: ${type}`);
+      io.to(`notification:${userId}`).emit('notification', populatedNotification);
+    } else {
+      console.error('[Notification] IO instance is UNDEFINED! Cannot broadcast notification.');
+    }
 
     // --- Push Notifications via FCM ---
     const deviceTokens = await DeviceToken.find({ user_id: userId, is_active: true });

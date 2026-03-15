@@ -36,21 +36,10 @@ import http from 'http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import compression from 'compression';
 import User from './models/User';
 import { connectRedis } from './config/redis';
 // Socket.IO uses default in-memory adapter (Upstash HTTP doesn't support pub/sub)
-import authRoutes from './routes/authRoutes';
-import chatRoutes from './routes/chatRoutes';
-import groupRoutes from './routes/groupRoutes';
-import announcementRoutes from './routes/announcementRoutes';
-import confessionRoutes from './routes/confessionRoutes';
-import eventRoutes from './routes/eventRoutes';
-import notificationRoutes from './routes/notificationRoutes';
-import pollRoutes from './routes/pollRoutes';
-import lostFoundRoutes from './routes/lostFoundRoutes';
-import marketplaceRoutes from './routes/marketplaceRoutes';
-import { generalRateLimiter } from './middleware/rateLimitMiddleware';
-
 const app = express();
 const server = http.createServer(app);
 
@@ -63,7 +52,7 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 const corsOptions: cors.CorsOptions = {
-  origin: (origin, callback) => {
+  origin: (origin: any, callback: any) => {
     // Check if origin is in allowedOrigins or if it's a vercel.app subdomain
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
@@ -80,6 +69,18 @@ const corsOptions: cors.CorsOptions = {
 export const io = new Server(server, {
   cors: corsOptions,
 });
+
+import authRoutes from './routes/authRoutes';
+import chatRoutes from './routes/chatRoutes';
+import groupRoutes from './routes/groupRoutes';
+import announcementRoutes from './routes/announcementRoutes';
+import confessionRoutes from './routes/confessionRoutes';
+import eventRoutes from './routes/eventRoutes';
+import notificationRoutes from './routes/notificationRoutes';
+import pollRoutes from './routes/pollRoutes';
+import lostFoundRoutes from './routes/lostFoundRoutes';
+import marketplaceRoutes from './routes/marketplaceRoutes';
+import { generalRateLimiter } from './middleware/rateLimitMiddleware';
 
 // Presence tracking (in-memory — Upstash HTTP doesn't support TCP pub/sub)
 const onlineUsers = new Map<string, Set<string>>();
@@ -205,6 +206,7 @@ io.on('connection', async (socket) => {
 
 // CORS must be applied before routes and body parsing
 app.use(cors(corsOptions));
+app.use(compression());
 app.use(express.json());
 app.use(generalRateLimiter);
 

@@ -8,6 +8,7 @@ export interface IMessageReaction {
 export interface IMessage extends Document {
   conversation_id: mongoose.Types.ObjectId;
   sender_id: mongoose.Types.ObjectId;
+  recipient_id: mongoose.Types.ObjectId; // Added for easier unread count queries
   message_text: string;
   message_type: 'text' | 'image' | 'file' | 'voice';
   media_url?: string;
@@ -23,6 +24,7 @@ export interface IMessage extends Document {
 const MessageSchema: Schema = new Schema({
   conversation_id: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true },
   sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  recipient_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   message_text: { type: String },
   message_type: { type: String, enum: ['text', 'image', 'file', 'voice'], default: 'text' },
   media_url: { type: String },

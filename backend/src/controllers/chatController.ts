@@ -4,6 +4,7 @@ import { AuthRequest } from '../types/express';
 import Conversation from '../models/Conversation';
 import Message from '../models/Message';
 import User from '../models/User';
+import Notification from '../models/Notification';
 import { io } from '../server';
 import { createNotification } from './notificationController';
 import { logDetailedError } from '../utils/logger';
@@ -38,11 +39,17 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You are not authorized to view this conversation' });
     }
 
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+
     const messages = await Message.find({ conversation_id: conversationId })
       .populate('sender_id', 'name profile_picture')
-      .sort({ timestamp: 1 });
+      .sort({ timestamp: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    res.json(messages);
+    res.json(messages.reverse());
   } catch (error: any) {
     console.error('Error in getMessages:', error);
     res.status(500).json({ message: error.message });
@@ -70,6 +77,7 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
     const message = await Message.create({
       conversation_id: conversation._id,
       sender_id: req.user.id,
+      recipient_id: recipientId, // Explicitly store recipient for fast unread counts
       message_text: message_text || '',
       message_type: message_type || 'text',
       media_url,
@@ -324,18 +332,46 @@ export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'Invalid conversation ID' });
     }
 
+    // 1. Mark actual messages as read (for delivery status)
     const result = await Message.updateMany(
       {
         conversation_id: new mongoose.Types.ObjectId(conversationId as string),
-        sender_id: { $ne: req.user._id },
+        recipient_id: req.user._id,
         delivery_status: { $ne: 'read' },
       },
       { delivery_status: 'read' }
     );
 
+    // 2. Mark corresponding notifications as read
+    await Notification.updateMany(
+      {
+        user_id: req.user._id,
+        'data.conversation_id': conversationId.toString(),
+        read: false,
+      },
+      { read: true, read_at: new Date() }
+    );
+
     res.json({ message: 'Messages marked as read', modifiedCount: result.modifiedCount });
   } catch (error: any) {
     console.error(`[ChatController] Error in markMessagesAsRead for ${conversationId}:`, error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get unread messages count for the current user
+export const getUnreadCount = async (req: AuthRequest, res: Response) => {
+  try {
+    // Count unread notifications of type 'message' (includes both private and group)
+    const count = await Notification.countDocuments({
+      user_id: req.user._id,
+      type: 'message',
+      read: false
+    });
+
+    res.json({ count });
+  } catch (error: any) {
+    console.error('[ChatController] Error in getUnreadCount:', error);
     res.status(500).json({ message: error.message });
   }
 };
