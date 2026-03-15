@@ -254,11 +254,19 @@ const ChatWindow = () => {
 
   const onDelete = async (messageId: string) => {
     try {
-      await api.delete(`/chat/messages/${messageId}`);
+      const isGroup = !!conversation?.group_name; // Check if it's a group
+      const endpoint = isGroup 
+        ? `/api/groups/messages/${messageId}` 
+        : `/api/chat/messages/${messageId}`;
+        
+      await api.delete(endpoint);
       setMessages(prev => prev.filter(m => m._id !== messageId));
-      socket?.emit('message_deleted', { messageId, roomId: id });
+      
+      const socketEvent = isGroup ? 'group_message_deleted' : 'message_deleted';
+      socket?.emit(socketEvent, { messageId, roomId: id });
     } catch (err: any) {
       console.error('Delete message error:', err);
+      alert(`Delete failed: ${err.response?.data?.message || err.message}`);
     }
   };
 
