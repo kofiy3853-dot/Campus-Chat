@@ -246,6 +246,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-xs text-gray-500 truncate leading-snug">
+                    {item.last_message && (item.last_message.sender_id?._id === user?._id || item.last_message.sender_id === user?._id) ? "You: " : ""}
                     {item.last_message?.message_text || (isGroup ? `${item.members?.length || 0} members` : 'Start a conversation')}
                   </p>
                   {item.unread_count > 0 && (
