@@ -53,11 +53,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
   const handleDelete = async () => {
     try {
-      const endpoint = message.group_id 
-        ? `/api/groups/messages/${message._id}` 
-        : `/api/chat/messages/${message._id}`;
-      
-      await api.delete(endpoint);
+      if (message.group_id) {
+        await api.delete(`/api/groups/messages/${message._id}`);
+      } else {
+        await api.delete(`/api/chat/messages/${message._id}`);
+      }
       onDelete?.(message._id);
     } catch (error: any) {
       console.error('Error deleting message:', error);
