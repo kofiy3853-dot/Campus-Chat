@@ -18,9 +18,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle,
     <header className="h-16 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 flex items-center justify-between shrink-0">
       <div className="flex items-center gap-2 md:gap-4">
         <button 
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate(user?.isGroup ? '/dashboard/groups/null' : '/dashboard/chats')}
           className="md:hidden p-1.5 -ml-1 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
-          aria-label="Back to chats"
+          aria-label="Back to messages"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
