@@ -26,7 +26,7 @@ interface NavSidebarProps {
 
 const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
   const { user, logout } = useAuth();
-  const { unread } = useUnread();
+  const { unread, messageUnread } = useUnread();
 
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
@@ -65,9 +65,9 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
           >
             <div className="relative">
               <item.icon className="w-6 h-6" />
-              {item.label === 'Chats' && unread > 0 && (
+              {item.label === 'Chats' && messageUnread > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
-                  {unread > 99 ? '99+' : unread}
+                  {messageUnread > 99 ? '99+' : messageUnread}
                 </span>
               )}
             </div>
