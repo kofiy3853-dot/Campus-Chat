@@ -111,7 +111,10 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
 
-    const messages = await Message.find({ conversation_id: conversationId })
+    const messages = await Message.find({ 
+      conversation_id: conversationId,
+      is_deleted: { $ne: true }
+    })
       .populate('sender_id', 'name profile_picture')
       .sort({ timestamp: -1 })
       .skip(skip)
@@ -227,7 +230,7 @@ export const searchMessages = async (req: AuthRequest, res: Response) => {
 
     const searchFilter: any = {
       conversation_id: conversationId,
-      is_deleted: false,
+      is_deleted: { $ne: true },
     };
 
     if (query) {

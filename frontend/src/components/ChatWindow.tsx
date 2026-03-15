@@ -119,9 +119,7 @@ const ChatWindow = () => {
 
     const deleteHandler = (data: any) => {
       if (data.roomId === id) {
-        setMessages(prev => prev.map(m => 
-          m._id === data.messageId ? { ...m, is_deleted: true, message_text: '[Message deleted]' } : m
-        ));
+        setMessages(prev => prev.filter(m => String(m._id) !== String(data.messageId)));
       }
     };
 
@@ -151,6 +149,7 @@ const ChatWindow = () => {
     socket.on('message_reaction', reactionHandler);
     socket.on('message_edited', editHandler);
     socket.on('message_deleted', deleteHandler);
+    socket.on('group_message_deleted', deleteHandler);
     socket.on('messages_read', messagesReadHandler);
     socket.on('user_status_change', statusHandler);
 
@@ -162,6 +161,7 @@ const ChatWindow = () => {
       socket.off('message_reaction', reactionHandler);
       socket.off('message_edited', editHandler);
       socket.off('message_deleted', deleteHandler);
+      socket.off('group_message_deleted', deleteHandler);
       socket.off('messages_read', messagesReadHandler);
       socket.off('user_status_change', statusHandler);
     };

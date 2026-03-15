@@ -110,7 +110,10 @@ export const getGroupMessages = async (req: AuthRequest, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
 
-    const messages = await GroupMessage.find({ group_id: groupId })
+    const messages = await GroupMessage.find({ 
+      group_id: groupId,
+      is_deleted: { $ne: true }
+    })
       .populate('sender_id', 'name profile_picture')
       .sort({ timestamp: -1 })
       .skip(skip)
