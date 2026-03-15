@@ -3,6 +3,7 @@ import {
   Smile, ImageIcon, Mic, Send, Paperclip, X, StopCircle,
   FileText, Calendar, Contact, FolderOpen, ChevronUp, Edit2
 } from 'lucide-react';
+import { clsx } from 'clsx';
 import api from '../services/api';
 
 interface ChatInputProps {
@@ -33,6 +34,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
   const [showEmoji, setShowEmoji] = useState(false);
   const [showAttach, setShowAttach] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [previewFile, setPreviewFile] = useState<{ url: string; type: string; name: string } | null>(null);
 
@@ -124,9 +126,16 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
 
       console.log(`[ChatInput] Recording with mimeType: ${mimeType}`);
       const recorder = new MediaRecorder(stream, { mimeType });
+      
+      setRecordingTime(0);
+      const timer = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+
       audioChunksRef.current = [];
       recorder.ondataavailable = e => audioChunksRef.current.push(e.data);
       recorder.onstop = async () => {
+        clearInterval(timer);
         const blob = new Blob(audioChunksRef.current, { type: mimeType });
         const extension = mimeType.split('/')[1].split(';')[0] || 'webm';
         const file = new File([blob], `voice-${Date.now()}.${extension}`, { type: mimeType });
@@ -292,8 +301,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
 
         <input
           type="text"
-          placeholder={uploading ? 'Uploading…' : isRecording ? 'Recording…' : 'Type message…'}
-          className="flex-1 bg-transparent border-none outline-none text-gray-800 py-2 md:py-2.5 px-1 md:px-2 text-sm md:text-[15px] placeholder:text-gray-400 min-w-0"
+          placeholder={uploading ? 'Uploading…' : isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, '0')}` : 'Type message…'}
+          className={clsx(
+            "flex-1 bg-transparent border-none outline-none text-gray-800 py-2 md:py-2.5 px-1 md:px-2 text-sm md:text-[15px] placeholder:text-gray-400 min-w-0",
+            isRecording && "animate-pulse text-red-500 font-bold"
+          )}
           value={text}
           onChange={e => { setText(e.target.value); onTyping(); }}
           disabled={uploading || isRecording}

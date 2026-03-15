@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import VoicePlayer from './VoicePlayer';
 import { clsx } from 'clsx';
 import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical, Paperclip, Clock, Mic } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -173,16 +174,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                       />
                     </a>
                   ) : (message.message_type === 'voice' || message.media_url?.match(/\.(mp3|ogg|wav|webm|m4a|aac)$/i)) ? (
-                    <div className="p-2 md:p-2.5 bg-slate-50/50 backdrop-blur-sm flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center shrink-0 shadow-sm">
-                        <Mic className="w-4 h-4 text-sky-500" />
-                      </div>
-                      <audio 
-                        controls 
-                        src={getMediaUrl(message.media_url)} 
-                        className="flex-1 h-7 custom-audio-player" 
-                      />
-                    </div>
+                    <VoicePlayer url={getMediaUrl(message.media_url)} isMe={isMe} />
                   ) : (
                     <a
                       href={getMediaUrl(message.media_url)}
