@@ -75,6 +75,7 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
 
     // Merge unread_count into the conversation objects
     const sortedConversations = conversationSummaries.map(summary => {
+      if (!summary._id) return null; // Skip messages without a conversation_id
       const conv = conversations.find(c => c._id.toString() === summary._id.toString());
       if (!conv) return null;
       

@@ -53,7 +53,7 @@ export const getGroups = async (req: AuthRequest, res: Response) => {
 
     const groupsWithUnread = groups.map(group => {
       const groupObj = group.toObject();
-      const unread = unreadNotifications.find(n => n._id === group._id.toString());
+      const unread = unreadNotifications.find(n => n._id?.toString() === group._id.toString());
       return {
         ...groupObj,
         unread_count: unread ? unread.count : 0
