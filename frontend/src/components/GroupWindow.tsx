@@ -157,9 +157,11 @@ const GroupWindow = () => {
   };
 
   const onDelete = (messageId: string) => {
-    socket?.emit('group_message_deleted', { messageId, roomId: id });
+    // We rely on the backend's socket broadcast from deleteGroupMessage
+    // No need for manual state update here if we use the socket handler
+    // but we can keep it for optimistic UI if needed
     setMessages(prev => prev.map(m => 
-      m._id === messageId ? { ...m, is_deleted: true, message_text: '[Message deleted]' } : m
+      m._id === messageId ? { ...m, is_deleted: true, message_text: 'This message was deleted' } : m
     ));
   };
 

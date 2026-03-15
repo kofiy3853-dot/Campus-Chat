@@ -144,10 +144,20 @@ export const addComment = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// DELETE /api/confessions/:id — admin only
+// DELETE /api/confessions/:id
 export const deleteConfession = async (req: AuthRequest, res: Response) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin only.' });
   try {
+    const confession = await Confession.findById(req.params.id);
+    if (!confession) return res.status(404).json({ message: 'Confession not found.' });
+
+    // Allow author or admin to delete
+    const isAuthor = confession.userId.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isAuthor && !isAdmin) {
+      return res.status(403).json({ message: 'Unauthorized.' });
+    }
+
     await Confession.findByIdAndUpdate(req.params.id, { isDeleted: true });
     res.json({ message: 'Confession deleted.' });
   } catch (err: any) {

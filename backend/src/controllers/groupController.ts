@@ -293,3 +293,37 @@ export const markGroupMessagesAsRead = async (req: AuthRequest, res: Response) =
     res.status(500).json({ message: error.message });
   }
 };
+
+// Delete group message (soft delete)
+export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
+  const { messageId } = req.params;
+
+  try {
+    const message = await GroupMessage.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+
+    if ((message.sender_id as any).toString() !== req.user.id) {
+      return res.status(403).json({ message: 'You can only delete your own messages' });
+    }
+
+    // Soft delete
+    await GroupMessage.findByIdAndUpdate(messageId, {
+      is_deleted: true,
+      deleted_at: new Date()
+    });
+
+    // Broadcast deletion
+    io.to(message.group_id.toString()).emit('group_message_deleted', {
+      messageId: message._id,
+      roomId: message.group_id.toString()
+    });
+
+    res.json({ success: true, message: 'Message deleted' });
+  } catch (error: any) {
+    console.error(`[GroupController] Error deleting message ${messageId}:`, error.message);
+    res.status(500).json({ message: error.message });
+  }
+};

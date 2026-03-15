@@ -290,7 +290,15 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You can only delete your own messages' });
     }
 
-    await Message.findByIdAndDelete(messageId);
+    message.is_deleted = true;
+    message.deleted_at = new Date();
+    await message.save();
+
+    // Broadcast deletion
+    io.to(message.conversation_id.toString()).emit('message_deleted', {
+      messageId: message._id,
+      roomId: message.conversation_id.toString()
+    });
 
     res.json({ success: true, message: 'Message deleted' });
   } catch (error: any) {

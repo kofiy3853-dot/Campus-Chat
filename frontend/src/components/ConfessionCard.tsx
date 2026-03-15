@@ -27,6 +27,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
   const [reported, setReported] = useState(false);
   const [reporting, setReporting] = useState(false);
   const isAdmin = currentUser?.role === 'admin';
+  const isAuthor = confession.userId?._id === currentUser?._id || confession.userId === currentUser?._id;
 
   const handleLike = async () => {
     try {
@@ -125,12 +126,12 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
           {reported && <span className="text-[11px]">Reported</span>}
         </button>
 
-        {/* Admin: Delete + Ban */}
-        {isAdmin && (
+        {/* Delete button for author or admin */}
+        {(isAdmin || isAuthor) && (
           <button
             onClick={handleDelete}
             title="Delete confession"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-slate-600 hover:text-red-400 hover:bg-red-400/10"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-slate-600 hover:text-red-400 hover:bg-red-400/10 transition-none"
           >
             <Trash2 className="w-4 h-4" />
           </button>

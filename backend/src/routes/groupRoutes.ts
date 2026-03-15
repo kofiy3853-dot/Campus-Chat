@@ -8,7 +8,8 @@ import {
   discoverGroups,
   searchGroups,
   addGroupMessageReaction,
-  markGroupMessagesAsRead
+  markGroupMessagesAsRead,
+  deleteGroupMessage
 } from '../controllers/groupController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -22,5 +23,6 @@ router.post('/join', protect, joinGroup);
 router.get('/messages/:groupId', protect, getGroupMessages);
 router.post('/send', protect, sendGroupMessage);
 router.post('/messages/:groupId/read', protect, markGroupMessagesAsRead);
+router.delete('/messages/:messageId', protect, deleteGroupMessage);
 
 export default router;
