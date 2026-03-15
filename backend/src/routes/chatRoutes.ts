@@ -52,7 +52,7 @@ router.post('/messages/:messageId/reaction', protect, addMessageReaction);
 router.post('/block/:userId', protect, blockUser);
 router.get('/blocked-users', protect, getBlockedUsers);
 router.post('/conversations/:conversationId/read', protect, markMessagesAsRead);
-router.get('/unread-count', protect, getUnreadCount);
+router.get('/unread/count', protect, getUnreadCount);
 
 export default router;
 
