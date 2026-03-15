@@ -240,6 +240,10 @@ io.on('connection', async (socket) => {
 app.use(cors(corsOptions));
 app.use(compression());
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`[Server] ${req.method} ${req.path}`);
+  next();
+});
 app.use(generalRateLimiter);
 
 const PORT = Number(process.env.PORT) || 6000;
