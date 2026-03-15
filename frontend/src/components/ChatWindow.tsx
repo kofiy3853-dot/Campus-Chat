@@ -170,10 +170,11 @@ const ChatWindow = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   }, [messages]);
 
-  const closeMenu = () => {
-    setActiveMessage(null);
-    setMenuPosition({ x: 0, y: 0 });
-  };
+  useEffect(() => {
+    const closeMenuHandler = () => setActiveMessage(null);
+    window.addEventListener('click', closeMenuHandler);
+    return () => window.removeEventListener('click', closeMenuHandler);
+  }, []);
 
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
     try {
@@ -327,18 +328,6 @@ const ChatWindow = () => {
       {/* Input component */}
       <ChatInput onSend={handleSend} onTyping={handleTyping} />
 
-      {/* Action Menu Backdrop */}
-      {activeMessage && (
-        <div 
-          className="fixed inset-0 z-[100] cursor-default"
-          onClick={closeMenu}
-          onContextMenu={(e) => {
-            e.preventDefault();
-            closeMenu();
-          }}
-        />
-      )}
-
       {/* Action Menu */}
       {activeMessage && (
         <div 
@@ -347,6 +336,7 @@ const ChatWindow = () => {
             top: `${Math.max(20, Math.min(menuPosition.y, window.innerHeight - 100))}px`, 
             left: `${Math.max(100, Math.min(menuPosition.x, window.innerWidth - 100))}px` 
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* Quick Reactions */}
           <div className="flex gap-0.5 mr-2 pr-2 border-r border-slate-100">
@@ -355,7 +345,7 @@ const ChatWindow = () => {
                 key={emoji}
                 onClick={() => {
                   onReaction(activeMessage._id, emoji);
-                  closeMenu();
+                  setActiveMessage(null);
                 }}
                 className="hover:scale-125 hover:rotate-3"
               >
@@ -368,7 +358,7 @@ const ChatWindow = () => {
             title="React"
             onClick={() => {
               onReaction(activeMessage._id, '😀');
-              closeMenu();
+              setActiveMessage(null);
             }}
           >
             😀
@@ -379,8 +369,7 @@ const ChatWindow = () => {
               <button 
                 title="Edit"
                 onClick={() => {
-                  // Pass data back if needed, but for now just a placeholder
-                  closeMenu();
+                  setActiveMessage(null);
                 }}
               >
                 ✏️
@@ -390,7 +379,7 @@ const ChatWindow = () => {
                 title="Delete"
                 onClick={() => {
                   onDelete(activeMessage._id);
-                  closeMenu();
+                  setActiveMessage(null);
                 }}
               >
                 🗑

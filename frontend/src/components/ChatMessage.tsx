@@ -112,6 +112,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
         onContextMenu={(e) => {
           if (message.is_deleted) return;
           e.preventDefault();
+          e.stopPropagation();
           const rect = e.currentTarget.getBoundingClientRect();
           onMenuOpen?.(message, { 
             x: rect.left + rect.width / 2, 
