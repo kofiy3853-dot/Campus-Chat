@@ -4,7 +4,7 @@ import {
   MessageSquare, 
   Users, 
   Megaphone, 
-  Settings,
+  Settings, 
   LogOut,
   User as UserIcon,
   Bell,
@@ -16,11 +16,9 @@ import {
   ShoppingBag
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useChat } from '../context/ChatContext';
+import { useUnread } from '../context/UnreadContext';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
-
-
 
 interface NavSidebarProps {
   className?: string;
@@ -28,7 +26,7 @@ interface NavSidebarProps {
 
 const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
   const { user, logout } = useAuth();
-  const { unreadCount } = useChat();
+  const { unread } = useUnread();
 
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
@@ -67,9 +65,9 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
           >
             <div className="relative">
               <item.icon className="w-6 h-6" />
-              {item.label === 'Chats' && unreadCount > 0 && (
+              {item.label === 'Chats' && unread > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
-                  {unreadCount > 99 ? '99+' : unreadCount}
+                  {unread > 99 ? '99+' : unread}
                 </span>
               )}
             </div>

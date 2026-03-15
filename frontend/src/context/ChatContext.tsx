@@ -1,74 +1,66 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import { useSocket } from './SocketContext';
 import { useAuth } from './AuthContext';
 
+interface Conversation {
+  _id: string;
+  participants: any[];
+  last_message: any;
+  updatedAt: string;
+}
+
 interface ChatContextType {
-  unreadCount: number;
-  refreshUnreadCount: () => Promise<void>;
+  conversations: Conversation[];
+  loading: boolean;
+  refreshConversations: () => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
   const { socket } = useSocket();
   const { user } = useAuth();
 
-  const refreshUnreadCount = async () => {
+  const fetchConversations = useCallback(async () => {
     if (!user) return;
     try {
-      const { data } = await api.get('/api/chat/unread-count');
-      setUnreadCount(data.count);
+      setLoading(true);
+      const { data } = await api.get('/api/chat/conversations');
+      setConversations(data);
     } catch (error) {
-      console.error('Failed to fetch unread count:', error);
+      console.error('Failed to fetch conversations:', error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
-      refreshUnreadCount();
-    } else {
-      setUnreadCount(0);
+      fetchConversations();
     }
-  }, [user]);
+  }, [user, fetchConversations]);
 
   useEffect(() => {
     if (!socket) return;
 
     const handleNewMessage = (message: any) => {
-      // Increment unread count if the message is for the current user 
-      // and they are not the sender
-      if (user && message.recipient_id === user._id && message.sender_id !== user._id) {
-        setUnreadCount(prev => prev + 1);
-      }
-    };
-
-    const handleMessagesRead = () => {
-      // Re-fetch count when messages are marked as read
-      refreshUnreadCount();
-    };
-
-    const handleNotification = (notification: any) => {
-      // Refresh count if we get a new message-related notification
-      if (notification.type === 'message') {
-        refreshUnreadCount();
-      }
+      fetchConversations();
     };
 
     socket.on('receive_message', handleNewMessage);
-    socket.on('messages_read', handleMessagesRead);
-    socket.on('notification', handleNotification);
+    socket.on('receive_group_message', handleNewMessage);
 
     return () => {
       socket.off('receive_message', handleNewMessage);
-      socket.off('messages_read', handleMessagesRead);
-      socket.off('notification', handleNotification);
+      socket.off('receive_group_message', handleNewMessage);
     };
-  }, [socket, user]);
+  }, [socket, fetchConversations]);
 
   return (
-    <ChatContext.Provider value={{ unreadCount, refreshUnreadCount }}>
+    <ChatContext.Provider value={{ conversations, loading, refreshConversations: fetchConversations }}>
       {children}
     </ChatContext.Provider>
   );

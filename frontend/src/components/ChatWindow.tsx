@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { useUnread } from '../context/UnreadContext';
 import api from '../services/api';
 import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
@@ -13,6 +14,7 @@ const ChatWindow = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const { socket } = useSocket();
+  const { setUnread } = useUnread();
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,6 +51,7 @@ const ChatWindow = () => {
       }
       setConversation(currentConv);
       markAsRead();
+      setUnread(0);
     } catch (err: any) {
       console.error('Error fetching messages:', err);
       setError(err.response?.data?.message || err.message || 'Failed to load messages');

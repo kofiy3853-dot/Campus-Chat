@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { useUnread } from '../context/UnreadContext';
 import api from '../services/api';
 import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
@@ -13,6 +14,7 @@ const GroupWindow = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { socket } = useSocket();
+  const { setUnread } = useUnread();
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,9 +25,7 @@ const GroupWindow = () => {
     if (!id || id === 'null') return;
     try {
       await api.post(`/api/groups/messages/${id}/read`);
-      // Optionally notify other tabs/users if needed, but for now just clear local unread count via context
-      // The ChatContext will refresh on notification events, but here we can force a refresh if we had a reference to it.
-      // Actually, markAsRead on backend clears notifications, so we just need to ensure the badge updates.
+      setUnread(0);
     } catch (err) {
       console.error('Error marking group messages as read:', err);
     }
