@@ -277,7 +277,7 @@ const DiscoverPage: React.FC = () => {
                               key={idx} 
                               src={getMediaUrl(m.profile_picture) || `https://ui-avatars.com/api/?name=${m.name || 'U'}`} 
                               alt="" 
-                              className="w-8 h-8 rounded-full border-2 border-white ring-2 ring-transparent group-hover:ring-sky-50 transition-all"
+                              loading="lazy"
                             />
                           ))}
                           {(group.members?.length || 0) > 3 && (
@@ -335,6 +335,7 @@ const DiscoverPage: React.FC = () => {
                           src={getMediaUrl(person.profile_picture) || `https://ui-avatars.com/api/?name=${person.name}&background=0EA5E9&color=fff`} 
                           alt={person.name}
                           className="relative w-full h-full object-cover rounded-full border-2 border-slate-50 group-hover:border-sky-300"
+                          loading="lazy"
                         />
                         {person.status === 'online' && (
                           <div className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 rounded-full border-4 border-white"></div>
@@ -413,13 +414,11 @@ const DiscoverPage: React.FC = () => {
 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                           <div className="flex -space-x-2">
                             {(group.members || []).slice(0, 3).map((m: any, idx: number) => (
                               <div key={idx} className="w-7 h-7 rounded-full border-2 border-white ring-1 ring-slate-100 overflow-hidden">
-                                <img src={getMediaUrl(m.profile_picture) || `https://ui-avatars.com/api/?name=${m.name || 'U'}`} alt="" className="w-full h-full object-cover" />
+                                <img src={getMediaUrl(m.profile_picture) || `https://ui-avatars.com/api/?name=${m.name || 'U'}`} alt="" className="w-full h-full object-cover" loading="lazy" />
                               </div>
                             ))}
-                          </div>
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                             {group.members?.length || 0} active members
                           </span>

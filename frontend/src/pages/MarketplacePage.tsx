@@ -3,7 +3,7 @@ import { ShoppingBag, Search, Filter, Plus, Tag, Ghost, Package } from 'lucide-r
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import MarketplaceCard from '../components/MarketplaceCard';
-import MarketplaceCompose from '../components/MarketplaceCompose';
+const MarketplaceCompose = React.lazy(() => import('../components/MarketplaceCompose'));
 import Skeleton from '../components/Skeleton';
 import { clsx } from 'clsx';
 
@@ -158,11 +158,13 @@ const MarketplacePage: React.FC = () => {
         </div>
       </main>
 
-      <MarketplaceCompose 
-        isOpen={isComposeOpen} 
-        onClose={() => setIsComposeOpen(false)} 
-        onSuccess={fetchItems}
-      />
+      <React.Suspense fallback={<div className="animate-pulse bg-slate-100 h-96 rounded-[2.5rem]" />}>
+        <MarketplaceCompose 
+          isOpen={isComposeOpen} 
+          onClose={() => setIsComposeOpen(false)} 
+          onSuccess={fetchItems}
+        />
+      </React.Suspense>
 
       {/* Mobile Fab */}
       <button 
