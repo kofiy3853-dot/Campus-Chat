@@ -86,8 +86,6 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
     }).filter(Boolean);
 
     res.json(sortedConversations);
-
-    res.json(sortedConversations);
   } catch (error: any) {
     console.error('Error in getConversations (Aggregation):', error);
     res.status(500).json({ message: error.message });

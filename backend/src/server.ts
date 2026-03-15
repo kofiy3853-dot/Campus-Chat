@@ -54,10 +54,11 @@ const allowedOrigins = [
 const corsOptions: cors.CorsOptions = {
   origin: (origin: any, callback: any) => {
     // Check if origin is in allowedOrigins or if it's a vercel.app subdomain
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+    if (!origin || allowedOrigins.includes(origin) || (typeof origin === 'string' && origin.endsWith('.vercel.app'))) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.warn(`[CORS] Rejected origin: ${origin}`);
+      callback(null, false);
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
