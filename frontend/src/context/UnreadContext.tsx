@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { useAuth } from './AuthContext';
 import { useSocket } from './SocketContext';
 import api from '../services/api';
@@ -65,7 +67,9 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [refreshUnreadCount]);
 
   useEffect(() => {
-    if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+    if (Capacitor.isNativePlatform()) {
+      LocalNotifications.requestPermissions();
+    } else if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
       Notification.requestPermission();
     }
   }, []);
@@ -83,11 +87,22 @@ export const UnreadProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       const isMine = message?.sender?._id === user._id || message?.sender === user._id;
       if (!isMine) {
-        playNotificationSound();
-        if (document.visibilityState === 'hidden' && "Notification" in window && Notification.permission === "granted") {
-          new Notification("Campus Chat", {
-            body: message?.text || "You received a new message",
-          });
+        if (Capacitor.isNativePlatform()) {
+          LocalNotifications.schedule({
+            notifications: [{
+              title: "Campus Chat",
+              body: message?.text || "You received a new message",
+              id: new Date().getTime(),
+              schedule: { at: new Date(Date.now() + 100) }
+            }]
+          }).catch(err => console.error("Native push failed:", err));
+        } else {
+          playNotificationSound();
+          if (document.visibilityState === 'hidden' && "Notification" in window && Notification.permission === "granted") {
+            new Notification("Campus Chat", {
+              body: message?.text || "You received a new message",
+            });
+          }
         }
       }
 
