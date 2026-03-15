@@ -24,19 +24,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   const senderName = isMe ? user?.name : message.sender_id?.name || 'User';
   const avatarUrl = isMe ? getMediaUrl(user?.profile_picture) : getMediaUrl(message.sender_id?.profile_picture);
 
-  const handleReaction = async (emoji: string) => {
-    try {
-      const endpoint = message.group_id 
-        ? `/api/groups/messages/${message._id}/reaction`
-        : `/api/chat/messages/${message._id}/reaction`;
-      
-      const response = await api.post(endpoint, { emoji });
-      // The parent component should handle the message update via socket or state
-      onReaction?.(message._id, emoji);
-      setShowReactions(false);
-    } catch (error) {
-      console.error('Error adding reaction:', error);
-    }
+  const handleReaction = (emoji: string) => {
+    onReaction?.(message._id, emoji);
+    setShowReactions(false);
   };
 
   const reactionCounts = message.reactions?.reduce((acc: Record<string, number>, curr: any) => {

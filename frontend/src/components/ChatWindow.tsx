@@ -219,20 +219,30 @@ const ChatWindow = () => {
     socket?.emit('typing_start', { roomId: id, userId: user?._id });
   };
 
-  const onReaction = (messageId: string, emoji: string) => {
-    socket?.emit('message_reaction', { messageId, emoji, roomId: id, userId: user?._id });
-    setMessages(prev => prev.map(m => {
-      if (m._id === messageId) {
-        const reactions = m.reactions || [];
-        const existing = reactions.find((r: any) => (r.userId?._id || r.userId) === user?._id && r.emoji === emoji);
-        if (existing) {
-          return { ...m, reactions: reactions.filter((r: any) => !((r.userId?._id || r.userId) === user?._id && r.emoji === emoji)) };
-        } else {
-          return { ...m, reactions: [...reactions, { userId: user?._id, emoji }] };
+  const onReaction = async (messageId: string, emoji: string) => {
+    try {
+      // Call API for persistence
+      await api.post(`/api/chat/messages/${messageId}/reaction`, { emoji });
+      
+      // Emit socket for real-time update to others
+      socket?.emit('message_reaction', { messageId, emoji, roomId: id, userId: user?._id });
+      
+      // Update local state
+      setMessages(prev => prev.map(m => {
+        if (m._id === messageId) {
+          const reactions = m.reactions || [];
+          const existing = reactions.find((r: any) => (r.userId?._id || r.userId) === user?._id && r.emoji === emoji);
+          if (existing) {
+            return { ...m, reactions: reactions.filter((r: any) => !((r.userId?._id || r.userId) === user?._id && r.emoji === emoji)) };
+          } else {
+            return { ...m, reactions: [...reactions, { userId: user?._id, emoji }] };
+          }
         }
-      }
-      return m;
-    }));
+        return m;
+      }));
+    } catch (err: any) {
+      console.error('Reaction error:', err);
+    }
   };
 
   const onEdit = (messageId: string, newText: string) => {
