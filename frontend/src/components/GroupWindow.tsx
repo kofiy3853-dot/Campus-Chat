@@ -9,6 +9,7 @@ import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import ProfileView from './ProfileView';
+import { db } from '../db/db';
 
 const GroupWindow = () => {
   const { id } = useParams();
@@ -43,18 +44,41 @@ const GroupWindow = () => {
       try {
         setLoading(true);
         setError(null);
+
+        // Load local messages first
+        if (id && id !== 'null') {
+          const localMsgs = await db.messages.where('conversation_id').equals(id).sortBy('timestamp');
+          if (localMsgs.length > 0) {
+            setMessages(localMsgs);
+            setLoading(false);
+          }
+        }
+
         const [msgRes, groupRes] = await Promise.all([
           api.get(`/api/groups/messages/${id}`),
           api.get(`/api/groups`)
         ]);
-        setMessages(msgRes.data || []);
+
+        const remoteMsgs = msgRes.data || [];
+        setMessages(remoteMsgs);
+
+        // Cache messages
+        if (id && id !== 'null') {
+          await db.transaction('rw', db.messages, async () => {
+            await db.messages.where('conversation_id').equals(id).delete();
+            await db.messages.bulkAdd(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
+          });
+        }
+
         const currentGroup = groupRes.data.find((g: any) => g._id === id);
         if (!currentGroup) throw new Error('Group not found');
         setGroup(currentGroup);
         markAsRead();
       } catch (err: any) {
         console.error('Error fetching group data:', err);
-        setError(err.response?.data?.message || 'Failed to load group');
+        if (messages.length === 0) {
+           setError(err.response?.data?.message || 'Failed to load group');
+        }
       } finally {
         setLoading(false);
       }
@@ -69,13 +93,20 @@ const GroupWindow = () => {
     joinRoom();
     socket.on('connect', joinRoom); // re-join after backend restart / reconnect
 
-    const messageHandler = (message: any) => {
+    const messageHandler = async (message: any) => {
       const incomingId = String(message._id);
       setMessages(prev => {
         if (prev.some(m => String(m._id) === incomingId)) return prev;
         const newMessages = [...prev, message];
         return newMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
       });
+
+      // Cache incoming message
+      try {
+        await db.messages.put({ ...message, conversation_id: id });
+      } catch (err) {
+        console.error('Failed to cache group message:', err);
+      }
 
       // Mark as read if from someone else
       if (message.sender_id?._id !== user?._id && message.sender_id !== user?._id) {
@@ -127,6 +158,24 @@ const GroupWindow = () => {
   }, [messages]);
 
   const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMessage: any = {
+      _id: tempId,
+      conversation_id: id,
+      sender_id: user,
+      message_text: messageText,
+      media_url: mediaUrl,
+      message_type: mediaType || 'text',
+      timestamp: new Date().toISOString(),
+      delivery_status: 'pending'
+    };
+
+    // 1. Update UI instantly
+    setMessages(prev => [...prev, optimisticMessage]);
+
+    // 2. Persist to local DB as pending
+    await db.messages.put(optimisticMessage);
+
     try {
       const { data } = await api.post(`/api/groups/send`, {
         groupId: id,
@@ -135,10 +184,33 @@ const GroupWindow = () => {
         message_type: mediaType || 'text',
       });
 
+      // 3. Update UI
+      setMessages(prev => prev.map(m => m._id === tempId ? data : m));
+
+      // 4. Update local DB
+      await db.transaction('rw', db.messages, async () => {
+        await db.messages.delete(tempId);
+        await db.messages.put({ ...data, conversation_id: id });
+      });
+
       socket?.emit('send_group_message', { ...data, roomId: id });
-      setMessages(prev => [...prev, data]);
     } catch (err) {
-      console.error('Error sending group message:', err);
+      console.error('Error sending group message, queuing:', err);
+      
+      // 5. Add to offline queue
+      await db.offline_queue.add({
+        type: 'send_message',
+        data: {
+          tempId,
+          conversation_id: id,
+          groupId: id,
+          message_text: messageText,
+          media_url: mediaUrl,
+          message_type: mediaType || 'text',
+          isGroup: true
+        },
+        timestamp: new Date().toISOString()
+      });
     }
   };
 

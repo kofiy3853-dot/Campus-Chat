@@ -5,6 +5,7 @@ import api from '../services/api';
 import { clsx } from 'clsx';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
+import { db } from '../db/db';
 import Skeleton from './Skeleton';
 import UserSearchModal from './UserSearchModal';
 import NotificationCenter from './NotificationCenter';
@@ -28,12 +29,32 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
+      // Load from local DB first
+      const collection = db.conversations.where('type').equals(activeTab === 'chats' ? 'chat' : 'group');
+      const localItems = await collection.toArray();
+      localItems.sort((a, b) => new Date(b.last_message_time).getTime() - new Date(a.last_message_time).getTime());
+      if (localItems.length > 0) {
+        setItems(localItems);
+        setLoading(false);
+      }
+
       const endpoint = activeTab === 'chats' ? '/api/chat/conversations' : '/api/groups';
       const response = await api.get(endpoint);
-      setItems(response.data);
+      const data = response.data;
+      setItems(data);
+
+      // Cache to local DB
+      await db.transaction('rw', db.conversations, async () => {
+        // Find existing items of THIS type and update/add
+        await db.conversations.where('type').equals(activeTab === 'chats' ? 'chat' : 'group').delete();
+        await db.conversations.bulkAdd(data.map((item: any) => ({
+          ...item,
+          type: activeTab === 'chats' ? 'chat' : 'group',
+          last_message_time: item.last_message?.timestamp || item.updatedAt
+        })));
+      });
     } catch (err) {
-      console.error('Failed to fetch chat list. This may be due to an expired session or network issue:', err);
+      console.error('Failed to fetch chat list:', err);
     } finally {
       setLoading(false);
     }

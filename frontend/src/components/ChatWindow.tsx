@@ -10,6 +10,7 @@ import ChatHeader from './ChatHeader';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import MessageSearch from './MessageSearch';
+import { db } from '../db/db';
 
 const ChatWindow = () => {
   const { id } = useParams();
@@ -45,11 +46,34 @@ const ChatWindow = () => {
       setError(null);
       setSearchResults(null);
       setIsSearchOpen(false);
+
+      // Load from local DB first for instant display
+      if (id && id !== 'null') {
+        const localMsgs = await db.messages.where('conversation_id').equals(id).sortBy('timestamp');
+        if (localMsgs.length > 0) {
+          setMessages(localMsgs);
+          setLoading(false); // We have data, can hide loading spinner early
+        }
+      }
+
       const [msgRes, convRes] = await Promise.all([
         api.get(`/api/chat/messages/${id}`),
         api.get(`/api/chat/conversations`)
       ]);
-      setMessages(msgRes.data);
+      
+      const remoteMsgs = msgRes.data;
+      setMessages(remoteMsgs);
+
+      // Cache messages to local DB
+      if (id && id !== 'null') {
+        await db.transaction('rw', db.messages, async () => {
+          // Find which messages to add (don't clear everything to preserve 'pending' local ones if any)
+          // For now, simple clear and refresh for simplicity, but in future reconcile
+          await db.messages.where('conversation_id').equals(id).delete();
+          await db.messages.bulkAdd(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
+        });
+      }
+
       const currentConv = convRes.data.find((c: any) => c._id === id);
       if (!currentConv) {
         throw new Error('Conversation not found');
@@ -59,11 +83,14 @@ const ChatWindow = () => {
       setUnread(0);
     } catch (err: any) {
       console.error('Error fetching messages:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to load messages');
+      // Only show error if we have NO messages at all
+      if (messages.length === 0) {
+        setError(err.response?.data?.message || err.message || 'Failed to load messages');
+      }
     } finally {
       setLoading(false);
     }
-  }, [id, markAsRead]);
+  }, [id, markAsRead, messages.length]);
 
   useEffect(() => {
     if (id && id !== 'null') {
@@ -78,13 +105,20 @@ const ChatWindow = () => {
     joinRoom();
     socket.on('connect', joinRoom);
 
-    const messageHandler = (message: any) => {
+    const messageHandler = async (message: any) => {
       const incomingId = String(message._id);
       setMessages(prev => {
         if (prev.some(m => String(m._id) === incomingId)) return prev;
         const newMessages = [...prev, message];
         return newMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
       });
+
+      // Persist to local DB
+      try {
+        await db.messages.put({ ...message, conversation_id: id });
+      } catch (err) {
+        console.error('Failed to cache incoming message:', err);
+      }
 
       // Mark as read if from someone else
       if (message.sender_id?._id !== user?._id && message.sender_id !== user?._id) {
@@ -195,25 +229,66 @@ const ChatWindow = () => {
         return;
       }
 
-      const otherParticipant = conversation?.participants.find((p: any) => p._id !== user?._id);
-      
-      if (!otherParticipant) {
-        console.error('Recipient not found');
-        return;
-      }
+      const otherParticipant = conversation.participants.find((p: any) => p._id !== user?._id);
+      if (!otherParticipant) return;
 
-      const { data } = await api.post('/api/chat/send', {
-        recipientId: otherParticipant._id,
+      const tempId = `temp-${Date.now()}`;
+      const optimisticMessage: any = {
+        _id: tempId,
+        conversation_id: id,
+        sender_id: user,
         message_text: messageText,
         media_url: mediaUrl,
         message_type: mediaType || 'text',
-      });
+        timestamp: new Date().toISOString(),
+        delivery_status: 'pending'
+      };
 
-      socket?.emit('send_message', { ...data, roomId: id });
-      setMessages(prev => [...prev, data]);
-      socket?.emit('typing_stop', { roomId: id, userId: user?._id });
+      // 1. Update UI instantly
+      setMessages(prev => [...prev, optimisticMessage]);
+
+      // 2. Persist to local DB as pending
+      await db.messages.put(optimisticMessage);
+
+      try {
+        const { data } = await api.post('/api/chat/send', {
+          recipientId: otherParticipant._id,
+          message_text: messageText,
+          media_url: mediaUrl,
+          message_type: mediaType || 'text',
+        });
+
+        // 3. Update UI with confirmed data (replace temp message)
+        setMessages(prev => prev.map(m => m._id === tempId ? data : m));
+
+        // 4. Update local DB
+        await db.transaction('rw', db.messages, async () => {
+          await db.messages.delete(tempId);
+          await db.messages.put({ ...data, conversation_id: id });
+        });
+
+        socket?.emit('send_message', { ...data, roomId: id });
+        socket?.emit('typing_stop', { roomId: id, userId: user?._id });
+      } catch (err) {
+        console.error('Error sending message, queuing for offline:', err);
+        
+        // 5. Add to offline queue
+        await db.offline_queue.add({
+          type: 'send_message',
+          data: {
+            tempId,
+            conversation_id: id,
+            recipientId: otherParticipant._id,
+            message_text: messageText,
+            media_url: mediaUrl,
+            message_type: mediaType || 'text',
+            isGroup: false
+          },
+          timestamp: new Date().toISOString()
+        });
+      }
     } catch (err) {
-      console.error('Error sending/editing message:', err);
+      console.error('Critical error in handleSend:', err);
     }
   };
 

@@ -8,18 +8,11 @@ import { ToastProvider } from './context/ToastContext';
 import { ChatProvider } from './context/ChatContext';
 import { SocketProvider } from './context/SocketContext';
 import { UnreadProvider } from './context/UnreadContext';
+import SyncService from './components/SyncService';
+import ProtectedRoute from './components/ProtectedRoute';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapApp } from '@capacitor/app';
 import './App.css';
-
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) return null;
-  if (!user) return <Navigate to="/login" />;
-  
-  return <>{children}</>;
-};
 
 function App() {
   useEffect(() => {
@@ -70,6 +63,7 @@ function App() {
                       <Route path="/" element={<Navigate to="/dashboard" />} />
                     </Routes>
                   </Suspense>
+                  <SyncService />
                 </div>
               </ChatProvider>
             </UnreadProvider>
