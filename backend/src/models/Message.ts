@@ -24,10 +24,10 @@ export interface IMessage extends Document {
 }
 
 const MessageSchema: Schema = new Schema({
-  conversation_id: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true },
-  sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  recipient_id: { type: Schema.Types.ObjectId, ref: 'User' }, // For compatibility
-  receiver: { type: Schema.Types.ObjectId, ref: 'User' }, // Explicitly requested
+  conversation_id: { type: Schema.Types.ObjectId, ref: 'Conversation', required: true, index: true },
+  sender_id: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  recipient_id: { type: Schema.Types.ObjectId, ref: 'User', index: true }, // For compatibility
+  receiver: { type: Schema.Types.ObjectId, ref: 'User', index: true }, // Explicitly requested
   message_text: { type: String },
   message_type: { 
     type: String, 
@@ -41,8 +41,8 @@ const MessageSchema: Schema = new Schema({
     enum: ['sent', 'delivered', 'read'], 
     default: 'sent' 
   },
-  read: { type: Boolean, default: false },
-  timestamp: { type: Date, default: Date.now },
+  read: { type: Boolean, default: false, index: true },
+  timestamp: { type: Date, default: Date.now, index: true },
   edited_at: { type: Date },
   is_deleted: { type: Boolean, default: false },
   deleted_at: { type: Date },
@@ -51,5 +51,7 @@ const MessageSchema: Schema = new Schema({
     emoji: { type: String }
   }]
 }, { timestamps: true });
+
+MessageSchema.index({ conversation_id: 1, timestamp: -1 }); // Compound index for fast message loading
 
 export default mongoose.model<IMessage>('Message', MessageSchema);

@@ -24,12 +24,12 @@ const NotificationSchema: Schema = new Schema({
   title: { type: String, required: true },
   body: { type: String, required: true },
   data: {
-    conversation_id: { type: String },
-    group_id: { type: String },
+    conversation_id: { type: String, index: true },
+    group_id: { type: String, index: true },
     announcement_id: { type: String },
     event_id: { type: String },
   },
-  read: { type: Boolean, default: false },
+  read: { type: Boolean, default: false, index: true },
   read_at: { type: Date },
   created_at: { type: Date, default: Date.now, index: true, expires: 2592000 }, // Auto-delete after 30 days
 }, { timestamps: true });

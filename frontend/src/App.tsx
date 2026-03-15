@@ -1,8 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
 import { ToastProvider } from './context/ToastContext';
 import { ChatProvider } from './context/ChatContext';
 import { SocketProvider } from './context/SocketContext';
@@ -27,19 +28,21 @@ function App() {
             <UnreadProvider>
               <ChatProvider>
                 <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
-                  <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route 
-                      path="/dashboard/*" 
-                      element={
-                        <ProtectedRoute>
-                          <Dashboard />
-                        </ProtectedRoute>
-                      } 
-                    />
-                    <Route path="/" element={<Navigate to="/dashboard" />} />
-                  </Routes>
+                  <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-950 font-bold text-sky-400">Loading Campus Chat...</div>}>
+                    <Routes>
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route 
+                        path="/dashboard/*" 
+                        element={
+                          <ProtectedRoute>
+                            <Dashboard />
+                          </ProtectedRoute>
+                        } 
+                      />
+                      <Route path="/" element={<Navigate to="/dashboard" />} />
+                    </Routes>
+                  </Suspense>
                 </div>
               </ChatProvider>
             </UnreadProvider>

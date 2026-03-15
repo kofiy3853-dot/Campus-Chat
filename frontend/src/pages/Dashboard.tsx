@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import NavSidebar from '../components/NavSidebar';
 import ChatListPanel from '../components/ChatListPanel';
-import ChatWindow from '../components/ChatWindow';
-import GroupWindow from '../components/GroupWindow';
-import AnnouncementList from '../components/AnnouncementList';
-import ProfileSettings from '../components/ProfileSettings';
-import ConfessionsPage from '../pages/ConfessionsPage';
-import EventsPage from '../pages/EventsPage';
-import PollsPage from '../pages/PollsPage';
-import LostFoundPage from '../pages/LostFoundPage';
-import LandingDashboard from '../components/LandingDashboard';
-import NotificationsPage from '../pages/NotificationsPage';
-import DiscoverPage from '../pages/DiscoverPage';
-import MarketplacePage from '../pages/MarketplacePage';
+
+// Lazy load components and pages
+const ChatWindow = lazy(() => import('../components/ChatWindow'));
+const GroupWindow = lazy(() => import('../components/GroupWindow'));
+const AnnouncementList = lazy(() => import('../components/AnnouncementList'));
+const ProfileSettings = lazy(() => import('../components/ProfileSettings'));
+const ConfessionsPage = lazy(() => import('../pages/ConfessionsPage'));
+const EventsPage = lazy(() => import('../pages/EventsPage'));
+const PollsPage = lazy(() => import('../pages/PollsPage'));
+const LostFoundPage = lazy(() => import('../pages/LostFoundPage'));
+const LandingDashboard = lazy(() => import('../components/LandingDashboard'));
+const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
+const DiscoverPage = lazy(() => import('../pages/DiscoverPage'));
+const MarketplacePage = lazy(() => import('../pages/MarketplacePage'));
+
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { usePushNotifications } from '../hooks/usePushNotifications';
 import { clsx } from 'clsx';
@@ -40,21 +43,23 @@ const Dashboard = () => {
         "flex-1 flex flex-col h-full overflow-hidden bg-white",
         (isListView && !isLanding && !isProfileOrNotifications) ? 'hidden md:flex' : 'flex w-full'
       )}>
-        <Routes>
-          <Route path="chat/:id" element={<ChatWindow />} />
-          <Route path="groups/:id" element={<GroupWindow />} />
-          <Route path="announcements" element={<AnnouncementList />} />
-          <Route path="confessions" element={<ConfessionsPage />} />
-          <Route path="events" element={<EventsPage />} />
-          <Route path="polls" element={<PollsPage />} />
-          <Route path="lost-found" element={<LostFoundPage />} />
-          <Route path="notifications" element={<NotificationsPage />} />
-          <Route path="discover" element={<DiscoverPage />} />
-          <Route path="marketplace" element={<MarketplacePage />} />
-          <Route path="profile" element={<ProfileSettings />} />
-          <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
-          <Route path="/" element={<LandingDashboard />} />
-        </Routes>
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-400 font-bold animate-pulse">Loading feature...</div>}>
+          <Routes>
+            <Route path="chat/:id" element={<ChatWindow />} />
+            <Route path="groups/:id" element={<GroupWindow />} />
+            <Route path="announcements" element={<AnnouncementList />} />
+            <Route path="confessions" element={<ConfessionsPage />} />
+            <Route path="events" element={<EventsPage />} />
+            <Route path="polls" element={<PollsPage />} />
+            <Route path="lost-found" element={<LostFoundPage />} />
+            <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="discover" element={<DiscoverPage />} />
+            <Route path="marketplace" element={<MarketplacePage />} />
+            <Route path="profile" element={<ProfileSettings />} />
+            <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
+            <Route path="/" element={<LandingDashboard />} />
+          </Routes>
+        </Suspense>
       </main>
       {!isConversation && <FloatingActionMenu />}
     </div>
