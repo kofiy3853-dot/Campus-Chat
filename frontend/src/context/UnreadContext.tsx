@@ -12,31 +12,41 @@ interface UnreadContextType {
 }
 
 // Global AudioContext must be unlocked by a user gesture on mobile
-let globalAudioCtx: any = null;
+let globalAudioCtx: AudioContext | null = null;
 let audioUnlocked = false;
 
-if (typeof window !== 'undefined') {
+const getAudioContext = () => {
+  if (typeof window === 'undefined') return null;
+  if (globalAudioCtx) return globalAudioCtx;
+  
   const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
   if (AudioContextClass) {
     globalAudioCtx = new AudioContextClass();
+    return globalAudioCtx;
   }
-}
+  return null;
+};
 
 const unlockAudio = () => {
-  if (audioUnlocked || !globalAudioCtx) return;
+  if (audioUnlocked) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
   try {
     // Play silent buffer to unlock the audio instance (Fixes iOS Safari/Mobile Chrome)
-    const buffer = globalAudioCtx.createBuffer(1, 1, 22050);
-    const source = globalAudioCtx.createBufferSource();
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const source = ctx.createBufferSource();
     source.buffer = buffer;
-    source.connect(globalAudioCtx.destination);
+    source.connect(ctx.destination);
     source.start(0);
-    if (globalAudioCtx.state === 'suspended') {
-      globalAudioCtx.resume();
+    
+    if (ctx.state === 'suspended') {
+      ctx.resume();
     }
     audioUnlocked = true;
+    console.log('[UnreadContext] Audio successfully unlocked');
   } catch (e) {
-    console.warn("Failed to unlock audio context", e);
+    console.warn("[UnreadContext] Failed to unlock audio context", e);
   } finally {
     document.removeEventListener('touchstart', unlockAudio);
     document.removeEventListener('click', unlockAudio);
@@ -50,15 +60,17 @@ if (typeof document !== 'undefined') {
 
 const playNotificationSound = () => {
   try {
-    if (!globalAudioCtx) return;
-    if (globalAudioCtx.state === 'suspended') {
-      globalAudioCtx.resume();
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    if (ctx.state === 'suspended') {
+      ctx.resume();
     }
     
     // Create a smooth, pleasant double chime ("Ding-Ding")
     const playTone = (freq: number, startTime: number, duration: number) => {
-      const osc = globalAudioCtx.createOscillator();
-      const gain = globalAudioCtx.createGain();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
       
       osc.type = 'sine';
       osc.frequency.value = freq;
@@ -69,14 +81,14 @@ const playNotificationSound = () => {
       gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
       
       osc.connect(gain);
-      gain.connect(globalAudioCtx.destination);
+      gain.connect(ctx.destination);
       
       osc.start(startTime);
       osc.stop(startTime + duration);
     };
 
-    playTone(1318.51, globalAudioCtx.currentTime, 0.4); // E6
-    playTone(1760.00, globalAudioCtx.currentTime + 0.15, 0.6); // A6
+    playTone(1318.51, ctx.currentTime, 0.4); // E6
+    playTone(1760.00, ctx.currentTime + 0.15, 0.6); // A6
   } catch (err) {
     console.log("Audio playback failed:", err);
   }

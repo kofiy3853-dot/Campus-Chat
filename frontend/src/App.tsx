@@ -9,6 +9,7 @@ import { ChatProvider } from './context/ChatContext';
 import { SocketProvider } from './context/SocketContext';
 import { UnreadProvider } from './context/UnreadContext';
 import SyncService from './components/SyncService';
+import OfflineBanner from './components/OfflineBanner';
 import ProtectedRoute from './components/ProtectedRoute';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapApp } from '@capacitor/app';
@@ -48,6 +49,7 @@ function App() {
             <UnreadProvider>
               <ChatProvider>
                 <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
+                  <OfflineBanner />
                   <Suspense fallback={null}>
                     <Routes>
                       <Route path="/login" element={<Login />} />
