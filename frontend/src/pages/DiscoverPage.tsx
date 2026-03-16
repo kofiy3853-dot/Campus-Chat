@@ -267,7 +267,7 @@ const DiscoverPage: React.FC = () => {
           
           {/* Campus Marketplace Section - Moved Higher as a Primary Category */}
           {(activeFilter === 'all') && (
-            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-75">
+            <div className="">
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center border border-green-100">
@@ -280,7 +280,7 @@ const DiscoverPage: React.FC = () => {
                 </div>
                 <button 
                   onClick={() => navigate('/dashboard/marketplace')}
-                  className="text-green-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
+                  className="text-green-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2"
                 >
                   Explore All <ChevronRight className="w-4 h-4" />
                 </button>
@@ -294,13 +294,13 @@ const DiscoverPage: React.FC = () => {
                     <div 
                       key={item._id}
                       onClick={() => navigate('/dashboard/marketplace')}
-                      className="group bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-green-500/5 hover:border-green-100 transition-all cursor-pointer overflow-hidden p-4"
+                      className="group bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-green-500/5 hover:border-green-100 cursor-pointer overflow-hidden p-4"
                     >
                       <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 relative bg-slate-50">
                         <SafeImage 
                           src={item.image} 
                           alt={item.title} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="w-full h-full object-cover"
                         />
                         <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur px-3 py-1 rounded-xl text-xs font-black text-slate-800 shadow-sm leading-none border border-slate-100">
                           ${item.price}

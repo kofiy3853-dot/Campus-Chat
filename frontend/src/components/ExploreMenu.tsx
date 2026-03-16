@@ -32,13 +32,13 @@ const ExploreMenu: React.FC<ExploreMenuProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-slate-900/40 backdrop-blur-md transition-all duration-300 animate-in fade-in">
+    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-4 bg-slate-900/40 backdrop-blur-md">
       <div 
         className="fixed inset-0 cursor-pointer" 
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-md bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in slide-in-from-bottom-full md:slide-in-from-bottom-20 duration-500">
+      <div className="relative w-full max-w-md bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden">
         {/* Handle for mobile */}
         <div className="md:hidden w-12 h-1.5 bg-slate-100 rounded-full mx-auto mt-4 mb-2" />
         
@@ -51,7 +51,7 @@ const ExploreMenu: React.FC<ExploreMenuProps> = ({ isOpen, onClose }) => {
             <button 
               onClick={onClose}
               title="Close explore menu"
-              className="p-2 hover:bg-slate-50 rounded-full transition-colors text-slate-400 hover:text-slate-600"
+              className="p-2 hover:bg-slate-50 rounded-full text-slate-400 hover:text-slate-600"
             >
               <X className="w-6 h-6" />
             </button>
@@ -65,16 +65,16 @@ const ExploreMenu: React.FC<ExploreMenuProps> = ({ isOpen, onClose }) => {
                   navigate(option.to);
                   onClose();
                 }}
-                className="flex items-center gap-4 p-4 rounded-3xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all group text-left"
+                className="flex items-center gap-4 p-4 rounded-3xl hover:bg-slate-50 border border-transparent hover:border-slate-100 group text-left"
               >
-                <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-110", option.color)}>
+                <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm", option.color)}>
                   <option.icon className="w-6 h-6" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-slate-800 text-sm group-hover:text-sky-600 transition-colors">{option.label}</h4>
+                  <h4 className="font-bold text-slate-800 text-sm group-hover:text-sky-600">{option.label}</h4>
                   <p className="text-xs text-slate-400 font-medium truncate">{option.description}</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-1 transition-all" />
+                <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-slate-500" />
               </button>
             ))}
           </div>

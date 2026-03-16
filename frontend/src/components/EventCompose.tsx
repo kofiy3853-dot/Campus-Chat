@@ -81,7 +81,7 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
             <h2 className="text-xl font-black text-slate-800 tracking-tight">Post Campus Event</h2>
             <p className="text-xs text-slate-400 mt-1 font-medium">Get the student community together</p>
           </div>
-          <button onClick={onClose} aria-label="Close" className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors">
+          <button onClick={onClose} aria-label="Close" className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -96,7 +96,7 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
               value={formData.title}
               onChange={handleChange}
               placeholder="e.g., Annual Tech Hackathon"
-              className="w-full bg-slate-50 border-none rounded-2xl px-4 py-3.5 text-sm font-medium text-slate-800 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+              className="w-full bg-slate-50 border-none rounded-2xl px-4 py-3.5 text-sm font-medium text-slate-800 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-sky-500/20"
             />
           </div>
 
