@@ -9,16 +9,27 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )
 
-// Register standard Service Worker for Firebase Messaging
+// Register Service Workers
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    // 1. Firebase Messaging Service Worker
     navigator.serviceWorker
       .register('/firebase-messaging-sw.js')
       .then((registration) => {
-        console.log('Firebase Service Worker registered with scope:', registration.scope);
+        console.log('Firebase Service Worker registered:', registration.scope);
       })
       .catch((err) => {
-        console.log('Firebase Service Worker registration failed:', err);
+        console.log('Firebase Service Worker failed:', err);
+      });
+
+    // 2. Offline Cache Service Worker
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.log('Offline Service Worker registered:', registration.scope);
+      })
+      .catch((err) => {
+        console.log('Offline Service Worker failed:', err);
       });
   });
 }

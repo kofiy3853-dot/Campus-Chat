@@ -11,12 +11,14 @@ import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import MessageSearch from './MessageSearch';
 import { db } from '../db/db';
+import { useToast } from '../context/ToastContext';
 
 const ChatWindow = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const { socket } = useSocket();
   const { setUnread } = useUnread();
+  const { showToast } = useToast();
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -257,6 +259,10 @@ const ChatWindow = () => {
       await db.messages.put(optimisticMessage);
 
       try {
+        if (!navigator.onLine) {
+          throw new Error('OFFLINE_MODE');
+        }
+
         const { data } = await api.post('/api/chat/send', {
           recipientId: otherParticipant._id,
           message_text: messageText,
@@ -276,8 +282,12 @@ const ChatWindow = () => {
 
         socket?.emit('send_message', { ...data, roomId: id });
         socket?.emit('typing_stop', { roomId: id, userId: user?._id });
-      } catch (err) {
-        console.error('Error sending message, queuing for offline:', err);
+      } catch (err: any) {
+        if (err.message === 'OFFLINE_MODE' || !navigator.onLine) {
+          showToast('info', 'Message Saved Offline', 'It will send when connection returns.');
+        } else {
+          console.error('Error sending message:', err);
+        }
         
         // 5. Add to offline queue
         await db.offline_queue.add({

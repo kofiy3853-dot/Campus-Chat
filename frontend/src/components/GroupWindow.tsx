@@ -10,6 +10,7 @@ import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import ProfileView from './ProfileView';
 import { db } from '../db/db';
+import { useToast } from '../context/ToastContext';
 
 const GroupWindow = () => {
   const { id } = useParams();
@@ -17,6 +18,7 @@ const GroupWindow = () => {
   const { user } = useAuth();
   const { socket } = useSocket();
   const { setUnread } = useUnread();
+  const { showToast } = useToast();
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -183,6 +185,9 @@ const GroupWindow = () => {
     await db.messages.put(optimisticMessage);
 
     try {
+      if (!navigator.onLine) {
+        throw new Error('OFFLINE_MODE');
+      }
       const { data } = await api.post(`/api/groups/send`, {
         groupId: id,
         message_text: messageText,
@@ -201,8 +206,12 @@ const GroupWindow = () => {
       });
 
       socket?.emit('send_group_message', { ...data, roomId: id });
-    } catch (err) {
-      console.error('Error sending group message, queuing:', err);
+    } catch (err: any) {
+      if (err.message === 'OFFLINE_MODE' || !navigator.onLine) {
+        showToast('info', 'Message Saved Offline', 'It will send when connection returns.');
+      } else {
+        console.error('Error sending group message, queuing:', err);
+      }
       
       // 5. Add to offline queue
       await db.offline_queue.add({

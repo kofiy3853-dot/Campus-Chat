@@ -48,3 +48,12 @@ export class AppDatabase extends Dexie {
 }
 
 export const db = new AppDatabase();
+
+// Offline helpers to match the requested interface
+export const saveMessageOffline = async (message: LocalMessage) => {
+  return await db.messages.put(message);
+};
+
+export const getOfflineMessages = async () => {
+  return await db.messages.toArray();
+};
