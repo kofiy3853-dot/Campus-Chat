@@ -29,10 +29,26 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  // Skip caching for API calls and Cloudinary assets
+  if (event.request.url.includes('/api/') || event.request.url.includes('cloudinary')) {
+    return;
+  }
+
+  // Handle SPA navigation: serve index.html for navigation requests
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        return response || fetch(event.request);
+        return response || fetch(event.request).catch(() => {
+          // Return nothing or a specific fallback if fetch fails
+          return null;
+        });
       })
   );
 });
