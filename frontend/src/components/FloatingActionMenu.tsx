@@ -48,7 +48,7 @@ const FloatingActionMenu: React.FC = () => {
       icon: Megaphone, 
       color: 'bg-amber-50 text-amber-600',
       action: () => {
-        navigate('/dashboard/announcements');
+        navigate('/dashboard/announcements?compose=true');
         setIsOpen(false);
       }
     },

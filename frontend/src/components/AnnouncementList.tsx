@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Megaphone, Heart, Bookmark, Share2, Loader2, Calendar, Award, ArrowRight, ChevronLeft, Plus, Pin } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -10,9 +10,17 @@ import CreateAnnouncementModal from './CreateAnnouncementModal';
 const AnnouncementList = () => {
   const { user } = useAuth();
   const { socket } = useSocket();
+  const location = useLocation();
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('compose') === 'true') {
+      setIsModalOpen(true);
+    }
+  }, [location]);
 
   const fetchAnnouncements = async () => {
     try {
@@ -194,14 +202,8 @@ const AnnouncementList = () => {
       </div>
       </div>
 
-      {/* Floating Action Button */}
-      <button 
-        onClick={() => setIsModalOpen(true)}
-        aria-label="Create new announcement"
-        className="absolute bottom-[calc(2rem+var(--safe-area-inset-bottom))] right-8 w-16 h-16 bg-slate-800 text-white rounded-[1.5rem] shadow-2xl shadow-slate-200 flex items-center justify-center hover:bg-sky-500 hover:scale-110 active:scale-95 transition-all z-40 group"
-      >
-        <Plus className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
-      </button>
+      </div>
+      </div>
 
       <CreateAnnouncementModal 
         isOpen={isModalOpen} 
