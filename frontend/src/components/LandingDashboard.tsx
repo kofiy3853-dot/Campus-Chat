@@ -69,33 +69,41 @@ const LandingDashboard: React.FC = () => {
   const quickActions = [
     { 
       id: 'post-confession', 
-      title: 'Post Confession', 
+      title: 'Confession', 
       icon: Ghost, 
       color: 'bg-purple-50 text-purple-600 border-purple-100',
       action: () => navigate('/dashboard/confessions?compose=true') 
     },
     { 
       id: 'create-event', 
-      title: 'Create Event', 
+      title: 'Event', 
       icon: Calendar, 
       color: 'bg-sky-50 text-sky-600 border-sky-100',
       action: () => navigate('/dashboard/events?compose=true') 
     },
     { 
       id: 'post-announcement', 
-      title: 'Post Announcement', 
+      title: 'Announcement', 
       icon: Megaphone, 
       color: 'bg-amber-50 text-amber-600 border-amber-100',
       action: () => navigate('/dashboard/announcements?compose=true') 
     },
     { 
       id: 'report-lost', 
-      title: 'Report Lost Item', 
+      title: 'Lost and Found', 
       icon: Package, 
       color: 'bg-orange-50 text-orange-600 border-orange-100',
       action: () => navigate('/dashboard/lost-found') 
     },
   ];
+
+  const isNew = (date: string) => {
+    if (!date) return false;
+    const now = new Date();
+    const created = new Date(date);
+    const diff = now.getTime() - created.getTime();
+    return diff < 48 * 60 * 60 * 1000; // Updated in last 48 hours for visibility
+  };
 
   return (
     <div className="flex flex-col h-full bg-[#F8FAFC] text-[#1E293B] overflow-y-auto scrollbar-hide">
@@ -166,6 +174,11 @@ const LandingDashboard: React.FC = () => {
                   {ann.pinned && (
                     <div className="absolute top-3 right-3 w-2 h-2 bg-amber-500 rounded-full"></div>
                   )}
+                  {isNew(ann.createdAt) && (
+                    <div className="absolute top-3 right-3 bg-amber-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                      UPDATED
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 rounded-full overflow-hidden border border-slate-100">
                       <img src={getMediaUrl(ann.posted_by?.profile_picture) || `https://ui-avatars.com/api/?name=${ann.posted_by?.name}`} alt="" className="w-full h-full object-cover" />
@@ -225,12 +238,17 @@ const LandingDashboard: React.FC = () => {
               [1, 2].map((i) => <Skeleton key={i} className="h-48 rounded-3xl" />)
             ) : marketplaceItems.length > 0 ? (
               marketplaceItems.map((item) => (
-                <div key={item._id} onClick={() => navigate('/dashboard/marketplace')} className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:border-green-200 transition-all cursor-pointer group">
+                <div key={item._id} onClick={() => navigate('/dashboard/marketplace')} className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:border-green-200 transition-all cursor-pointer group relative">
                   <div className="aspect-square relative overflow-hidden bg-slate-100">
                     <SafeImage src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-black text-slate-800 shadow-sm leading-none">
                       ₵{item.price}
                     </div>
+                    {isNew(item.createdAt) && (
+                      <div className="absolute bottom-2 left-2 bg-green-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-sm">
+                        UPDATED
+                      </div>
+                    )}
                   </div>
                   <div className="p-3">
                     <h4 className="font-bold text-xs text-slate-800 truncate">{item.title}</h4>
@@ -266,7 +284,12 @@ const LandingDashboard: React.FC = () => {
               [1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-3xl" />)
             ) : trendingConfessions.length > 0 ? (
               trendingConfessions.map((c) => (
-                <div key={c._id} onClick={() => navigate('/dashboard/confessions')} className="p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-purple-200 transition-all cursor-pointer">
+                <div key={c._id} onClick={() => navigate('/dashboard/confessions')} className="p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-purple-200 transition-all cursor-pointer relative overflow-hidden">
+                  {isNew(c.createdAt) && (
+                    <div className="absolute top-3 right-3 bg-purple-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-sm">
+                      UPDATED
+                    </div>
+                  )}
                   <p className="text-sm text-slate-600 leading-relaxed font-medium mb-3 line-clamp-2 italic">“{c.text}”</p>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 bg-slate-50 px-2.5 py-1 rounded-full">
@@ -306,7 +329,12 @@ const LandingDashboard: React.FC = () => {
               [1, 2].map((i) => <Skeleton key={i} className="min-w-[240px] h-32 rounded-3xl shrink-0" />)
             ) : upcomingEvents.length > 0 ? (
               upcomingEvents.map((event) => (
-                <div key={event._id} onClick={() => navigate('/dashboard/events')} className="min-w-[260px] p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-sky-200 transition-all cursor-pointer shrink-0">
+                <div key={event._id} onClick={() => navigate('/dashboard/events')} className="min-w-[260px] p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-sky-200 transition-all cursor-pointer shrink-0 relative overflow-hidden">
+                  {isNew(event.createdAt) && (
+                    <div className="absolute top-3 right-3 bg-sky-500 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-sm">
+                      UPDATED
+                    </div>
+                  )}
                   <div className="flex items-start justify-between mb-3">
                     <span className="text-[10px] font-black uppercase tracking-wider text-sky-500 bg-sky-50 px-2.5 py-1 rounded-full">
                       {event.category || 'General'}
