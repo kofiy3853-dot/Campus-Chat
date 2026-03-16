@@ -20,9 +20,11 @@ const SafeImage: React.FC<SafeImageProps> = ({
     target.onerror = null; 
   };
 
+  const imageUrl = getMediaUrl(src);
+  
   return (
     <img
-      src={getMediaUrl(src)}
+      src={imageUrl || fallback}
       alt={alt}
       className={className}
       onError={handleImageError}

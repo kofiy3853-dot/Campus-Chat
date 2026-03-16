@@ -256,6 +256,32 @@ app.get('/', (req, res) => {
   res.send('Campus Chat API is running... (v1.0.1)');
 });
 
+// Diagnostic endpoint to check filesystem
+app.get('/api/diag/uploads', (req, res) => {
+  try {
+    const uploadsDir = path.join(__dirname, '../public/uploads');
+    const exists = fs.existsSync(uploadsDir);
+    let files: string[] = [];
+    if (exists) {
+      files = fs.readdirSync(uploadsDir);
+    }
+    res.json({
+      timestamp: new Date().toISOString(),
+      __dirname,
+      cwd: process.cwd(),
+      uploadsDir,
+      exists,
+      files,
+      env: {
+        PORT: process.env.PORT,
+        NODE_ENV: process.env.NODE_ENV
+      }
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '../public/uploads');
 if (!fs.existsSync(uploadsDir)) {
