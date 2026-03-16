@@ -54,7 +54,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Persist to local DB
       await db.transaction('rw', db.conversations, async () => {
         await db.conversations.clear();
-        await db.conversations.bulkAdd(data.map((c: any) => ({
+        await db.conversations.bulkPut(data.map((c: any) => ({
           ...c,
           last_message_time: c.last_message?.timestamp || c.updatedAt,
           type: c.group_name ? 'group' : 'chat'

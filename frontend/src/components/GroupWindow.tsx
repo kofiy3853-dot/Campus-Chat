@@ -71,7 +71,7 @@ const GroupWindow = () => {
       if (id && id !== 'null') {
         await db.transaction('rw', db.messages, async () => {
           await db.messages.where('conversation_id').equals(id).delete();
-          await db.messages.bulkAdd(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
+          await db.messages.bulkPut(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
         });
       }
 

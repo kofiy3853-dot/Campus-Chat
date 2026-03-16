@@ -47,7 +47,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       await db.transaction('rw', db.conversations, async () => {
         // Find existing items of THIS type and update/add
         await db.conversations.where('type').equals(activeTab === 'chats' ? 'chat' : 'group').delete();
-        await db.conversations.bulkAdd(data.map((item: any) => ({
+        await db.conversations.bulkPut(data.map((item: any) => ({
           ...item,
           type: activeTab === 'chats' ? 'chat' : 'group',
           last_message_time: item.last_message?.timestamp || item.updatedAt

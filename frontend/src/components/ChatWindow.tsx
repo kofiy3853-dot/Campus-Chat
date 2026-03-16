@@ -76,7 +76,7 @@ const ChatWindow = () => {
           // Find which messages to add (don't clear everything to preserve 'pending' local ones if any)
           // For now, simple clear and refresh for simplicity, but in future reconcile
           await db.messages.where('conversation_id').equals(id).delete();
-          await db.messages.bulkAdd(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
+          await db.messages.bulkPut(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
         });
       }
 
