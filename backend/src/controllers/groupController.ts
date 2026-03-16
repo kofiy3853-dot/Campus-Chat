@@ -114,6 +114,10 @@ export const getGroupMessages = async (req: AuthRequest, res: Response) => {
       group_id: groupId,
     })
       .populate('sender_id', 'name profile_picture')
+      .populate({
+        path: 'reply_to',
+        populate: { path: 'sender_id', select: 'name' }
+      })
       .sort({ timestamp: -1 })
       .skip(skip)
       .limit(limit);
@@ -125,7 +129,7 @@ export const getGroupMessages = async (req: AuthRequest, res: Response) => {
 };
 
 export const sendGroupMessage = async (req: any, res: Response) => {
-  const { groupId, message_text, media_url } = req.body;
+  const { groupId, message_text, media_url, replyTo } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(groupId)) {
     return res.status(400).json({ message: 'Invalid group ID format' });
@@ -138,11 +142,16 @@ export const sendGroupMessage = async (req: any, res: Response) => {
       message_text,
       message_type: req.body.message_type || 'text',
       media_url,
+      reply_to: replyTo || undefined,
     });
 
     // Populate sender info for real-time broadcast
     const populatedMessage: any = await GroupMessage.findById(message._id)
-      .populate('sender_id', 'name profile_picture');
+      .populate('sender_id', 'name profile_picture')
+      .populate({
+        path: 'reply_to',
+        populate: { path: 'sender_id', select: 'name' }
+      });
     
     const group = await Group.findByIdAndUpdate(groupId, {
       last_message: message._id,

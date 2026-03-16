@@ -28,6 +28,7 @@ const ChatWindow = () => {
   const [activeMessage, setActiveMessage] = useState<any>(null);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [editingMessage, setEditingMessage] = useState<any>(null);
+  const [reply, setReply] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const markAsRead = useCallback(async () => {
@@ -216,7 +217,7 @@ const ChatWindow = () => {
     return () => window.removeEventListener('click', closeMenuHandler);
   }, []);
 
-  const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
+  const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string, replyTo?: string) => {
     try {
       if (editingMessage) {
         const { data } = await api.put(`/api/chat/messages/${editingMessage._id}`, { 
@@ -244,11 +245,13 @@ const ChatWindow = () => {
         media_url: mediaUrl,
         message_type: mediaType || 'text',
         timestamp: new Date().toISOString(),
-        delivery_status: 'pending'
+        delivery_status: 'pending',
+        reply_to: reply // Optimistic reply info
       };
 
       // 1. Update UI instantly
       setMessages(prev => [...prev, optimisticMessage]);
+      setReply(null); // Clear reply state after sending
 
       // 2. Persist to local DB as pending
       await db.messages.put(optimisticMessage);
@@ -259,6 +262,7 @@ const ChatWindow = () => {
           message_text: messageText,
           media_url: mediaUrl,
           message_type: mediaType || 'text',
+          replyTo: replyTo,
         });
 
         // 3. Update UI with confirmed data (replace temp message)
@@ -299,7 +303,7 @@ const ChatWindow = () => {
     socket?.emit('typing_start', { roomId: id, userId: user?._id });
   };
 
-  const onReaction = async (messageId: string, emoji: string) => {
+  const onReaction = useCallback(async (messageId: string, emoji: string) => {
     try {
       // Call API for persistence
       await api.post(`/api/chat/messages/${messageId}/reaction`, { emoji });
@@ -323,16 +327,16 @@ const ChatWindow = () => {
     } catch (err: any) {
       console.error('Reaction error:', err);
     }
-  };
+  }, [socket, id, user?._id]);
 
-  const onEdit = (messageId: string, newText: string) => {
+  const onEdit = useCallback((messageId: string, newText: string) => {
     socket?.emit('message_edited', { messageId, message_text: newText, roomId: id });
     setMessages(prev => prev.map(m => 
       m._id === messageId ? { ...m, message_text: newText, edited_at: new Date() } : m
     ));
-  };
+  }, [socket, id]);
 
-  const onDelete = async (messageId: string) => {
+  const onDelete = useCallback(async (messageId: string) => {
     try {
       const isGroup = !!conversation?.group_name; // Check if it's a group
       const endpoint = isGroup 
@@ -348,7 +352,17 @@ const ChatWindow = () => {
       console.error('Delete message error:', err);
       alert(`Delete failed: ${err.response?.data?.message || err.message}`);
     }
-  };
+  }, [conversation?.group_name, id, socket]);
+
+  const handleMenuOpen = useCallback((message: any, position: { x: number, y: number }) => {
+    setActiveMessage(message);
+    setMenuPosition(position);
+  }, []);
+
+  const handleSwipe = useCallback((msg: any) => {
+    setReply(msg);
+    setEditingMessage(null);
+  }, []);
 
   if (!id || id === 'null') return (
     <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
@@ -433,10 +447,8 @@ const ChatWindow = () => {
                 onReaction={onReaction}
                 onEdit={onEdit}
                 onDelete={onDelete}
-                onMenuOpen={(message, position) => {
-                  setActiveMessage(message);
-                  setMenuPosition(position);
-                }}
+                onMenuOpen={handleMenuOpen}
+                onSwipe={handleSwipe}
               />
             ))}
             <div ref={messagesEndRef} />
@@ -449,6 +461,8 @@ const ChatWindow = () => {
         onTyping={handleTyping} 
         editingValue={editingMessage?.message_text}
         onCancelEdit={() => setEditingMessage(null)}
+        reply={reply}
+        onCancelReply={() => setReply(null)}
       />
 
       {/* Action Menu */}

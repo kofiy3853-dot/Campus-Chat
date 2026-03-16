@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2, Users } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -22,6 +22,7 @@ const GroupWindow = () => {
   const [error, setError] = useState<string | null>(null);
   const [group, setGroup] = useState<any>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [reply, setReply] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const markAsRead = async () => {
@@ -160,7 +161,7 @@ const GroupWindow = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string) => {
+  const handleSend = async (messageText: string, mediaUrl?: string, mediaType?: string, replyTo?: string) => {
     const tempId = `temp-${Date.now()}`;
     const optimisticMessage: any = {
       _id: tempId,
@@ -170,11 +171,13 @@ const GroupWindow = () => {
       media_url: mediaUrl,
       message_type: mediaType || 'text',
       timestamp: new Date().toISOString(),
-      delivery_status: 'pending'
+      delivery_status: 'pending',
+      reply_to: reply // Optimistic reply info
     };
 
     // 1. Update UI instantly
     setMessages(prev => [...prev, optimisticMessage]);
+    setReply(null); // Clear reply state after sending
 
     // 2. Persist to local DB as pending
     await db.messages.put(optimisticMessage);
@@ -185,6 +188,7 @@ const GroupWindow = () => {
         message_text: messageText,
         media_url: mediaUrl,
         message_type: mediaType || 'text',
+        replyTo: replyTo,
       });
 
       // 3. Update UI
@@ -221,26 +225,30 @@ const GroupWindow = () => {
     socket?.emit('typing_start', { roomId: id, userId: user?._id });
   };
 
-  const onReaction = (messageId: string, emoji: string) => {
+  const onReaction = useCallback((messageId: string, emoji: string) => {
     // The ChatMessage component handles the API call, we just need to broadcast
     socket?.emit('group_message_reaction', { messageId, emoji, roomId: id, userId: user?._id });
-  };
+  }, [socket, id, user?._id]);
 
-  const onEdit = (messageId: string, newText: string) => {
+  const onEdit = useCallback((messageId: string, newText: string) => {
     socket?.emit('group_message_edited', { messageId, message_text: newText, roomId: id });
     setMessages(prev => prev.map(m => 
       m._id === messageId ? { ...m, message_text: newText, edited_at: new Date() } : m
     ));
-  };
+  }, [socket, id]);
 
-  const onDelete = (messageId: string) => {
+  const onDelete = useCallback((messageId: string) => {
     // We rely on the backend's socket broadcast from deleteGroupMessage
     // No need for manual state update here if we use the socket handler
     // but we can keep it for optimistic UI if needed
     setMessages(prev => prev.map(m => 
       m._id === messageId ? { ...m, is_deleted: true, message_text: 'This message was deleted' } : m
     ));
-  };
+  }, []);
+
+  const handleSwipe = useCallback((msg: any) => {
+    setReply(msg);
+  }, []);
 
   if (!id || id === 'null') return (
     <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
@@ -317,6 +325,7 @@ const GroupWindow = () => {
                         onReaction={onReaction}
                         onEdit={onEdit}
                         onDelete={onDelete}
+                        onSwipe={handleSwipe}
                     />
                     </div>
                 );
@@ -326,7 +335,12 @@ const GroupWindow = () => {
         )}
       </div>
 
-      <ChatInput onSend={handleSend} onTyping={handleTyping} />
+      <ChatInput 
+        onSend={handleSend} 
+        onTyping={handleTyping} 
+        reply={reply}
+        onCancelReply={() => setReply(null)}
+      />
     </div>
   );
 };

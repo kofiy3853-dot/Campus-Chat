@@ -183,7 +183,7 @@ export const createNotification = async (
     const tokens = deviceTokens.map(dt => dt.token);
 
     if (tokens.length > 0 && admin.apps.length > 0) {
-      const message = {
+      const message: any = {
         notification: {
           title,
           body,
@@ -191,7 +191,25 @@ export const createNotification = async (
         data: {
           ...data,
           type,
-          click_action: '/dashboard/notifications', // Customize based on your routing
+          click_action: '/dashboard/notifications',
+        },
+        android: {
+          priority: 'high',
+          notification: {
+            sound: 'default',
+            channelId: 'default',
+            priority: 'high',
+            clickAction: 'FCM_PLUGIN_ACTIVITY',
+          },
+        },
+        apns: {
+          payload: {
+            aps: {
+              sound: 'default',
+              contentAvailable: true,
+              badge: 1,
+            },
+          },
         },
         tokens,
       };

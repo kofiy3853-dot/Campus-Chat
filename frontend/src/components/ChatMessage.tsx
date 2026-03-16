@@ -13,14 +13,17 @@ interface ChatMessageProps {
   onEdit?: (messageId: string, newText: string) => void;
   onDelete?: (messageId: string) => void;
   onMenuOpen?: (message: any, position: { x: number, y: number }) => void;
+  onSwipe?: (message: any) => void;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, onEdit, onDelete, onMenuOpen }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, onEdit, onDelete, onMenuOpen, onSwipe }) => {
   const { user } = useAuth();
   const [showReactions, setShowReactions] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.message_text);
   const [showMenu, setShowMenu] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [swipeOffset, setSwipeOffset] = useState(0);
   
   const senderName = isMe ? user?.name : message.sender_id?.name || 'User';
   const avatarUrl = isMe ? getMediaUrl(user?.profile_picture) : getMediaUrl(message.sender_id?.profile_picture);
@@ -87,8 +90,48 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     return <Clock className="w-3 h-3 text-white/40" strokeWidth={3} />;
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (message.is_deleted) return;
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const currentTouch = e.targetTouches[0].clientX;
+    const diff = currentTouch - touchStart;
+    
+    // Only allow swiping right
+    if (diff > 0) {
+      // Add a slight resistance/cap to the swipe
+      const offset = Math.min(diff * 0.5, 60); 
+      setSwipeOffset(offset);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (swipeOffset > 40) {
+      onSwipe?.(message);
+      // Haptic feedback if available (standard in Capacitor)
+      if (window.navigator.vibrate) window.navigator.vibrate(10);
+    }
+    setTouchStart(null);
+    setSwipeOffset(0);
+  };
+
+  const scrollToMessage = (msgId: string) => {
+    const el = document.getElementById(`msg-${msgId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add("message-highlight");
+      setTimeout(() => {
+        el.classList.remove("message-highlight");
+      }, 2000);
+    }
+  };
+
   return (
     <div
+      id={`msg-${message._id}`}
       className={clsx(
         "flex w-full mb-1 px-1 md:px-2 transition-all duration-300",
         isMe ? "justify-end" : "justify-start"
@@ -123,12 +166,38 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           </span>
         )}
 
-        <div className={clsx(
-          "px-[14px] py-[10px] rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300",
-          isMe 
-            ? "bg-gradient-to-br from-sky-400 to-sky-500 text-white rounded-br-md hover:shadow-sky-200/50" 
-            : "bg-white text-slate-700 rounded-bl-md border border-slate-100/50 hover:shadow-slate-300/50"
-        )}>
+        <div 
+          className={clsx(
+            "px-[14px] py-[10px] rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300",
+            isMe 
+              ? "bg-gradient-to-br from-sky-400 to-sky-500 text-white rounded-br-md hover:shadow-sky-200/50" 
+              : "bg-white text-slate-700 rounded-bl-md border border-slate-100/50 hover:shadow-slate-300/50"
+          )}
+          style={{ transform: `translateX(${swipeOffset}px)` }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Reply Context */}
+          {message.reply_to && !message.is_deleted && (
+            <div 
+              onClick={() => scrollToMessage(message.reply_to._id)}
+              className={clsx(
+                "mb-2 p-2 px-3 rounded-2xl text-[12px] border-l-4 overflow-hidden cursor-pointer",
+                isMe 
+                  ? "bg-white/10 border-white/40 text-white/90" 
+                  : "bg-slate-50 border-sky-400 text-slate-500"
+              )}
+            >
+              <p className="font-black uppercase tracking-widest text-[10px] mb-0.5 opacity-80">
+                {message.reply_to.sender_id?.name || 'User'}
+              </p>
+              <p className="line-clamp-1 italic">
+                {message.reply_to.message_text || (message.reply_to.media_url ? 'Sent an attachment' : '')}
+              </p>
+            </div>
+          )}
+
           {/* Message Content */}
           {isEditing && isMe ? (
             <div className="flex flex-col gap-3 min-w-[240px]">
@@ -249,4 +318,4 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   );
 };
 
-export default ChatMessage;
+export default React.memo(ChatMessage);

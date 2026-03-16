@@ -21,6 +21,7 @@ export interface IMessage extends Document {
   is_deleted: boolean;
   deleted_at?: Date;
   reactions: IMessageReaction[];
+  reply_to?: mongoose.Types.ObjectId | IMessage;
 }
 
 const MessageSchema: Schema = new Schema({
@@ -49,7 +50,8 @@ const MessageSchema: Schema = new Schema({
   reactions: [{
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     emoji: { type: String }
-  }]
+  }],
+  reply_to: { type: Schema.Types.ObjectId, ref: 'Message' }
 }, { timestamps: true });
 
 MessageSchema.index({ conversation_id: 1, timestamp: -1 }); // Compound index for fast message loading

@@ -80,6 +80,10 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
       conversation_id: conversationId,
     })
       .populate('sender_id', 'name profile_picture')
+      .populate({
+        path: 'reply_to',
+        populate: { path: 'sender_id', select: 'name' }
+      })
       .sort({ timestamp: -1 })
       .skip(skip)
       .limit(limit);
@@ -92,7 +96,7 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
 };
 
 export const sendMessage = async (req: AuthRequest, res: Response) => {
-  const { recipientId, message_text, message_type, media_url } = req.body;
+  const { recipientId, message_text, message_type, media_url, replyTo } = req.body;
 
   try {
     if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
@@ -118,11 +122,16 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
       message_type: message_type || 'text',
       media_url,
       read: false, // Explicitly requested
+      reply_to: replyTo || undefined,
     });
 
     // Safer population
     await message.populate([
-      { path: 'sender_id', select: 'name profile_picture' }
+      { path: 'sender_id', select: 'name profile_picture' },
+      { 
+        path: 'reply_to',
+        populate: { path: 'sender_id', select: 'name' }
+      }
     ]);
 
     conversation.last_message = message._id as any;
@@ -223,6 +232,10 @@ export const searchMessages = async (req: AuthRequest, res: Response) => {
 
     const messages = await Message.find(searchFilter)
       .populate('sender_id', 'name profile_picture')
+      .populate({
+        path: 'reply_to',
+        populate: { path: 'sender_id', select: 'name' }
+      })
       .sort({ timestamp: -1 })
       .limit(50);
 

@@ -9,10 +9,12 @@ import { getMediaUrl } from '../utils/imageUrl';
 import { compressImage } from '../utils/imageCompression';
 
 interface ChatInputProps {
-  onSend: (text: string, mediaUrl?: string, mediaType?: string) => void;
+  onSend: (text: string, mediaUrl?: string, mediaType?: string, replyTo?: string) => void;
   onTyping: () => void;
   editingValue?: string;
   onCancelEdit?: () => void;
+  reply?: any;
+  onCancelReply?: () => void;
 }
 
 // Built-in emoji set
@@ -31,7 +33,7 @@ const ATTACH_OPTIONS = [
   { id: 'contact',  label: 'Contact',  icon: Contact,    accept: '.vcf', desc: 'vCard contact (.vcf)' },
 ];
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, onCancelEdit }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, onCancelEdit, reply, onCancelReply }) => {
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [showAttach, setShowAttach] = useState(false);
@@ -107,13 +109,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (previewFile) {
-      onSend(text || previewFile.name, previewFile.url, previewFile.type);
+      onSend(text || previewFile.name, previewFile.url, previewFile.type, reply?._id);
       setPreviewFile(null);
       setText('');
       return;
     }
     if (!text.trim()) return;
-    onSend(text);
+    onSend(text, undefined, undefined, reply?._id);
     setText('');
   };
 
@@ -167,7 +169,29 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
   };
 
   return (
-    <footer className="p-2.5 md:p-6 bg-white/90 backdrop-blur-xl border-t border-gray-100">
+    <footer className="p-2.5 md:p-6 bg-white/90 backdrop-blur-xl border-t border-gray-100 relative">
+      {/* Reply Preview Area */}
+      {reply && (
+        <div className="max-w-6xl mx-auto mb-3 flex items-center justify-between px-4 py-3 bg-sky-50 border-l-4 border-sky-400 rounded-xl animate-in slide-in-from-bottom-2 duration-200">
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-black uppercase tracking-widest text-sky-600 mb-0.5">
+              Replying to {reply.sender_id?.name || 'User'}
+            </p>
+            <p className="text-sm text-slate-600 truncate italic">
+              {reply.message_text || (reply.media_url ? 'Attachment' : '')}
+            </p>
+          </div>
+          <button 
+            onClick={onCancelReply}
+            aria-label="Cancel reply"
+            title="Cancel reply"
+            className="p-1.5 hover:bg-sky-100 rounded-lg text-sky-400 transition-colors shrink-0 ml-4"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Edit Mode Indicator */}
       {editingValue !== undefined && (
         <div className="max-w-6xl mx-auto mb-3 flex items-center justify-between px-4 py-2 bg-amber-50 border border-amber-100 rounded-xl animate-in slide-in-from-bottom-2 duration-200">

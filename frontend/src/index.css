@@ -153,3 +153,14 @@ body {
   border-color: rgba(255, 255, 255, 0.85) transparent transparent transparent;
   filter: drop-shadow(0 2px 2px rgba(0,0,0,0.05));
 }
+
+/* Message Highlight Animation */
+@keyframes highlight-flash {
+  0% { background-color: rgba(14, 165, 233, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.message-highlight {
+  animation: highlight-flash 2s ease-out;
+  border-radius: 1.5rem;
+}

@@ -11,6 +11,7 @@ export interface IGroupMessage extends Document {
     userId: mongoose.Types.ObjectId;
     emoji: string;
   }[];
+  reply_to?: mongoose.Types.ObjectId | IGroupMessage;
 }
 
 const GroupMessageSchema: Schema = new Schema({
@@ -24,6 +25,7 @@ const GroupMessageSchema: Schema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     emoji: { type: String }
   }],
+  reply_to: { type: Schema.Types.ObjectId, ref: 'GroupMessage' },
 }, { timestamps: true });
 
 export default mongoose.model<IGroupMessage>('GroupMessage', GroupMessageSchema);
