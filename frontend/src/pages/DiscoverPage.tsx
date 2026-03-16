@@ -160,11 +160,7 @@ const DiscoverPage: React.FC = () => {
     }
   };
 
-  const startChat = async (userId: string, connectionStatus: string) => {
-    if (connectionStatus !== 'accepted') {
-      alert('You must be connected with this student before you can message them.');
-      return;
-    }
+  const startChat = async (userId: string, _connectionStatus: string) => {
     try {
       const { data } = await api.post('/api/chat/conversations', { participantId: userId });
       navigate(`/dashboard/chat/${data._id}`);
@@ -478,12 +474,7 @@ const DiscoverPage: React.FC = () => {
 
                         <button 
                           onClick={() => startChat(person._id, person.connection_status)}
-                          className={clsx(
-                            "w-full py-2.5 border rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all",
-                            person.connection_status === 'accepted' 
-                              ? "bg-white border-sky-100 text-sky-500 hover:bg-sky-50" 
-                              : "bg-slate-50 border-transparent text-slate-300 cursor-not-allowed"
-                          )}
+                          className="w-full py-2.5 bg-white border border-sky-100 text-sky-500 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-50 hover:border-sky-200 transition-all shadow-sm"
                         >
                           <MessageSquare className="w-3 h-3" /> Message
                         </button>

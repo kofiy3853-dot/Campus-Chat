@@ -175,23 +175,6 @@ export const createConversation = async (req: AuthRequest, res: Response) => {
     }).populate('participants', 'name email profile_picture status');
 
     if (!conversation) {
-      // Security check: Verify they are connected before starting a NEW conversation
-      // We check for an accepted connection in either direction
-      const Connection = mongoose.model('Connection');
-      const isConnected = await Connection.findOne({
-        $or: [
-          { sender: req.user.id, recipient: participantId, status: 'accepted' },
-          { sender: participantId, recipient: req.user.id, status: 'accepted' }
-        ]
-      });
-
-      if (!isConnected) {
-        return res.status(403).json({ 
-          message: 'You must be connected with this student before you can message them.',
-          needsConnection: true 
-        });
-      }
-
       conversation = await Conversation.create({
         participants: [req.user.id, participantId],
       });
