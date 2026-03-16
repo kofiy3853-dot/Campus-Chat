@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, MapPin, AlignLeft, Tag, Image as ImageIcon } from 'lucide-react';
+import { X, Calendar, MapPin, AlignLeft, Tag, Image as ImageIcon, Loader2 } from 'lucide-react';
 import api from '../services/api';
 
 interface EventComposeProps {
@@ -16,14 +16,27 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
     location: '',
     dateTime: '',
     category: 'Social',
-    image: '',
     maxAttendees: ''
   });
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,8 +48,19 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
     setSubmitting(true);
     setError('');
     try {
+      let imageUrl = '';
+      if (image) {
+        const uploadData = new FormData();
+        uploadData.append('image', image);
+        const uploadRes = await api.post('/api/events/upload', uploadData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        imageUrl = uploadRes.data.url;
+      }
+
       const { data } = await api.post('/api/events', {
         ...formData,
+        image: imageUrl,
         maxAttendees: formData.maxAttendees ? parseInt(formData.maxAttendees) : undefined
       });
       onCreated(data);
@@ -122,7 +146,7 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
             </div>
           </div>
 
-          {/* Category & Image URL */}
+          {/* Category & Image selection */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Category</label>
@@ -140,15 +164,28 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Image URL</label>
-              <div className="relative">
-                <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Event Banner</label>
+              <div 
+                className="relative cursor-pointer group"
+                onClick={() => document.getElementById('event-image-input')?.click()}
+              >
+                <div className="absolute inset-0 bg-sky-500/5 group-hover:bg-sky-500/10 rounded-2xl transition-all"></div>
+                <div className="relative w-full h-[50px] rounded-2xl border-2 border-dashed border-slate-100 group-hover:border-sky-200 flex items-center justify-center gap-2 transition-all">
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Preview" className="w-7 h-7 rounded-lg object-cover" />
+                  ) : (
+                    <ImageIcon className="w-4 h-4 text-slate-400 group-hover:text-sky-500" />
+                  )}
+                  <span className="text-[10px] font-bold text-slate-400 group-hover:text-sky-600 truncate px-2">
+                    {image ? image.name : 'Choose Image'}
+                  </span>
+                </div>
                 <input
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  className="w-full bg-slate-50 border-none rounded-2xl pl-11 pr-4 py-3.5 text-sm font-medium text-slate-800 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-sky-500/20"
+                  id="event-image-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
                 />
               </div>
             </div>
@@ -175,7 +212,9 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
               disabled={submitting}
               className="flex-1 py-4 rounded-2xl bg-sky-500 text-white text-sm font-black tracking-widest uppercase shadow-lg shadow-sky-200 hover:bg-sky-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {submitting ? 'Creating...' : 'Create Event'}
+              {submitting ? (
+                 <Loader2 className="w-4 h-4 animate-spin" />
+              ) : 'Create Event'}
             </button>
           </div>
         </form>

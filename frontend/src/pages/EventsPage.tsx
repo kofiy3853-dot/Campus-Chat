@@ -60,9 +60,9 @@ const EventsPage: React.FC = () => {
   };
 
   const filteredEvents = events.filter((e: any) => 
-    e.title.toLowerCase().includes(search.toLowerCase()) || 
-    e.description.toLowerCase().includes(search.toLowerCase()) ||
-    e.location.toLowerCase().includes(search.toLowerCase())
+    (e.title?.toLowerCase().includes(search.toLowerCase()) || false) || 
+    (e.description?.toLowerCase().includes(search.toLowerCase()) || false) ||
+    (e.location?.toLowerCase().includes(search.toLowerCase()) || false)
   );
 
   return (

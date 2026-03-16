@@ -11,8 +11,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 // Global handler for chunk loading errors (typical after new deployments)
 window.addEventListener('error', (event) => {
-  if (event.message.includes('Failed to fetch dynamically imported module') || 
-      event.message.includes('MIME type') ||
+  const message = event.message || '';
+  if (message.includes('Failed to fetch dynamically imported module') || 
+      message.includes('MIME type') ||
       (event.target && (event.target as any).src && (event.target as any).src.includes('/assets/'))) {
     
     // Use a small delay and a session flag to avoid infinite reload loops
