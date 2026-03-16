@@ -170,17 +170,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
 
       {/* Footer / Navigation */}
       <div className="p-4 border-t border-gray-100 space-y-2">
-        <NavLink 
-          to="/dashboard/announcements" 
-          aria-label="Campus Announcements"
-          className={({ isActive }) => clsx(
-            "flex items-center gap-3 p-3 rounded-xl transition-none",
-            isActive ? "bg-amber-50 text-amber-500" : "hover:bg-gray-50 text-gray-400"
-          )}
-        >
-          <Megaphone className="w-6 h-6" />
-          {isOpen && <span className="font-medium">Announcements</span>}
-        </NavLink>
         
         <div className="pt-2 flex items-center justify-between">
           {isOpen ? (

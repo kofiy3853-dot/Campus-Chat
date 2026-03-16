@@ -85,13 +85,6 @@ const LandingDashboard: React.FC = () => {
       color: 'bg-orange-50 text-orange-600 border-orange-100',
       action: () => navigate('/dashboard/lost-found') 
     },
-    { 
-      id: 'announcements', 
-      title: 'View Announcements', 
-      icon: Megaphone, 
-      color: 'bg-blue-50 text-blue-600 border-blue-100',
-      action: () => navigate('/dashboard/announcements') 
-    },
   ];
 
   return (
