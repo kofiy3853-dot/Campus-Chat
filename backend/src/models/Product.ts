@@ -5,7 +5,7 @@ export interface IProduct extends Document {
   price: number;
   category: string;
   image: string;
-  sellerId: string | mongoose.Types.ObjectId;
+  sellerId: mongoose.Types.ObjectId;
   createdAt: Date;
 }
 
@@ -14,12 +14,11 @@ const ProductSchema: Schema = new Schema({
   price: Number,
   category: String,
   image: String,
-  sellerId: { type: String, ref: 'User' }, // Keeping ref for population
+  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // ObjectId for proper populate()
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-// For convenience, we can add a virtual or just ensure population works
 export default mongoose.model<IProduct>('Product', ProductSchema);

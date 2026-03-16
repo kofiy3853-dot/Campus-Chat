@@ -32,7 +32,7 @@ export const createListing = async (req: AuthRequest, res: Response) => {
 
 export const getListings = async (req: AuthRequest, res: Response) => {
   const { category, search } = req.query;
-  const filter: any = {}; // Removed 'available' status filter as it's not in the new schema yet
+  const filter: any = {};
 
   if (category && category !== 'All') {
     filter.category = category;
@@ -46,26 +46,9 @@ export const getListings = async (req: AuthRequest, res: Response) => {
   }
 
   try {
-    let items = await Product.find(filter)
+    const items = await Product.find(filter)
       .populate('sellerId', 'name profile_picture status')
       .sort({ createdAt: -1 });
-
-    // Seed "Banku and egg" if no items exist (for demo purposes)
-    if (items.length === 0 && !category && !search) {
-       const User = mongoose.model('User');
-       const seller = await User.findOne(); // Get any user as seller
-       if (seller) {
-         const seeded = await Product.create({
-           title: "Banku and egg",
-           price: 200,
-           category: "Food",
-           image: "/uploads/banku.jpg",
-           sellerId: seller._id
-         });
-         const populated = await Product.findById(seeded._id).populate('sellerId', 'name profile_picture status');
-         if (populated) items = [populated];
-       }
-    }
 
     res.json(items);
   } catch (error: any) {
