@@ -82,6 +82,13 @@ const LandingDashboard: React.FC = () => {
       action: () => navigate('/dashboard/events?compose=true') 
     },
     { 
+      id: 'post-announcement', 
+      title: 'Post Announcement', 
+      icon: Megaphone, 
+      color: 'bg-amber-50 text-amber-600 border-amber-100',
+      action: () => navigate('/dashboard/announcements?compose=true') 
+    },
+    { 
       id: 'report-lost', 
       title: 'Report Lost Item', 
       icon: Package, 

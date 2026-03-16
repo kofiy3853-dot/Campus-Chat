@@ -26,6 +26,7 @@ const Dashboard = () => {
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');
   const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
   const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/discover' || location.pathname === '/dashboard/marketplace';
+  const isAnnouncements = location.pathname === '/dashboard/announcements';
 
   return (
     <div className="flex h-[100dvh] min-h-screen overflow-hidden bg-white font-sans selection:bg-sky-500/30">
@@ -33,13 +34,13 @@ const Dashboard = () => {
       <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />
       
       {/* Chat list panel - visible on list views, hidden on mobile during conversation, hidden on landing/profile/notifications */}
-      {(!isLanding && !isProfileOrNotifications) && (
+      {(!isLanding && !isProfileOrNotifications && !isAnnouncements) && (
         <ChatListPanel className={isListView ? "flex w-full md:w-80" : "hidden md:flex md:w-80"} />
       )}
       
       <main className={clsx(
         "flex-1 flex flex-col h-full overflow-hidden bg-white",
-        (isListView && !isLanding && !isProfileOrNotifications) ? 'hidden md:flex' : 'flex w-full'
+        (isListView && !isLanding && !isProfileOrNotifications && !isAnnouncements) ? 'hidden md:flex' : 'flex w-full'
       )}>
         <Suspense fallback={null}>
           <Routes>
@@ -59,7 +60,7 @@ const Dashboard = () => {
           </Routes>
         </Suspense>
       </main>
-      {!isConversation && <FloatingActionMenu />}
+      {(!isConversation && !isAnnouncements) && <FloatingActionMenu />}
     </div>
   );
 };
