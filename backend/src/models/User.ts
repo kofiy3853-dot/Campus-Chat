@@ -21,6 +21,7 @@ export interface IUser extends Document {
     browser_notifications: boolean;
   };
   tick_color: string;
+  saved_internships: mongoose.Types.ObjectId[];
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -37,6 +38,7 @@ const UserSchema: Schema = new Schema({
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   isBanned: { type: Boolean, default: false },
   blocked_users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  saved_internships: [{ type: Schema.Types.ObjectId, ref: 'Internship' }],
   notification_preferences: {
     email_notifications: { type: Boolean, default: true },
     browser_notifications: { type: Boolean, default: true }

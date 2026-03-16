@@ -9,14 +9,18 @@ import { io } from '../server';
 import { createNotification } from './notificationController';
 
 export const createGroup = async (req: AuthRequest, res: Response) => {
-  const { group_name, description, members } = req.body;
+  const { group_name, description, members, subject, schedule, max_members, visibility } = req.body;
 
   try {
     const group = await Group.create({
       group_name,
       description,
+      subject,
+      schedule,
+      max_members: max_members || 50,
+      visibility: visibility || 'public',
       admins: [req.user.id],
-      members: [...members, req.user.id],
+      members: [...(members || []), req.user.id],
       created_by: req.user.id,
     });
 
@@ -68,6 +72,10 @@ export const getGroups = async (req: AuthRequest, res: Response) => {
 
 export const joinGroup = async (req: AuthRequest, res: Response) => {
   const { groupId } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(groupId)) {
+    return res.status(400).json({ message: 'Invalid group ID format' });
+  }
 
   try {
     const group = await Group.findById(groupId);
@@ -194,15 +202,89 @@ export const sendGroupMessage = async (req: any, res: Response) => {
 
 export const discoverGroups = async (req: AuthRequest, res: Response) => {
   try {
-    const groups = await Group.find({
-      members: { $ne: req.user.id },
-    })
-    .populate('members', 'name profile_picture')
-    .sort({ createdAt: -1 })
-    .limit(10);
+    const userId = req.user.id;
+    const { subject } = req.query;
 
-    res.set('Cache-Control', 'public, max-age=60');
+    const filter: any = {
+      visibility: 'public',
+      members: { $ne: userId }
+    };
+
+    if (subject) {
+      filter.subject = { $regex: subject, $options: 'i' };
+    }
+
+    const groups = await Group.find(filter)
+      .populate('members', 'name profile_picture')
+      .sort({ createdAt: -1 })
+      .limit(20);
+
     res.json(groups);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Add resource to group
+export const addGroupResource = async (req: AuthRequest, res: Response) => {
+  const { groupId, title, url, type } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(groupId)) {
+    return res.status(400).json({ message: 'Invalid group ID format' });
+  }
+
+  try {
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ message: 'Group not found' });
+
+    // Check if user is member
+    if (!group.members.includes(req.user.id)) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    group.resources.push({
+      title,
+      url,
+      type: type || 'link',
+      added_by: req.user.id,
+      timestamp: new Date()
+    });
+
+    await group.save();
+    res.status(201).json(group.resources[group.resources.length - 1]);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Schedule study session
+export const scheduleStudySession = async (req: AuthRequest, res: Response) => {
+  const { groupId, title, description, start_time, end_time, location } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(groupId)) {
+    return res.status(400).json({ message: 'Invalid group ID format' });
+  }
+
+  try {
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ message: 'Group not found' });
+
+    // Check if user is admin
+    if (!group.admins.includes(req.user.id)) {
+      return res.status(403).json({ message: 'Only admins can schedule sessions' });
+    }
+
+    group.study_sessions.push({
+      title,
+      description,
+      start_time: new Date(start_time),
+      end_time: new Date(end_time),
+      location,
+      created_by: req.user.id
+    });
+
+    await group.save();
+    res.status(201).json(group.study_sessions[group.study_sessions.length - 1]);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -227,8 +309,13 @@ export const searchGroups = async (req: AuthRequest, res: Response) => {
 
 // Add reaction to group message
 export const addGroupMessageReaction = async (req: AuthRequest, res: Response) => {
-  const { messageId } = req.params;
+  const { messageId: rawMessageId } = req.params;
+  const messageId = Array.isArray(rawMessageId) ? rawMessageId[0] : rawMessageId;
   const { emoji } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+    return res.status(400).json({ message: 'Invalid message ID format' });
+  }
 
   try {
     const message = await GroupMessage.findById(messageId);
@@ -307,7 +394,12 @@ export const markGroupMessagesAsRead = async (req: AuthRequest, res: Response) =
 
 // Delete group message (hard delete)
 export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
-  const { id } = req.params;
+  const { id: rawId } = req.params;
+  const id = Array.isArray(rawId) ? rawId[0] : rawId;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid message ID format' });
+  }
 
   try {
     const message = await GroupMessage.findById(id);

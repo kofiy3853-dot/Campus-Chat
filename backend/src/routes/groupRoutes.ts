@@ -9,7 +9,9 @@ import {
   searchGroups,
   addGroupMessageReaction,
   markGroupMessagesAsRead,
-  deleteGroupMessage
+  deleteGroupMessage,
+  addGroupResource,
+  scheduleStudySession
 } from '../controllers/groupController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -24,5 +26,8 @@ router.get('/messages/:groupId', protect, getGroupMessages);
 router.post('/send', protect, sendGroupMessage);
 router.post('/messages/:groupId/read', protect, markGroupMessagesAsRead);
 router.delete('/messages/:id', protect, deleteGroupMessage);
+router.post('/resources', protect, addGroupResource);
+router.post('/sessions', protect, scheduleStudySession);
+router.post('/messages/:messageId/react', protect, addGroupMessageReaction);
 
 export default router;

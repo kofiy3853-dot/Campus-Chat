@@ -61,6 +61,10 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
 export const getMessages = async (req: AuthRequest, res: Response) => {
   const { conversationId } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+    return res.status(400).json({ message: 'Invalid conversation ID format' });
+  }
+
   try {
     // Security check: Verify the user is a participant in the conversation
     const conversation = await Conversation.findOne({
@@ -98,11 +102,15 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
 export const sendMessage = async (req: AuthRequest, res: Response) => {
   const { recipientId, message_text, message_type, media_url, replyTo } = req.body;
 
-  try {
-    if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
-      return res.status(400).json({ message: 'Invalid or missing recipient ID' });
-    }
+  if (!recipientId) {
+    return res.status(400).json({ message: 'Recipient ID is required' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(recipientId)) {
+    return res.status(400).json({ message: 'Invalid recipient ID format' });
+  }
 
+  try {
+    // Create or find conversation
     let conversation = await Conversation.findOne({
       participants: { $all: [req.user.id, recipientId] },
     });
@@ -164,11 +172,14 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 export const createConversation = async (req: AuthRequest, res: Response) => {
   const { participantId } = req.body;
 
-  try {
-    if (!participantId) {
-      return res.status(400).json({ message: 'Participant ID is required' });
-    }
+  if (!participantId) {
+    return res.status(400).json({ message: 'Participant ID is required' });
+  }
+  if (!mongoose.Types.ObjectId.isValid(participantId)) {
+    return res.status(400).json({ message: 'Invalid participant ID format' });
+  }
 
+  try {
     // Check if conversation already exists
     let conversation = await Conversation.findOne({
       participants: { $all: [req.user.id, participantId] },
@@ -190,6 +201,10 @@ export const createConversation = async (req: AuthRequest, res: Response) => {
 // Search messages in a conversation
 export const searchMessages = async (req: AuthRequest, res: Response) => {
   const { conversationId, query, messageType } = req.query;
+
+  if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
+    return res.status(400).json({ message: 'Invalid conversation ID format' });
+  }
 
   try {
     const conversation = await Conversation.findOne({
@@ -233,6 +248,10 @@ export const editMessage = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
   const { message_text } = req.body;
 
+  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+    return res.status(400).json({ message: 'Invalid message ID format' });
+  }
+
   try {
     const message = await Message.findById(messageId);
 
@@ -257,6 +276,10 @@ export const editMessage = async (req: AuthRequest, res: Response) => {
 // Delete message (hard delete)
 export const deleteMessage = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid message ID format' });
+  }
 
   try {
     const message = await Message.findById(id);
@@ -287,6 +310,10 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
 export const addMessageReaction = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
   const { emoji } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+    return res.status(400).json({ message: 'Invalid message ID format' });
+  }
 
   try {
     const message = await Message.findById(messageId);
@@ -331,6 +358,10 @@ export const addMessageReaction = async (req: AuthRequest, res: Response) => {
 // Block/Unblock user
 export const blockUser = async (req: AuthRequest, res: Response) => {
   const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: 'Invalid user ID format' });
+  }
 
   try {
     const user = await User.findById(req.user.id);

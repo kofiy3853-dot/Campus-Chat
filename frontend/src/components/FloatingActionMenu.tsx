@@ -7,7 +7,9 @@ import {
   Calendar, 
   Package, 
   Megaphone,
-  X 
+  X,
+  BookOpen,
+  Briefcase
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -16,6 +18,15 @@ const FloatingActionMenu: React.FC = () => {
   const navigate = useNavigate();
 
   const options = [
+    { 
+      label: 'New Study Group', 
+      icon: BookOpen, 
+      color: 'bg-indigo-50 text-indigo-600',
+      action: () => {
+        navigate('/dashboard/study-groups');
+        setIsOpen(false);
+      }
+    },
     { 
       label: 'Start New Chat', 
       icon: MessageSquare, 

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import { AuthRequest } from '../types/express';
 import Notification from '../models/Notification';
 import User from '../models/User';
@@ -22,7 +23,12 @@ export const getNotifications = async (req: AuthRequest, res: Response) => {
 
 // Mark notification as read
 export const markNotificationAsRead = async (req: AuthRequest, res: Response) => {
-  const { notificationId } = req.params;
+  const { notificationId: rawNotificationId } = req.params;
+  const notificationId = (Array.isArray(rawNotificationId) ? rawNotificationId[0] : rawNotificationId) as string;
+
+  if (!mongoose.Types.ObjectId.isValid(notificationId)) {
+    return res.status(400).json({ message: 'Invalid notification ID format' });
+  }
 
   try {
     const notification = await Notification.findByIdAndUpdate(
@@ -63,7 +69,12 @@ export const markAllNotificationsAsRead = async (req: AuthRequest, res: Response
 
 // Delete notification
 export const deleteNotification = async (req: AuthRequest, res: Response) => {
-  const { notificationId } = req.params;
+  const { notificationId: rawNotificationId } = req.params;
+  const notificationId = (Array.isArray(rawNotificationId) ? rawNotificationId[0] : rawNotificationId) as string;
+
+  if (!mongoose.Types.ObjectId.isValid(notificationId)) {
+    return res.status(400).json({ message: 'Invalid notification ID format' });
+  }
 
   try {
     await Notification.findByIdAndDelete(notificationId);

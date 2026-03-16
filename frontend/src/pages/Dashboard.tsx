@@ -16,16 +16,21 @@ const LandingDashboard = lazy(() => import('../components/LandingDashboard'));
 const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
 const DiscoverPage = lazy(() => import('../pages/DiscoverPage'));
 const MarketplacePage = lazy(() => import('../pages/MarketplacePage'));
+const StudyGroupsPage = lazy(() => import('../pages/StudyGroupsPage'));
+const StudyGroupWindow = lazy(() => import('../components/StudyGroupWindow'));
+const InternshipPage = lazy(() => import('../pages/InternshipPage'));
 
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { clsx } from 'clsx';
 
 const Dashboard = () => {
   const location = useLocation();
-  const isConversation = location.pathname.includes('/chat/') || (location.pathname.includes('/groups/') && !location.pathname.endsWith('/null') && location.pathname !== '/dashboard/groups');
+  const isConversation = location.pathname.includes('/chat/') || 
+                         (location.pathname.includes('/groups/') && !location.pathname.endsWith('/null') && location.pathname !== '/dashboard/groups') ||
+                         location.pathname.includes('/study-groups/');
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');
   const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
-  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/discover' || location.pathname === '/dashboard/marketplace';
+  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/discover' || location.pathname === '/dashboard/marketplace' || location.pathname === '/dashboard/internships';
   const isAnnouncements = location.pathname === '/dashboard/announcements';
 
   return (
@@ -54,6 +59,9 @@ const Dashboard = () => {
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="discover" element={<DiscoverPage />} />
             <Route path="marketplace" element={<MarketplacePage />} />
+            <Route path="internships" element={<InternshipPage />} />
+            <Route path="study-groups" element={<StudyGroupsPage />} />
+            <Route path="study-groups/:id" element={<StudyGroupWindow />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
             <Route path="/" element={<LandingDashboard />} />
