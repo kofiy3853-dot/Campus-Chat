@@ -33,6 +33,7 @@ const LandingDashboard: React.FC = () => {
   const [groups, setGroups] = useState<any[]>([]);
   const [trendingConfessions, setTrendingConfessions] = useState<any[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
+  const [marketplaceItems, setMarketplaceItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -40,16 +41,18 @@ const LandingDashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [chatsRes, groupsRes, confessionsRes, eventsRes] = await Promise.all([
+        const [chatsRes, groupsRes, confessionsRes, eventsRes, marketRes] = await Promise.all([
           api.get('/api/chat/conversations'),
           api.get('/api/groups'),
           api.get('/api/confessions?page=1&sort=top'),
-          api.get('/api/events?sort=upcoming')
+          api.get('/api/events?sort=upcoming'),
+          api.get('/api/marketplace')
         ]);
         setRecentChats((chatsRes.data || []).slice(0, 5));
         setGroups((groupsRes.data || []).slice(0, 5));
         setTrendingConfessions((confessionsRes.data.confessions || []).slice(0, 3));
         setUpcomingEvents((eventsRes.data || []).slice(0, 3));
+        setMarketplaceItems((marketRes.data || []).slice(0, 4));
       } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
       } finally {
@@ -154,6 +157,47 @@ const LandingDashboard: React.FC = () => {
                 <span className="font-bold text-[xs] tracking-tight">{action.title}</span>
               </button>
             ))}
+          </div>
+        </section>
+
+        {/* Campus Marketplace */}
+        <section>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center border border-green-100">
+                <Package className="w-4 h-4 text-green-500" />
+              </div>
+              <h2 className="text-lg font-black text-slate-800 tracking-tight">Marketplace Deals</h2>
+            </div>
+            <button onClick={() => navigate('/dashboard/marketplace')} className="text-green-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+              Shop Now <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {loading ? (
+              [1, 2].map((i) => <Skeleton key={i} className="h-48 rounded-3xl" />)
+            ) : marketplaceItems.length > 0 ? (
+              marketplaceItems.map((item) => (
+                <div key={item._id} onClick={() => navigate('/dashboard/marketplace')} className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:border-green-200 transition-all cursor-pointer group">
+                  <div className="aspect-square relative overflow-hidden bg-slate-100">
+                    <img src={getMediaUrl(item.image_url)} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-black text-slate-800 shadow-sm leading-none">
+                      ${item.price}
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <h4 className="font-bold text-xs text-slate-800 truncate">{item.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-medium truncate capitalize">{item.category}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-2 p-8 text-center bg-white border border-slate-100 rounded-3xl">
+                <Package className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                <p className="text-xs text-slate-400 font-medium">No items available yet</p>
+              </div>
+            )}
           </div>
         </section>
 

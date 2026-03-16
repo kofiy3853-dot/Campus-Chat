@@ -42,7 +42,6 @@ const ChatWindow = () => {
 
   const fetchMessages = useCallback(async () => {
     try {
-      setLoading(true);
       setError(null);
       setSearchResults(null);
       setIsSearchOpen(false);
@@ -52,8 +51,12 @@ const ChatWindow = () => {
         const localMsgs = await db.messages.where('conversation_id').equals(id).sortBy('timestamp');
         if (localMsgs.length > 0) {
           setMessages(localMsgs);
-          setLoading(false); // We have data, can hide loading spinner early
+          setLoading(false); // We have data, hide spinner
+        } else {
+          setLoading(true); // No data, show spinner
         }
+      } else {
+        setLoading(true);
       }
 
       const [msgRes, convRes] = await Promise.all([

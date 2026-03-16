@@ -42,7 +42,6 @@ const GroupWindow = () => {
         return;
       }
       try {
-        setLoading(true);
         setError(null);
 
         // Load local messages first
@@ -50,8 +49,12 @@ const GroupWindow = () => {
           const localMsgs = await db.messages.where('conversation_id').equals(id).sortBy('timestamp');
           if (localMsgs.length > 0) {
             setMessages(localMsgs);
-            setLoading(false);
+            setLoading(false); // We have data, hide spinner
+          } else {
+            setLoading(true); // No data, show spinner
           }
+        } else {
+          setLoading(true);
         }
 
         const [msgRes, groupRes] = await Promise.all([

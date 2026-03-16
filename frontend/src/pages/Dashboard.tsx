@@ -4,8 +4,8 @@ import NavSidebar from '../components/NavSidebar';
 import ChatListPanel from '../components/ChatListPanel';
 
 // Lazy load components and pages
-const ChatWindow = lazy(() => import('../components/ChatWindow'));
-const GroupWindow = lazy(() => import('../components/GroupWindow'));
+import ChatWindow from '../components/ChatWindow';
+import GroupWindow from '../components/GroupWindow';
 const AnnouncementList = lazy(() => import('../components/AnnouncementList'));
 const ProfileSettings = lazy(() => import('../components/ProfileSettings'));
 const ConfessionsPage = lazy(() => import('../pages/ConfessionsPage'));
