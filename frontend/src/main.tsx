@@ -9,6 +9,25 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )
 
+// Global handler for chunk loading errors (typical after new deployments)
+window.addEventListener('error', (event) => {
+  if (event.message.includes('Failed to fetch dynamically imported module') || 
+      event.message.includes('MIME type') ||
+      (event.target && (event.target as any).src && (event.target as any).src.includes('/assets/'))) {
+    
+    // Use a small delay and a session flag to avoid infinite reload loops
+    const reloadKey = 'last-reload-failed-chunk';
+    const lastReload = sessionStorage.getItem(reloadKey);
+    const now = Date.now();
+    
+    if (!lastReload || now - parseInt(lastReload) > 10000) {
+      sessionStorage.setItem(reloadKey, now.toString());
+      console.warn('Chunk load error detected. Forcing page refresh to fetch latest assets...');
+      window.location.reload();
+    }
+  }
+}, true);
+
 // Register Service Workers
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
