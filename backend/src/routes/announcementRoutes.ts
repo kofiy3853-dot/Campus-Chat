@@ -14,14 +14,24 @@ const upload = multer({ storage });
 router.post('/create', protect, createAnnouncement);
 router.get('/', getAnnouncements);
 
-// Image upload for announcements
 router.post('/upload', protect, upload.single('image'), (async (req: any, res: any) => {
   try {
-    if (!req.file) return res.status(400).json({ message: 'No image uploaded' });
+    if (!req.file) {
+      console.warn('[Announcements] Upload attempted with no file');
+      return res.status(400).json({ message: 'No image uploaded' });
+    }
+    
+    console.log(`[Announcements] Uploading file: ${req.file.originalname}, size: ${req.file.size} bytes`);
     const url = await uploadToCloudinary(req.file.buffer, 'announcements');
+    
+    console.log('[Announcements] Upload successful:', url);
     res.json({ url });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to upload image' });
+  } catch (error: any) {
+    console.error('[Announcements] Image upload error:', error);
+    res.status(500).json({ 
+      message: 'Failed to upload image',
+      details: error.message 
+    });
   }
 }) as any);
 

@@ -13,12 +13,14 @@ export const uploadToCloudinary = async (fileBuffer: Buffer, folder: string = 'c
       },
       (error, result) => {
         if (error) {
-          console.error('Cloudinary upload error:', error);
+          console.error('[Cloudinary] Stream error:', error);
           return reject(error);
         }
         if (!result) {
+          console.error('[Cloudinary] No result returned from upload');
           return reject(new Error('Cloudinary upload failed: No result'));
         }
+        console.log('[Cloudinary] Upload success secure_url:', result.secure_url);
         resolve(result.secure_url);
       }
     );
