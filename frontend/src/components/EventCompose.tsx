@@ -89,8 +89,9 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
         <form onSubmit={handleSubmit} className="p-8 space-y-6 overflow-y-auto custom-scrollbar">
           {/* Title */}
           <div className="space-y-2">
-            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Event Title</label>
+            <label htmlFor="event-title" className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Event Title</label>
             <input
+              id="event-title"
               name="title"
               value={formData.title}
               onChange={handleChange}
@@ -102,10 +103,11 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
           {/* Date & Location */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Date & Time</label>
+              <label htmlFor="event-date" className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Date & Time</label>
               <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
+                  id="event-date"
                   type="datetime-local"
                   name="dateTime"
                   value={formData.dateTime}
@@ -116,10 +118,11 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Location</label>
+              <label htmlFor="event-location" className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Location</label>
               <div className="relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
+                  id="event-location"
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
@@ -132,10 +135,11 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
 
           {/* Description */}
           <div className="space-y-2">
-            <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Description</label>
+            <label htmlFor="event-description" className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Description</label>
             <div className="relative">
               <AlignLeft className="absolute left-4 top-4 w-4 h-4 text-slate-400" />
               <textarea
+                id="event-description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -149,10 +153,11 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
           {/* Category & Image selection */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Category</label>
+              <label htmlFor="event-category" className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Category</label>
               <div className="relative">
                 <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <select
+                  id="event-category"
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
@@ -164,7 +169,7 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Event Banner</label>
+              <label htmlFor="event-image-input" className="text-[11px] font-black text-slate-400 uppercase tracking-widest pl-1">Event Banner</label>
               <div 
                 className="relative cursor-pointer group"
                 onClick={() => document.getElementById('event-image-input')?.click()}
@@ -186,6 +191,7 @@ const EventCompose: React.FC<EventComposeProps> = ({ onClose, onCreated }) => {
                   accept="image/*"
                   onChange={handleImageChange}
                   className="hidden"
+                  title="Upload event banner image"
                 />
               </div>
             </div>
