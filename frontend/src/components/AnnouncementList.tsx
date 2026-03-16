@@ -198,7 +198,7 @@ const AnnouncementList = () => {
       <button 
         onClick={() => setIsModalOpen(true)}
         aria-label="Create new announcement"
-        className="absolute bottom-8 right-8 w-16 h-16 bg-slate-800 text-white rounded-[1.5rem] shadow-2xl shadow-slate-200 flex items-center justify-center hover:bg-sky-500 hover:scale-110 active:scale-95 transition-all z-40 group"
+        className="absolute bottom-[calc(2rem+var(--safe-area-inset-bottom))] right-8 w-16 h-16 bg-slate-800 text-white rounded-[1.5rem] shadow-2xl shadow-slate-200 flex items-center justify-center hover:bg-sky-500 hover:scale-110 active:scale-95 transition-all z-40 group"
       >
         <Plus className="w-8 h-8 group-hover:rotate-90 transition-transform duration-500" />
       </button>
