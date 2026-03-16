@@ -265,6 +265,63 @@ const DiscoverPage: React.FC = () => {
       <main className="flex-1 min-h-0 overflow-y-auto px-6 py-8">
         <div className="max-w-4xl mx-auto space-y-12 pb-32">
           
+          {/* Campus Marketplace Section - Moved Higher as a Primary Category */}
+          {(activeFilter === 'all') && (
+            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-75">
+              <div className="flex items-center justify-between mb-6 px-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center border border-green-100">
+                    <ShoppingBag className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black text-slate-800 tracking-tight">Campus Marketplace</h2>
+                    <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Buy and sell on campus</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => navigate('/dashboard/marketplace')}
+                  className="text-green-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
+                >
+                  Explore All <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {loading ? (
+                   [1, 2, 3].map(i => <Skeleton key={i} className="h-64 rounded-[2.5rem]" />)
+                ) : marketplaceItems.length > 0 ? (
+                  marketplaceItems.map((item) => (
+                    <div 
+                      key={item._id}
+                      onClick={() => navigate('/dashboard/marketplace')}
+                      className="group bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-green-500/5 hover:border-green-100 transition-all cursor-pointer overflow-hidden p-4"
+                    >
+                      <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 relative bg-slate-50">
+                        <SafeImage 
+                          src={item.image} 
+                          alt={item.title} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur px-3 py-1 rounded-xl text-xs font-black text-slate-800 shadow-sm leading-none border border-slate-100">
+                          ${item.price}
+                        </div>
+                      </div>
+                      <h4 className="font-black text-slate-800 truncate mb-1 px-2">{item.title}</h4>
+                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest px-2 mb-2">
+                        {item.category}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                    <div className="col-span-full py-12 text-center bg-white border border-dashed border-slate-200 rounded-[2.5rem]">
+                        <Package className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                        <h4 className="text-slate-400 font-bold uppercase tracking-widest text-sm">No items found</h4>
+                    </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Recommended Groups Section */}
           {(activeFilter === 'all' || activeFilter === 'groups') && (
             <section>
@@ -321,11 +378,12 @@ const DiscoverPage: React.FC = () => {
                               key={idx} 
                               src={getMediaUrl(m.profile_picture) || `https://ui-avatars.com/api/?name=${m.name || 'U'}`} 
                               alt="" 
+                              className="w-8 h-8 rounded-full border-2 border-white ring-1 ring-slate-100 object-cover"
                               loading="lazy"
                             />
                           ))}
                           {(group.members?.length || 0) > 3 && (
-                            <div className="w-8 h-8 rounded-full bg-slate-50 border-2 border-white flex items-center justify-center text-[10px] font-black text-slate-400">
+                            <div className="w-8 h-8 rounded-full bg-slate-50 border-2 border-white flex items-center justify-center text-[10px] font-black text-slate-400 ring-1 ring-slate-100">
                               +{(group.members?.length || 0) - 3}
                             </div>
                           )}
@@ -436,63 +494,6 @@ const DiscoverPage: React.FC = () => {
                     <div className="col-span-full py-12 text-center bg-white border border-dashed border-slate-200 rounded-[2.5rem]">
                         <SearchX className="w-12 h-12 text-slate-200 mx-auto mb-4" />
                         <h4 className="text-slate-400 font-bold uppercase tracking-widest text-sm">No students found</h4>
-                    </div>
-                )}
-              </div>
-            </section>
-          )}
-
-          {/* Campus Marketplace Section */}
-          {(activeFilter === 'all') && (
-            <section className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
-              <div className="flex items-center justify-between mb-6 px-1">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center border border-green-100">
-                    <ShoppingBag className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-black text-slate-800 tracking-tight">Campus Marketplace</h2>
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">New listings near you</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => navigate('/dashboard/marketplace')}
-                  className="text-green-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all"
-                >
-                  View All <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {loading ? (
-                   [1, 2, 3].map(i => <Skeleton key={i} className="h-64 rounded-[2.5rem]" />)
-                ) : marketplaceItems.length > 0 ? (
-                  marketplaceItems.map((item) => (
-                    <div 
-                      key={item._id}
-                      onClick={() => navigate('/dashboard/marketplace')}
-                      className="group bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-green-500/5 hover:border-green-100 transition-all cursor-pointer overflow-hidden p-4"
-                    >
-                      <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 relative bg-slate-50">
-                        <SafeImage 
-                          src={item.image} 
-                          alt={item.title} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur px-3 py-1 rounded-xl text-xs font-black text-slate-800 shadow-sm leading-none border border-slate-100">
-                          ${item.price}
-                        </div>
-                      </div>
-                      <h4 className="font-black text-slate-800 truncate mb-1 px-2">{item.title}</h4>
-                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest px-2 mb-2">
-                        {item.category}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                    <div className="col-span-full py-12 text-center bg-white border border-dashed border-slate-200 rounded-[2.5rem]">
-                        <Package className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                        <h4 className="text-slate-400 font-bold uppercase tracking-widest text-sm">No items found</h4>
                     </div>
                 )}
               </div>
