@@ -24,6 +24,7 @@ import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
 import { clsx } from 'clsx';
 import Skeleton from './Skeleton';
+import SafeImage from './SafeImage';
 
 const LandingDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -181,7 +182,7 @@ const LandingDashboard: React.FC = () => {
               marketplaceItems.map((item) => (
                 <div key={item._id} onClick={() => navigate('/dashboard/marketplace')} className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:border-green-200 transition-all cursor-pointer group">
                   <div className="aspect-square relative overflow-hidden bg-slate-100">
-                    <img src={getMediaUrl(item.image_url)} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <SafeImage src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-black text-slate-800 shadow-sm leading-none">
                       ${item.price}
                     </div>

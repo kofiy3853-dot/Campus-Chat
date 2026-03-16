@@ -14,7 +14,6 @@ const CATEGORIES = ['Electronics', 'Books', 'Furniture', 'Clothing', 'Services',
 
 const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose, onSuccess }) => {
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('General');
   const [image, setImage] = useState<File | null>(null);
@@ -35,29 +34,23 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !description || !price || !image) return;
+    if (!title || !price || !image) return;
 
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append('file', image);
-      
-      const { data: uploadRes } = await api.post('/api/chat/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      formData.append('title', title);
+      formData.append('price', price);
+      formData.append('image', image);
+      formData.append('category', category);
 
-      await api.post('/api/marketplace', {
-        title,
-        description,
-        price: parseFloat(price),
-        image_url: uploadRes.url,
-        category
+      await api.post('/api/marketplace', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       onSuccess();
       onClose();
       setTitle('');
-      setDescription('');
       setPrice('');
       setImage(null);
       setImagePreview(null);
@@ -151,16 +144,6 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
                 </select>
               </div>
             </div>
-
-            <textarea 
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your item..."
-              title="Item description"
-              rows={3}
-              className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20 resize-none"
-              required
-            />
           </div>
 
           <button 

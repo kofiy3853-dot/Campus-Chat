@@ -25,6 +25,7 @@ import Skeleton from '../components/Skeleton';
 import { getMediaUrl } from '../utils/imageUrl';
 import CreateGroupModal from '../components/CreateGroupModal';
 import ConnectionRequests from '../components/ConnectionRequests';
+import SafeImage from '../components/SafeImage';
 
 interface Group {
   _id: string;
@@ -473,8 +474,8 @@ const DiscoverPage: React.FC = () => {
                       className="group bg-white border border-slate-100 rounded-[2.5rem] shadow-sm hover:shadow-xl hover:shadow-green-500/5 hover:border-green-100 transition-all cursor-pointer overflow-hidden p-4"
                     >
                       <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 relative bg-slate-50">
-                        <img 
-                          src={getMediaUrl(item.image_url)} 
+                        <SafeImage 
+                          src={item.image} 
                           alt={item.title} 
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />

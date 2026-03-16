@@ -37,60 +37,59 @@ const GroupWindow = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchGroupData = async () => {
-      if (id === 'mock-1') {
-        setError('This is a demo group and cannot be loaded.');
-        setLoading(false);
-        return;
-      }
-      try {
-        setError(null);
+  const fetchGroupData = useCallback(async () => {
+    if (id === 'mock-1') {
+      setError('This is a demo group and cannot be loaded.');
+      setLoading(false);
+      return;
+    }
+    try {
+      setError(null);
 
-        // Load local messages first
-        if (id && id !== 'null') {
-          const localMsgs = await db.messages.where('conversation_id').equals(id).sortBy('timestamp');
-          if (localMsgs.length > 0) {
-            setMessages(localMsgs);
-            setLoading(false); // We have data, hide spinner
-          } else {
-            setLoading(true); // No data, show spinner
-          }
+      // Load local messages first
+      if (id && id !== 'null') {
+        const localMsgs = await db.messages.where('conversation_id').equals(id).sortBy('timestamp');
+        if (localMsgs.length > 0) {
+          setMessages(localMsgs);
+          setLoading(false); // We have data, hide spinner
         } else {
-          setLoading(true);
+          setLoading(true); // No data, show spinner
         }
-
-        const [msgRes, groupRes] = await Promise.all([
-          api.get(`/api/groups/messages/${id}`),
-          api.get(`/api/groups`)
-        ]);
-
-        const remoteMsgs = msgRes.data || [];
-        setMessages(remoteMsgs);
-
-        // Cache messages
-        if (id && id !== 'null') {
-          await db.transaction('rw', db.messages, async () => {
-            await db.messages.where('conversation_id').equals(id).delete();
-            await db.messages.bulkAdd(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
-          });
-        }
-
-        const currentGroup = groupRes.data.find((g: any) => g._id === id);
-        if (!currentGroup) throw new Error('Group not found');
-        setGroup(currentGroup);
-        markAsRead();
-      } catch (err: any) {
-        console.error('Error fetching group data:', err);
-        if (messages.length === 0) {
-           setError(err.response?.data?.message || 'Failed to load group');
-        }
-      } finally {
-        setLoading(false);
+      } else {
+        setLoading(true);
       }
-    };
-    if (id && id !== 'null') fetchGroupData();
+
+      const [msgRes, groupRes] = await Promise.all([
+        api.get(`/api/groups/messages/${id}`),
+        api.get(`/api/groups`)
+      ]);
+
+      const remoteMsgs = msgRes.data || [];
+      setMessages(remoteMsgs);
+
+      // Cache messages
+      if (id && id !== 'null') {
+        await db.transaction('rw', db.messages, async () => {
+          await db.messages.where('conversation_id').equals(id).delete();
+          await db.messages.bulkAdd(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
+        });
+      }
+
+      const currentGroup = groupRes.data.find((g: any) => g._id === id);
+      if (!currentGroup) throw new Error('Group not found');
+      setGroup(currentGroup);
+      markAsRead();
+    } catch (err: any) {
+      console.error('Error fetching group data:', err);
+      setError(err.response?.data?.message || 'Failed to load group');
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
+
+  useEffect(() => {
+    if (id && id !== 'null') fetchGroupData();
+  }, [id, fetchGroupData]);
 
   useEffect(() => {
     if (!socket || !id || id === 'null') return;

@@ -89,14 +89,12 @@ const ChatWindow = () => {
       setUnread(0);
     } catch (err: any) {
       console.error('Error fetching messages:', err);
-      // Only show error if we have NO messages at all
-      if (messages.length === 0) {
-        setError(err.response?.data?.message || err.message || 'Failed to load messages');
-      }
+      // Only show error if we have NO messages at all (using functional update check if needed or just removing the length check)
+      setError(err.response?.data?.message || err.message || 'Failed to load messages');
     } finally {
       setLoading(false);
     }
-  }, [id, markAsRead, messages.length]);
+  }, [id, markAsRead]);
 
   useEffect(() => {
     if (id && id !== 'null') {
