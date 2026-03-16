@@ -2,7 +2,6 @@ import express, { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import {
   createPost,
   getAllPosts,
@@ -16,22 +15,12 @@ import {
 } from '../controllers/lostFoundController';
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter } from '../middleware/rateLimitMiddleware';
+import { uploadToCloudinary } from '../services/cloudinaryService';
 
 const router = express.Router();
 
-// Ensure media uploads directory exists
-const uploadDir = path.join(__dirname, '../../public/uploads/lost-found');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, unique + path.extname(file.originalname));
-  },
-});
+// Multer config for Cloudinary (Memory Storage)
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -42,16 +31,22 @@ const upload = multer({
 router.use(protect);
 
 // Upload endpoint
-router.post('/upload', upload.single('file'), (req: any, res) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+router.post('/upload', upload.single('file'), async (req: any, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-  const ext = path.extname(req.file.originalname).toLowerCase();
-  if (!['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) {
-    return res.status(400).json({ message: 'Only image files are allowed' });
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    if (!['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) {
+      return res.status(400).json({ message: 'Only image files are allowed' });
+    }
+
+    // Upload to Cloudinary
+    const url = await uploadToCloudinary(req.file.buffer, 'lost-found');
+    res.json({ url, originalName: req.file.originalname });
+  } catch (error: any) {
+    console.error('Lost & Found upload error:', error);
+    res.status(500).json({ message: 'Failed to upload image to Cloudinary' });
   }
-
-  const url = `/uploads/lost-found/${req.file.filename}`;
-  res.json({ url, originalName: req.file.originalname });
 });
 
 // CRUD operations

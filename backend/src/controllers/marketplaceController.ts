@@ -2,16 +2,19 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import Product from '../models/Product';
 import mongoose from 'mongoose';
+import { uploadToCloudinary } from '../services/cloudinaryService';
 
 export const createListing = async (req: AuthRequest, res: Response) => {
   const { title, price, category } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
-
-  if (!image) {
-    return res.status(400).json({ message: 'Image upload is required' });
-  }
-
+  
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Image upload is required' });
+    }
+
+    // Upload to Cloudinary
+    const image = await uploadToCloudinary(req.file.buffer, 'marketplace');
+
     const item = await Product.create({
       title,
       price,

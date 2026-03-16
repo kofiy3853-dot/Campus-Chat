@@ -208,6 +208,8 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
   }
 };
 
+import { uploadToCloudinary } from '../services/cloudinaryService';
+
 export const uploadProfilePicture = async (req: Request, res: Response) => {
   try {
     if (!req.file) {
@@ -215,11 +217,12 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
     }
 
     const userId = (req as any).user._id;
-    const imageUrl = `/uploads/${req.file.filename}`;
+    
+    // Upload to Cloudinary
+    const imageUrl = await uploadToCloudinary(req.file.buffer, 'profiles');
 
     const user = await User.findById(userId).select('-password_hash');
     if (!user) {
-      fs.unlinkSync(req.file.path);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -238,9 +241,6 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Error uploading profile picture:', error);
-    if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-    }
     res.status(500).json({ message: 'Server error' });
   }
 };
