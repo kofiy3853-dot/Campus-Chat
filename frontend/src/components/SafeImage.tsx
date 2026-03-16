@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getMediaUrl } from '../utils/imageUrl';
 
 interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string | undefined | null;
+  src: string | undefined;
   fallback?: string;
 }
 
@@ -14,7 +14,7 @@ const SafeImage: React.FC<SafeImageProps> = ({
   ...props 
 }) => {
   const [errorCount, setErrorCount] = useState(0);
-  const imageUrl = getMediaUrl(src);
+  const imageUrl = getMediaUrl(src || undefined);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (errorCount < 2) {
