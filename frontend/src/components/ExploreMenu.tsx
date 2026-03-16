@@ -23,7 +23,7 @@ interface ExploreMenuProps {
 }
 
 const EXPLORE_OPTIONS = [
-  { icon: Users, label: 'Study Groups', description: 'Find study partners', color: 'bg-blue-50 text-blue-500', to: '/dashboard/discover' },
+  { icon: Users, label: 'Study Groups', description: 'Find study partners', color: 'bg-blue-50 text-blue-500', to: '/dashboard/study-groups' },
   { icon: Calendar, label: 'Campus Events', description: 'What\'s happening now', color: 'bg-purple-50 text-purple-500', to: '/dashboard/events' },
   { icon: ShoppingBag, label: 'Marketplace', description: 'Buy & sell on campus', color: 'bg-emerald-50 text-emerald-500', to: '/dashboard/marketplace' },
   { icon: Megaphone, label: 'Announcements', description: 'Official campus updates', color: 'bg-rose-50 text-rose-500', to: '/dashboard/announcements' },
@@ -31,7 +31,7 @@ const EXPLORE_OPTIONS = [
   { icon: Sparkles, label: 'AI Study Assistant', description: 'Your academic helper', color: 'bg-sky-50 text-sky-500', to: '/dashboard/chat/ai' },
   { icon: BarChart3, label: 'Polls', description: 'Share your opinion', color: 'bg-cyan-50 text-cyan-500', to: '/dashboard/polls' },
   { icon: Search, label: 'Lost & Found', description: 'Report or find items', color: 'bg-slate-50 text-slate-500', to: '/dashboard/lost-found' },
-  { icon: Briefcase, label: 'Internships', description: 'Career opportunities', color: 'bg-orange-50 text-orange-500', to: '/dashboard/discover' },
+  { icon: Briefcase, label: 'Internships', description: 'Career opportunities', color: 'bg-orange-50 text-orange-500', to: '/dashboard/internships' },
   { icon: Globe, label: 'Clubs & Communities', description: 'Join student orgs', color: 'bg-green-50 text-green-500', to: '/dashboard/discover' },
   { icon: Trophy, label: 'Leaderboard', description: 'Campus top performers', color: 'bg-amber-50 text-amber-500', to: '/dashboard/discover' },
 ];

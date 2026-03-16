@@ -11,9 +11,7 @@ import {
   Ghost,
   Search,
   Home,
-  Compass,
-  BookOpen,
-  Briefcase
+  Compass
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';
@@ -33,8 +31,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
     { icon: Search, label: 'Discover', to: '/dashboard/discover' },
-    { icon: BookOpen, label: 'Study Groups', to: '/dashboard/study-groups' },
-    { icon: Briefcase, label: 'Internships', to: '/dashboard/internships' },
     { icon: MessageSquare, label: 'Chats', to: '/dashboard/chats' },
     { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },
   ];
