@@ -4,6 +4,8 @@ export interface IAnnouncement extends Document {
   title: string;
   content: string;
   posted_by: mongoose.Types.ObjectId;
+  image?: string;
+  pinned: boolean;
   reactions: { user_id: mongoose.Types.ObjectId, emoji: string }[];
 }
 
@@ -11,6 +13,8 @@ const AnnouncementSchema: Schema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
   posted_by: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  image: { type: String },
+  pinned: { type: Boolean, default: false },
   reactions: [
     {
       user_id: { type: Schema.Types.ObjectId, ref: 'User' },

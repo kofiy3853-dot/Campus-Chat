@@ -7,21 +7,12 @@ import { getConversations, getMessages, sendMessage, createConversation, searchM
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter, searchRateLimiter } from '../middleware/rateLimitMiddleware';
 
+import { uploadToCloudinary } from '../services/cloudinaryService';
+
 const router = express.Router();
 
-// Ensure media uploads directory exists
-const uploadDir = path.join(__dirname, '../../public/uploads/media');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, unique + path.extname(file.originalname));
-  },
-});
+// Multer config for Cloudinary (Memory Storage)
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -29,16 +20,24 @@ const upload = multer({
 });
 
 // Media upload – returns { url, type }
-router.post('/upload', protect, upload.single('file'), (req: AuthRequest, res: Response) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+router.post('/upload', protect, upload.single('file'), async (req: any, res: Response) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
-  const ext = path.extname(req.file.originalname).toLowerCase();
-  let type: 'image' | 'voice' | 'file' = 'file';
-  if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) type = 'image';
-  else if (['.mp3', '.ogg', '.wav', '.webm', '.m4a', '.mp4', '.aac'].includes(ext)) type = 'voice';
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    let type: 'image' | 'voice' | 'file' = 'file';
+    if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) type = 'image';
+    else if (['.mp3', '.ogg', '.wav', '.webm', '.m4a', '.mp4', '.aac'].includes(ext)) type = 'voice';
 
-  const url = `/uploads/media/${req.file.filename}`;
-  res.json({ url, type, originalName: req.file.originalname });
+    // Upload to Cloudinary
+    const folder = type === 'image' ? 'chat/images' : (type === 'voice' ? 'chat/voice' : 'chat/files');
+    const url = await uploadToCloudinary(req.file.buffer, folder);
+
+    res.json({ url, type, originalName: req.file.originalname });
+  } catch (error: any) {
+    console.error('Chat media upload error:', error);
+    res.status(500).json({ message: 'Failed to upload media to Cloudinary' });
+  }
 });
 
 router.get('/test', (req, res) => res.json({ message: 'Chat routes are working' }));
