@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, Mail, Lock, User, Contact, GraduationCap, Loader2, ArrowRight } from 'lucide-react';
+import { UserPlus, Mail, Lock, User, Contact, GraduationCap, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,6 +13,7 @@ const Register = () => {
     department: '',
     level: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
@@ -118,12 +119,20 @@ const Register = () => {
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
                     <input 
                       name="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       required
                       placeholder="Password"
                       onChange={handleChange}
-                      className="w-full bg-slate-50 border border-slate-100 text-slate-900 rounded-2xl py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all text-sm placeholder:text-slate-400"
+                      className="w-full bg-slate-50 border border-slate-100 text-slate-900 rounded-2xl py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all text-sm placeholder:text-slate-400"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
 
                   {/* Study Level */}

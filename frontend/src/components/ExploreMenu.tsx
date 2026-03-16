@@ -7,7 +7,12 @@ import {
   Sparkles, 
   Trophy, 
   X,
-  ChevronRight
+  ChevronRight,
+  Ghost,
+  ShoppingBag,
+  Search,
+  BarChart3,
+  Megaphone
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useNavigate } from 'react-router-dom';
@@ -20,9 +25,14 @@ interface ExploreMenuProps {
 const EXPLORE_OPTIONS = [
   { icon: Users, label: 'Study Groups', description: 'Find study partners', color: 'bg-blue-50 text-blue-500', to: '/dashboard/discover' },
   { icon: Calendar, label: 'Campus Events', description: 'What\'s happening now', color: 'bg-purple-50 text-purple-500', to: '/dashboard/events' },
+  { icon: ShoppingBag, label: 'Marketplace', description: 'Buy & sell on campus', color: 'bg-emerald-50 text-emerald-500', to: '/dashboard/marketplace' },
+  { icon: Megaphone, label: 'Announcements', description: 'Official campus updates', color: 'bg-rose-50 text-rose-500', to: '/dashboard/announcements' },
+  { icon: Ghost, label: 'Confessions', description: 'Share secrets anonymously', color: 'bg-indigo-50 text-indigo-500', to: '/dashboard/confessions' },
+  { icon: Sparkles, label: 'AI Study Assistant', description: 'Your academic helper', color: 'bg-sky-50 text-sky-500', to: '/dashboard/chat/ai' },
+  { icon: BarChart3, label: 'Polls', description: 'Share your opinion', color: 'bg-cyan-50 text-cyan-500', to: '/dashboard/polls' },
+  { icon: Search, label: 'Lost & Found', description: 'Report or find items', color: 'bg-slate-50 text-slate-500', to: '/dashboard/lost-found' },
   { icon: Briefcase, label: 'Internships', description: 'Career opportunities', color: 'bg-orange-50 text-orange-500', to: '/dashboard/discover' },
   { icon: Globe, label: 'Clubs & Communities', description: 'Join student orgs', color: 'bg-green-50 text-green-500', to: '/dashboard/discover' },
-  { icon: Sparkles, label: 'AI Study Assistant', description: 'Your academic helper', color: 'bg-sky-50 text-sky-500', to: '/dashboard/chat/ai' },
   { icon: Trophy, label: 'Leaderboard', description: 'Campus top performers', color: 'bg-amber-50 text-amber-500', to: '/dashboard/discover' },
 ];
 
@@ -38,11 +48,11 @@ const ExploreMenu: React.FC<ExploreMenuProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
       
-      <div className="relative w-full max-w-md bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-md bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Handle for mobile */}
-        <div className="md:hidden w-12 h-1.5 bg-slate-100 rounded-full mx-auto mt-4 mb-2" />
+        <div className="md:hidden w-12 h-1.5 bg-slate-100 rounded-full mx-auto mt-4 mb-2 shrink-0" />
         
-        <div className="p-8">
+        <div className="p-8 overflow-y-auto custom-scrollbar">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl font-black text-slate-800 tracking-tight">Explore Campus</h2>
