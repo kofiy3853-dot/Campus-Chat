@@ -6,6 +6,7 @@ import {
   Ghost, 
   Calendar, 
   Package, 
+  Megaphone,
   X 
 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -39,6 +40,15 @@ const FloatingActionMenu: React.FC = () => {
       color: 'bg-green-50 text-green-600',
       action: () => {
         navigate('/dashboard/events?compose=true');
+        setIsOpen(false);
+      }
+    },
+    { 
+      label: 'Post Announcement', 
+      icon: Megaphone, 
+      color: 'bg-amber-50 text-amber-600',
+      action: () => {
+        navigate('/dashboard/announcements');
         setIsOpen(false);
       }
     },

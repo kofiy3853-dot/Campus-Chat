@@ -35,6 +35,7 @@ const LandingDashboard: React.FC = () => {
   const [trendingConfessions, setTrendingConfessions] = useState<any[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([]);
   const [marketplaceItems, setMarketplaceItems] = useState<any[]>([]);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -42,18 +43,20 @@ const LandingDashboard: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [chatsRes, groupsRes, confessionsRes, eventsRes, marketRes] = await Promise.all([
+        const [chatsRes, groupsRes, confessionsRes, eventsRes, marketRes, announcementsRes] = await Promise.all([
           api.get('/api/chat/conversations'),
           api.get('/api/groups'),
           api.get('/api/confessions?page=1&sort=top'),
           api.get('/api/events?sort=upcoming'),
-          api.get('/api/marketplace')
+          api.get('/api/marketplace'),
+          api.get('/api/announcements')
         ]);
         setRecentChats((chatsRes.data || []).slice(0, 5));
         setGroups((groupsRes.data || []).slice(0, 5));
         setTrendingConfessions((confessionsRes.data.confessions || []).slice(0, 3));
         setUpcomingEvents((eventsRes.data || []).slice(0, 3));
         setMarketplaceItems((marketRes.data || []).slice(0, 4));
+        setAnnouncements((announcementsRes.data || []).slice(0, 3));
       } catch (err) {
         console.error('Failed to fetch dashboard data:', err);
       } finally {
@@ -132,6 +135,48 @@ const LandingDashboard: React.FC = () => {
             />
           </div>
         </div>
+
+        {/* Live Campus Feed Cards */}
+        <section>
+          <div className="flex items-center justify-between mb-4 px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center border border-amber-100">
+                <Megaphone className="w-4 h-4 text-amber-500" />
+              </div>
+              <h2 className="text-lg font-black text-slate-800 tracking-tight">Campus Announcements</h2>
+            </div>
+            <button onClick={() => navigate('/dashboard/announcements')} className="text-amber-600 text-xs font-black uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+              Live Feed <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex overflow-x-auto gap-4 no-scrollbar pb-2">
+            {loading ? (
+              [1, 2].map((i) => <Skeleton key={i} className="min-w-[280px] h-40 rounded-3xl shrink-0" />)
+            ) : announcements.length > 0 ? (
+              announcements.map((ann) => (
+                <div key={ann._id} onClick={() => navigate('/dashboard/announcements')} className="min-w-[280px] p-5 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-amber-200 transition-all cursor-pointer shrink-0 relative overflow-hidden group">
+                  {ann.pinned && (
+                    <div className="absolute top-3 right-3 w-2 h-2 bg-amber-500 rounded-full"></div>
+                  )}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full overflow-hidden border border-slate-100">
+                      <img src={getMediaUrl(ann.posted_by?.profile_picture) || `https://ui-avatars.com/api/?name=${ann.posted_by?.name}`} alt="" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-500">{ann.posted_by?.name}</span>
+                  </div>
+                  <h4 className="font-bold text-slate-800 text-sm mb-2 line-clamp-2 uppercase tracking-tight">{ann.title}</h4>
+                  <p className="text-[11px] text-slate-400 line-clamp-2 font-medium">{ann.content}</p>
+                </div>
+              ))
+            ) : (
+              <div className="w-full p-8 text-center bg-white border border-slate-100 rounded-3xl">
+                <Megaphone className="w-8 h-8 text-slate-200 mx-auto mb-2" />
+                <p className="text-xs text-slate-400 font-medium">No recent announcements</p>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Quick Actions Grid */}
         <section>
