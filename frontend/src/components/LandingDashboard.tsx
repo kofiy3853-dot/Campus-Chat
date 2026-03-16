@@ -184,7 +184,7 @@ const LandingDashboard: React.FC = () => {
                   <div className="aspect-square relative overflow-hidden bg-slate-100">
                     <SafeImage src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-2 py-1 rounded-lg text-[10px] font-black text-slate-800 shadow-sm leading-none">
-                      ${item.price}
+                      ₵{item.price}
                     </div>
                   </div>
                   <div className="p-3">
