@@ -20,7 +20,12 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/firebase-logo.png' // Replace with your icon path
+    icon: '/firebase-logo.png', // Replace with your icon path
+    vibrate: [200, 100, 200],
+    tag: payload.data?.type || 'campus-chat-notification',
+    renotify: true,
+    requireInteraction: true,
+    data: payload.data
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
