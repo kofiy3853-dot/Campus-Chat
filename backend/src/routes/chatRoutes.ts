@@ -43,10 +43,15 @@ router.post('/upload', protect, upload.single('file'), async (req: any, res: Res
     res.json({ url, type, originalName: req.file.originalname });
   } catch (error: any) {
     console.error('[Upload] Chat media upload error:', error);
+    // Log full error details for debugging
+    if (error.response) {
+      console.error('[Upload] Cloudinary rejection:', error.response.data || error.response);
+    }
+
     res.status(500).json({ 
       message: 'Failed to upload media to Cloudinary',
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: error.message || String(error),
+      details: error.response?.data || error
     });
   }
 });
