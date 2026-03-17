@@ -149,6 +149,8 @@ const PostInternshipModal: React.FC<PostInternshipModalProps> = ({ isOpen, onClo
               <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="category">Category</label>
               <select 
                 id="category"
+                title="Select internship category"
+                aria-label="Select internship category"
                 className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-6 text-base font-medium text-slate-700 outline-none focus:bg-white focus:ring-4 focus:ring-indigo-500/5 transition-all appearance-none"
                 value={formData.category}
                 onChange={e => setFormData(p => ({ ...p, category: e.target.value }))}
@@ -209,6 +211,8 @@ const PostInternshipModal: React.FC<PostInternshipModalProps> = ({ isOpen, onClo
                   key={index}
                   type="text" 
                   placeholder={`Requirement #${index + 1}`}
+                  aria-label={`Requirement item ${index + 1}`}
+                  title={`Requirement item ${index + 1}`}
                   className="bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 text-sm font-medium text-slate-700 outline-none focus:bg-white transition-all"
                   value={req}
                   onChange={e => handleRequirementChange(index, e.target.value)}

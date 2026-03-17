@@ -33,10 +33,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     setShowReactions(false);
   };
 
-  const reactionCounts = message.reactions?.reduce((acc: Record<string, number>, curr: any) => {
+  const reactionCounts = (message.reactions || []).reduce((acc: Record<string, number>, curr: any) => {
     acc[curr.emoji] = (acc[curr.emoji] || 0) + 1;
     return acc;
-  }, {}) || {};
+  }, {});
 
   const myReactions = message.reactions?.filter((r: any) => {
     const rUserId = r.userId?._id || r.userId;
@@ -129,6 +129,23 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     }
   };
 
+  const renderSenderName = !isMe && message.sender_id?.name && (
+    <span className="text-[11px] font-bold text-slate-400 mb-1.5 ml-1 uppercase tracking-widest leading-none">
+      {message.sender_id.name}
+    </span>
+  );
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (message.is_deleted) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    onMenuOpen?.(message, { 
+      x: rect.left + rect.width / 2, 
+      y: rect.top - 50 
+    });
+  };
+
   return (
     <div
       id={`msg-${message._id}`}
@@ -148,23 +165,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           "max-w-[70%] group relative transform-gpu transition-all duration-300",
           isMe ? "flex flex-col items-end" : "flex flex-col items-start"
         )}
-        onContextMenu={(e) => {
-          if (message.is_deleted) return;
-          e.preventDefault();
-          e.stopPropagation();
-          const rect = e.currentTarget.getBoundingClientRect();
-          onMenuOpen?.(message, { 
-            x: rect.left + rect.width / 2, 
-            y: rect.top - 50 
-          });
-        }}
+        onContextMenu={handleContextMenu}
       >
-        {/* Sender Name in groups */}
-        {!isMe && message.sender_id?.name && (
-          <span className="text-[11px] font-bold text-slate-400 mb-1.5 ml-1 uppercase tracking-widest leading-none">
-            {message.sender_id.name}
-          </span>
-        )}
+        {renderSenderName}
 
         <div 
           className={clsx(
@@ -298,10 +301,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                   )}
                 >
                   <span>{emoji}</span>
-                  {((count as any) > 1) && <span className={clsx(
-                    "text-[10px] font-bold",
-                    myReactions.includes(emoji) ? "text-sky-600" : "text-slate-400"
-                  )}>{count as any}</span>}
+                  {(Number(count) > 1) && (
+                    <span className={clsx(
+                      "text-[10px] font-bold",
+                      myReactions.includes(emoji) ? "text-sky-600" : "text-slate-400"
+                    )}>
+                      {count as any}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
