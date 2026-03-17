@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import VoicePlayer from './VoicePlayer';
 import { clsx } from 'clsx';
-import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical, Paperclip, Clock, Mic } from 'lucide-react';
+import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical, Paperclip, Clock, Mic, Star } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
@@ -65,6 +65,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     } catch (error: any) {
       console.error('Error deleting message:', error);
       alert(`Deletion failed: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  const handleMarkHelpful = async () => {
+    try {
+      await api.post(`/api/groups/messages/${message._id}/helpful`);
+      // Haptic feedback
+      if (window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
+    } catch (error: any) {
+      console.error('Error marking as helpful:', error);
     }
   };
 
@@ -280,6 +290,21 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                 )}
                 {isMe && <DeliveryStatus />}
               </div>
+
+              {/* Mark as Helpful Button (Group messages only, not mine) */}
+              {!isMe && message.group_id && !message.is_deleted && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMarkHelpful();
+                  }}
+                  className="mt-2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-100 text-slate-400 hover:text-yellow-500 hover:bg-yellow-50 hover:border-yellow-100 transition-all duration-300"
+                  title="Mark as Helpful Study Tip"
+                >
+                  <Star className="w-3.5 h-3.5 fill-current" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Helpful</span>
+                </button>
+              )}
             </div>
           )}
 

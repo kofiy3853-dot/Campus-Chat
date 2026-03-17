@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import bcrypt from 'bcryptjs';
+import { awardPoints, checkDailyLogin } from '../services/pointService';
 import { AuthRequest } from '../types/express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
@@ -88,6 +90,12 @@ export const login = async (req: Request, res: Response) => {
       const token = generateToken(userId);
       console.log('[Auth] Token generated successfully');
       
+      // Check for daily login points
+      const shouldAwardLoginPoints = await checkDailyLogin(userId);
+      if (shouldAwardLoginPoints) {
+        await awardPoints(userId, 5, 'DAILY_LOGIN');
+      }
+
       res.json({
         _id: user._id,
         name: user.name,

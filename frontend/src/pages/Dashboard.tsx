@@ -21,6 +21,7 @@ const StudyGroupWindow = lazy(() => import('../components/StudyGroupWindow'));
 const InternshipPage = lazy(() => import('../pages/InternshipPage'));
 const ClubsPage = lazy(() => import('./ClubsPage'));
 const ClubDetailPage = lazy(() => import('./ClubDetailPage'));
+const Leaderboard = lazy(() => import('../pages/Leaderboard'));
 
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { clsx } from 'clsx';
@@ -32,7 +33,13 @@ const Dashboard = () => {
                          location.pathname.includes('/study-groups/');
   const isListView = location.pathname === '/dashboard/chats' || location.pathname === '/dashboard/groups' || location.pathname.endsWith('/null');
   const isLanding = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
-  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || location.pathname === '/dashboard/notifications' || location.pathname === '/dashboard/discover' || location.pathname === '/dashboard/marketplace' || location.pathname === '/dashboard/internships' || location.pathname === '/dashboard/clubs';
+  const isProfileOrNotifications = location.pathname === '/dashboard/profile' || 
+                                   location.pathname === '/dashboard/notifications' || 
+                                   location.pathname === '/dashboard/discover' || 
+                                   location.pathname === '/dashboard/marketplace' || 
+                                   location.pathname === '/dashboard/internships' || 
+                                   location.pathname === '/dashboard/clubs' ||
+                                   location.pathname === '/dashboard/leaderboard';
   const isAnnouncements = location.pathname === '/dashboard/announcements';
 
   return (
@@ -66,6 +73,7 @@ const Dashboard = () => {
             <Route path="study-groups/:id" element={<StudyGroupWindow />} />
             <Route path="clubs" element={<ClubsPage />} />
             <Route path="clubs/:id" element={<ClubDetailPage />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
             <Route path="/" element={<LandingDashboard />} />

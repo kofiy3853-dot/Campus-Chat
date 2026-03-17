@@ -11,7 +11,8 @@ import {
   markGroupMessagesAsRead,
   deleteGroupMessage,
   addGroupResource,
-  scheduleStudySession
+  scheduleStudySession,
+  markMessageHelpful
 } from '../controllers/groupController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -29,5 +30,6 @@ router.delete('/messages/:id', protect, deleteGroupMessage);
 router.post('/resources', protect, addGroupResource);
 router.post('/sessions', protect, scheduleStudySession);
 router.post('/messages/:messageId/react', protect, addGroupMessageReaction);
+router.post('/messages/:messageId/helpful', protect, markMessageHelpful);
 
 export default router;

@@ -7,6 +7,7 @@ import GroupMessage from '../models/GroupMessage';
 import Notification from '../models/Notification';
 import { io } from '../server';
 import { createNotification } from './notificationController';
+import { awardPoints } from '../services/pointService';
 
 export const createGroup = async (req: AuthRequest, res: Response) => {
   const { group_name, description, members, subject, schedule, max_members, visibility } = req.body;
@@ -87,6 +88,8 @@ export const joinGroup = async (req: AuthRequest, res: Response) => {
     if (!group.members.includes(req.user.id)) {
       group.members.push(req.user.id);
       await group.save();
+      // Award points for joining a group
+      await awardPoints(req.user.id, 10, 'GROUP_JOIN', { groupId });
     }
 
     res.json(group);
@@ -251,6 +254,10 @@ export const addGroupResource = async (req: AuthRequest, res: Response) => {
     });
 
     await group.save();
+    
+    // Award points for sharing a resource
+    await awardPoints(req.user.id, 20, 'RESOURCE_POST', { groupId, resourceTitle: title });
+
     res.status(201).json(group.resources[group.resources.length - 1]);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -424,6 +431,44 @@ export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
     res.json({ success: true, message: 'Message deleted successfully' });
   } catch (error: any) {
     console.error(`[GroupController] Error deleting message ${id}:`, error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Mark a group message as helpful
+export const markMessageHelpful = async (req: AuthRequest, res: Response) => {
+  const { messageId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+    return res.status(400).json({ message: 'Invalid message ID format' });
+  }
+
+  try {
+    const message = await GroupMessage.findById(messageId);
+    if (!message) return res.status(404).json({ message: 'Message not found' });
+
+    // Check if user is member of the group
+    const group = await Group.findOne({
+      _id: message.group_id,
+      members: req.user.id
+    });
+
+    if (!group) return res.status(403).json({ message: 'Unauthorized' });
+
+    // Cannot mark your own message as helpful
+    if (message.sender_id.toString() === req.user.id.toString()) {
+      return res.status(400).json({ message: 'You cannot mark your own message as helpful' });
+    }
+
+    // Award points to the sender of the helpful message
+    await awardPoints(message.sender_id.toString(), 30, 'HELPFUL_ANSWER', { 
+      messageId: message._id, 
+      groupId: message.group_id,
+      markedBy: req.user.id
+    });
+
+    res.json({ message: 'Message marked as helpful' });
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
