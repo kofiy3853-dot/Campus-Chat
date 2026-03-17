@@ -25,18 +25,29 @@ router.post('/upload', protect, upload.single('file'), async (req: any, res: Res
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
 
     const ext = path.extname(req.file.originalname).toLowerCase();
+    console.log(`[Upload] File received: ${req.file.originalname}, size: ${req.file.size}, ext: ${ext}`);
+    
     let type: 'image' | 'voice' | 'file' = 'file';
     if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) type = 'image';
     else if (['.mp3', '.ogg', '.wav', '.webm', '.m4a', '.mp4', '.aac'].includes(ext)) type = 'voice';
 
+    console.log(`[Upload] Detected type: ${type}`);
+
     // Upload to Cloudinary
     const folder = type === 'image' ? 'chat/images' : (type === 'voice' ? 'chat/voice' : 'chat/files');
+    console.log(`[Upload] Target folder: ${folder}`);
+    
     const url = await uploadToCloudinary(req.file.buffer, folder);
+    console.log(`[Upload] Success! URL: ${url}`);
 
     res.json({ url, type, originalName: req.file.originalname });
   } catch (error: any) {
-    console.error('Chat media upload error:', error);
-    res.status(500).json({ message: 'Failed to upload media to Cloudinary' });
+    console.error('[Upload] Chat media upload error:', error);
+    res.status(500).json({ 
+      message: 'Failed to upload media to Cloudinary',
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 

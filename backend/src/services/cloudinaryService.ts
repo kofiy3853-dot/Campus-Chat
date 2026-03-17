@@ -5,6 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 // cloudinary.config(); 
 
 export const uploadToCloudinary = async (fileBuffer: Buffer, folder: string = 'campus-chat'): Promise<string> => {
+  console.log(`[Cloudinary] Starting upload to folder: ${folder}, buffer size: ${fileBuffer.length}`);
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
@@ -13,17 +14,22 @@ export const uploadToCloudinary = async (fileBuffer: Buffer, folder: string = 'c
       },
       (error, result) => {
         if (error) {
-          console.error('[Cloudinary] Stream error:', error);
+          console.error('[Cloudinary] Upload Error:', error);
           return reject(error);
         }
         if (!result) {
-          console.error('[Cloudinary] No result returned from upload');
+          console.error('[Cloudinary] No result returned');
           return reject(new Error('Cloudinary upload failed: No result'));
         }
-        console.log('[Cloudinary] Upload success secure_url:', result.secure_url);
+        console.log('[Cloudinary] Upload Successful:', result.secure_url);
         resolve(result.secure_url);
       }
     );
+
+    uploadStream.on('error', (err) => {
+      console.error('[Cloudinary] Stream-level error:', err);
+      reject(err);
+    });
 
     uploadStream.end(fileBuffer);
   });
