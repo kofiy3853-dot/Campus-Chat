@@ -12,6 +12,8 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [waveformBars] = useState(() => 
     Array.from({ length: 22 }, () => Math.random() * 0.8 + 0.2)
@@ -21,30 +23,63 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const onLoadedMetadata = () => setDuration(audio.duration);
+    const onLoadedMetadata = () => {
+      // Fix for Infinity duration in some browsers (especially with WebM)
+      if (audio.duration === Infinity) {
+        audio.currentTime = 1e101;
+        audio.ontimeupdate = () => {
+          audio.ontimeupdate = null;
+          setDuration(audio.duration);
+          audio.currentTime = 0;
+        };
+      } else {
+        setDuration(audio.duration);
+      }
+      setIsLoading(false);
+    };
+
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+    
     const onEnded = () => {
       setIsPlaying(false);
       setCurrentTime(0);
     };
 
+    const onError = () => {
+      console.error('[VoicePlayer] Audio error:', audio.error);
+      setIsError(true);
+      setIsLoading(false);
+    };
+
+    const onCanPlay = () => setIsLoading(false);
+
     audio.addEventListener('loadedmetadata', onLoadedMetadata);
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('ended', onEnded);
+    audio.addEventListener('error', onError);
+    audio.addEventListener('canplay', onCanPlay);
+
+    // Initial load check
+    if (audio.readyState >= 2) setIsLoading(false);
 
     return () => {
       audio.removeEventListener('loadedmetadata', onLoadedMetadata);
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
+      audio.removeEventListener('canplay', onCanPlay);
     };
-  }, []);
+  }, [url]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || isError) return;
     if (isPlaying) {
       audioRef.current.pause();
     } else {
-      audioRef.current.play();
+      audioRef.current.play().catch(err => {
+        console.error('[VoicePlayer] Playback failed:', err);
+        setIsError(true);
+      });
     }
     setIsPlaying(!isPlaying);
   };
@@ -76,12 +111,19 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
       {/* Play/Pause Button */}
       <button
         onClick={togglePlay}
+        disabled={isLoading || isError}
         className={clsx(
-          "w-6 h-6 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95",
+          "w-6 h-6 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95 disabled:opacity-50",
           isMe ? "bg-white text-sky-500" : "bg-sky-500 text-white shadow-md shadow-sky-200/50"
         )}
       >
-        {isPlaying ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 ml-0.5" />}
+        {isError ? (
+          <span className="text-[8px] font-bold">!</span>
+        ) : isPlaying ? (
+          <Pause className="w-2.5 h-2.5" />
+        ) : (
+          <Play className="w-2.5 h-2.5 ml-0.5" />
+        )}
       </button>
 
       {/* Waveform and Progress */}
@@ -108,8 +150,8 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
           "flex justify-between items-center text-[9px] font-bold tracking-tight uppercase px-0.5",
           isMe ? "text-white/70" : "text-slate-400"
         )}>
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
+          <span>{isError ? 'Error' : formatTime(currentTime)}</span>
+          <span>{isLoading ? '...' : formatTime(duration)}</span>
         </div>
       </div>
 

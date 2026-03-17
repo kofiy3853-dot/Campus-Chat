@@ -133,6 +133,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
         'audio/aac',
         'audio/mp4',
         'audio/mpeg',
+        'audio/webm;codecs=opus',
         'audio/webm',
         'audio/ogg'
       ].find(type => MediaRecorder.isTypeSupported(type)) || 'audio/webm';
@@ -146,19 +147,37 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
       }, 1000);
 
       audioChunksRef.current = [];
-      recorder.ondataavailable = e => audioChunksRef.current.push(e.data);
+      // Requesting chunks every 1 second to ensure we capture data even on small recordings
+      recorder.ondataavailable = e => {
+        if (e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+        }
+      };
+      
       recorder.onstop = async () => {
         clearInterval(timer);
         const blob = new Blob(audioChunksRef.current, { type: mimeType });
-        const extension = mimeType.split('/')[1].split(';')[0] || 'webm';
+        
+        if (blob.size === 0) {
+          console.error('[ChatInput] Recorded blob is empty');
+          alert('Recording failed: no audio data captured.');
+          return;
+        }
+
+        const extension = mimeType.includes('aac') ? 'aac' : 
+                         mimeType.includes('mp4') ? 'mp4' : 
+                         mimeType.includes('mpeg') ? 'mp3' : 'webm';
+        
         const file = new File([blob], `voice-${Date.now()}.${extension}`, { type: mimeType });
         stream.getTracks().forEach(t => t.stop());
         await uploadFile(file, 'voice');
       };
-      recorder.start();
+      
+      recorder.start(1000); // Capture in 1s chunks
       mediaRecorderRef.current = recorder;
       setIsRecording(true);
-    } catch {
+    } catch (err) {
+      console.error('[ChatInput] Start recording failed:', err);
       alert('Microphone access denied or not available.');
     }
   };
