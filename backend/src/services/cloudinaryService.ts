@@ -1,9 +1,17 @@
 import { v2 as cloudinary } from 'cloudinary';
 
-// Cloudinary is automatically configured by the CLOUDINARY_URL env variable
-// but we can explicitly call config if needed. 
-// cloudinary.config(); 
+// Cloudinary can be configured by CLOUDINARY_URL, but explicit config is often more reliable
+if (process.env.CLOUDINARY_URL) {
+  console.log('[Cloudinary] Found CLOUDINARY_URL, applying config');
+  cloudinary.config({
+    secure: true
+  });
+} else {
+  console.warn('[Cloudinary] No CLOUDINARY_URL found in environment');
+}
 
+console.log('[Cloudinary] Configured cloud_name:', cloudinary.config().cloud_name);
+console.log('[Cloudinary] Configured api_key:', cloudinary.config().api_key);
 export const uploadToCloudinary = async (fileBuffer: Buffer, folder: string = 'campus-chat'): Promise<string> => {
   console.log(`[Cloudinary] Starting upload to folder: ${folder}, buffer size: ${fileBuffer.length}`);
   return new Promise((resolve, reject) => {
