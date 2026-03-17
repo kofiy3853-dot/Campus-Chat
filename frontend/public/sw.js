@@ -37,7 +37,18 @@ self.addEventListener("fetch", (event) => {
   // Handle SPA navigation: serve index.html for navigation requests
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match('/index.html'))
+      fetch(event.request)
+        .catch(() => {
+          return caches.match('/index.html')
+            .then(response => {
+              if (response) return response;
+              // Fallback to direct fetch of index.html if cache fails too
+              return fetch('/index.html').catch(() => {
+                  // Last resort fallback (e.g. if we are completely offline and nothing is cached)
+                  return new Response('Offline: Resource not available', { status: 503 });
+              });
+            });
+        })
     );
     return;
   }

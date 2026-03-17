@@ -56,8 +56,13 @@ const allowedOrigins = [
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin: any, callback: any) => {
-    // Check if origin is in allowedOrigins or if it's a vercel.app subdomain
-    if (!origin || allowedOrigins.includes(origin) || (typeof origin === 'string' && origin.endsWith('.vercel.app'))) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const isVercel = /https:\/\/campus-chat-.*\.vercel\.app$/.test(origin);
+    const isAllowed = allowedOrigins.includes(origin) || isVercel;
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       console.warn(`[CORS] Rejected origin: ${origin}`);

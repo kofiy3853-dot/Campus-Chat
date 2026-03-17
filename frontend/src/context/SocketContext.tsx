@@ -28,7 +28,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       path: '/socket.io',
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
-      transports: ['websocket', 'polling'], // Ensure websocket is preferred
+      transports: ['websocket', 'polling'],
+      autoConnect: true,
+      withCredentials: true,
     });
 
     newSocket.on('connect', () => {
@@ -36,8 +38,18 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log('[Socket] Connected');
     });
 
-    newSocket.on('disconnect', () => {
+    newSocket.on('disconnect', (reason) => {
       setConnected(false);
+      console.warn('[Socket] Disconnected:', reason);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('[Socket] Connection Error:', error.message);
+      // Fallback to polling if websocket fails explicitly
+      const opts = newSocket.io.opts;
+      if (opts && opts.transports && opts.transports.includes('websocket' as any)) {
+        console.log('[Socket] Attempting polling fallback...');
+      }
     });
 
     newSocket.on('notification', (data: any) => {

@@ -3,7 +3,14 @@ export const getMediaUrl = (path: string | undefined | null) => {
   if (path.startsWith('http') || path.startsWith('data:')) return path;
   
   const baseUrl = import.meta.env.VITE_API_URL || '';
-  // Ensure we don't end up with double slashes if path starts with /
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${baseUrl}${cleanPath}`;
+  
+  // If it's a legacy local upload, it should be in /uploads/
+  // But first, ensure we don't have multiple slashes
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  
+  if (cleanPath.startsWith('uploads/')) {
+    return `${baseUrl}/${cleanPath}`;
+  }
+  
+  return `${baseUrl}/uploads/${cleanPath}`;
 };
