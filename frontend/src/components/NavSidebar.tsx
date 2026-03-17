@@ -32,7 +32,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
     { icon: Search, label: 'Discover', to: '/dashboard/discover' },
-    { icon: Trophy, label: 'Leaderboard', to: '/dashboard/leaderboard' },
     { icon: MessageSquare, label: 'Chats', to: '/dashboard/chats' },
     { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },
   ];

@@ -33,7 +33,7 @@ const EXPLORE_OPTIONS = [
   { icon: Search, label: 'Lost & Found', description: 'Report or find items', color: 'bg-slate-50 text-slate-500', to: '/dashboard/lost-found' },
   { icon: Briefcase, label: 'Internships', description: 'Career opportunities', color: 'bg-orange-50 text-orange-500', to: '/dashboard/internships' },
   { icon: Globe, label: 'Clubs & Communities', description: 'Join student orgs', color: 'bg-green-50 text-green-500', to: '/dashboard/discover' },
-  { icon: Trophy, label: 'Leaderboard', description: 'Campus top performers', color: 'bg-amber-50 text-amber-500', to: '/dashboard/discover' },
+  { icon: Trophy, label: 'Leaderboard', description: 'Campus top performers', color: 'bg-amber-50 text-amber-500', to: '/dashboard/leaderboard' },
 ];
 
 const ExploreMenu: React.FC<ExploreMenuProps> = ({ isOpen, onClose }) => {
