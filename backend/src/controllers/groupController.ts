@@ -438,8 +438,9 @@ export const deleteGroupMessage = async (req: AuthRequest, res: Response) => {
 // Mark a group message as helpful
 export const markMessageHelpful = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
+  const id = messageId as string;
 
-  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: 'Invalid message ID format' });
   }
 
