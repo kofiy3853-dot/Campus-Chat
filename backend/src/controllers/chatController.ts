@@ -61,7 +61,7 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
 export const getMessages = async (req: AuthRequest, res: Response) => {
   const { conversationId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+  if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
     return res.status(400).json({ message: 'Invalid conversation ID format' });
   }
 
@@ -105,7 +105,7 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
   if (!recipientId) {
     return res.status(400).json({ message: 'Recipient ID is required' });
   }
-  if (!mongoose.Types.ObjectId.isValid(recipientId)) {
+  if (!mongoose.Types.ObjectId.isValid(recipientId as string)) {
     return res.status(400).json({ message: 'Invalid recipient ID format' });
   }
 
@@ -175,7 +175,7 @@ export const createConversation = async (req: AuthRequest, res: Response) => {
   if (!participantId) {
     return res.status(400).json({ message: 'Participant ID is required' });
   }
-  if (!mongoose.Types.ObjectId.isValid(participantId)) {
+  if (!mongoose.Types.ObjectId.isValid(participantId as string)) {
     return res.status(400).json({ message: 'Invalid participant ID format' });
   }
 
@@ -248,12 +248,12 @@ export const editMessage = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
   const { message_text } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+  if (!mongoose.Types.ObjectId.isValid(messageId as string)) {
     return res.status(400).json({ message: 'Invalid message ID format' });
   }
 
   try {
-    const message = await Message.findById(messageId);
+    const message = await Message.findById(messageId as string);
 
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -277,7 +277,7 @@ export const editMessage = async (req: AuthRequest, res: Response) => {
 export const deleteMessage = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id as string)) {
     return res.status(400).json({ message: 'Invalid message ID format' });
   }
 
@@ -311,12 +311,12 @@ export const addMessageReaction = async (req: AuthRequest, res: Response) => {
   const { messageId } = req.params;
   const { emoji } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(messageId)) {
+  if (!mongoose.Types.ObjectId.isValid(messageId as string)) {
     return res.status(400).json({ message: 'Invalid message ID format' });
   }
 
   try {
-    const message = await Message.findById(messageId);
+    const message = await Message.findById(messageId as string);
 
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
@@ -359,7 +359,7 @@ export const addMessageReaction = async (req: AuthRequest, res: Response) => {
 export const blockUser = async (req: AuthRequest, res: Response) => {
   const { userId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(userId)) {
+  if (!mongoose.Types.ObjectId.isValid(userId as string)) {
     return res.status(400).json({ message: 'Invalid user ID format' });
   }
 
