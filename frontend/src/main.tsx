@@ -29,6 +29,7 @@ window.addEventListener('error', (event) => {
   }
 }, true);
 
+/*
 // Register Service Workers
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -53,3 +54,4 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+*/
