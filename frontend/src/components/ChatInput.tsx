@@ -85,8 +85,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
         type: explicitType || data.type, 
         name: originalFile.name 
       });
-    } catch {
-      alert('Upload failed. Please try again.');
+    } catch (err: any) {
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Upload failed. Please try again.';
+      console.error('[ChatInput] Upload error detaills:', err.response?.data);
+      alert(errMsg);
     } finally {
       setUploading(false);
     }
