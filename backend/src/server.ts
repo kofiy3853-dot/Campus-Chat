@@ -29,6 +29,7 @@ console.log('Resolved .env path:', path.resolve(__dirname, '../.env'));
 console.log('PORT:', process.env.PORT);
 console.log('MONGODB_URI Raw:', process.env.MONGODB_URI);
 console.log('REDIS_URL Raw:', process.env.REDIS_URL);
+console.log('CLOUDINARY_URL set:', !!process.env.CLOUDINARY_URL);
 console.log('-------------------------');
 
 import express from 'express';
