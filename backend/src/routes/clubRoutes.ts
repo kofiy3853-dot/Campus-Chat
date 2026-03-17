@@ -9,7 +9,9 @@ import {
   createClubPost,
   getClubPosts,
   getClubMessages,
-  sendClubMessage
+  sendClubMessage,
+  createClubEvent,
+  getClubEvents
 } from '../controllers/clubController';
 
 const router = express.Router();
@@ -25,5 +27,7 @@ router.get('/:id/posts', protect, getClubPosts);
 router.post('/:id/posts', protect, upload.single('image'), createClubPost);
 router.get('/:id/messages', protect, getClubMessages);
 router.post('/:id/messages', protect, sendClubMessage);
+router.get('/:id/events', protect, getClubEvents);
+router.post('/:id/events', protect, upload.single('image'), createClubEvent);
 
 export default router;

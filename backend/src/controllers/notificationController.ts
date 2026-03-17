@@ -208,7 +208,7 @@ export const createNotification = async (
           priority: 'high',
           notification: {
             sound: 'default',
-            channelId: 'default',
+            channelId: 'campus_chat_high_importance',
             priority: 'high',
             clickAction: 'FCM_PLUGIN_ACTIVITY',
           },

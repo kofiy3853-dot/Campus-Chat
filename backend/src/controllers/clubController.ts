@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Club from '../models/Club';
 import ClubPost from '../models/ClubPost';
 import ClubMessage from '../models/ClubMessage';
+import ClubEvent from '../models/ClubEvent';
 import mongoose from 'mongoose';
 import { io } from '../server';
 import { uploadToCloudinary } from '../services/cloudinaryService';
@@ -207,5 +208,56 @@ export const sendClubMessage = async (req: AuthRequest, res: Response) => {
     res.status(201).json(populatedMessage);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const createClubEvent = async (req: AuthRequest, res: Response) => {
+  const { id } = req.params; // club id
+  const { title, description, date, location } = req.body;
+  const userId = req.user?._id;
+
+  try {
+    const club = await Club.findById(id);
+    if (!club) return res.status(404).json({ message: 'Club not found' });
+
+    // Only admins can create events
+    if (!club.admins.includes(userId as any)) {
+      return res.status(403).json({ message: 'Only admins can create events' });
+    }
+
+    let image = '';
+    if (req.file) {
+      image = await uploadToCloudinary(req.file.buffer, 'club_events');
+    }
+
+    const event = await ClubEvent.create({
+      club_id: id as any,
+      title,
+      description,
+      date,
+      location,
+      image,
+      created_by: userId as any
+    });
+
+    const populatedEvent = await (event as any).populate('created_by', 'name profile_picture');
+    io.emit(`new_club_event_${id}`, populatedEvent);
+
+    res.status(201).json(populatedEvent);
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getClubEvents = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const events = await ClubEvent.find({ club_id: id })
+      .populate('created_by', 'name profile_picture')
+      .sort({ date: 1 });
+    res.json(events);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 };

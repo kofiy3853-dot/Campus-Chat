@@ -15,7 +15,8 @@ import {
   Heart,
   MoreVertical,
   Shield,
-  ShieldCheck
+  ShieldCheck,
+  MapPin
 } from 'lucide-react';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
@@ -24,6 +25,8 @@ import { useToast } from '../context/ToastContext';
 import { clsx } from 'clsx';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
+import CreatePostModal from '../components/CreatePostModal';
+import CreateEventModal from '../components/CreateEventModal';
 
 const ClubDetailPage = () => {
   const { id } = useParams();
@@ -44,6 +47,14 @@ const ClubDetailPage = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const [messagesLoading, setMessagesLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Events State
+  const [events, setEvents] = useState<any[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(false);
+  
+  // Modals
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
   const fetchClubDetails = useCallback(async () => {
     try {
@@ -83,6 +94,18 @@ const ClubDetailPage = () => {
     }
   }, [id]);
 
+  const fetchEvents = useCallback(async () => {
+    try {
+      setEventsLoading(true);
+      const { data } = await api.get(`/api/clubs/${id}/events`);
+      setEvents(data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setEventsLoading(false);
+    }
+  }, [id]);
+
   useEffect(() => {
     fetchClubDetails();
   }, [fetchClubDetails]);
@@ -90,7 +113,8 @@ const ClubDetailPage = () => {
   useEffect(() => {
     if (activeTab === 'hub') fetchPosts();
     if (activeTab === 'chat') fetchMessages();
-  }, [activeTab, fetchPosts, fetchMessages]);
+    if (activeTab === 'events') fetchEvents();
+  }, [activeTab, fetchPosts, fetchMessages, fetchEvents]);
 
   useEffect(() => {
     if (!socket || !id) return;
@@ -110,12 +134,19 @@ const ClubDetailPage = () => {
       });
     };
 
+    const eventHandler = (event: any) => {
+      setEvents(prev => [event, ...prev]);
+      showToast('success', 'New Event', `A new event has been scheduled in ${club?.name}`);
+    };
+
     socket.on(`new_club_post_${id}`, postHandler);
     socket.on('receive_club_message', messageHandler);
+    socket.on(`new_club_event_${id}`, eventHandler);
 
     return () => {
       socket.off(`new_club_post_${id}`, postHandler);
       socket.off('receive_club_message', messageHandler);
+      socket.off(`new_club_event_${id}`, eventHandler);
     };
   }, [socket, id, activeTab, club?.name, showToast]);
 
@@ -161,7 +192,7 @@ const ClubDetailPage = () => {
       <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm flex items-center gap-4">
         <img src={user?.profile_picture || `https://ui-avatars.com/api/?name=${user?.name}`} className="w-12 h-12 rounded-xl" alt="" />
         <button 
-          onClick={() => showToast('info', 'Feature Comming Soon', 'Post creation from details page is launching shortly!')}
+          onClick={() => setIsPostModalOpen(true)}
           className="flex-1 bg-slate-50 hover:bg-slate-100 text-left px-6 py-4 rounded-2xl text-slate-400 font-medium transition-colors"
         >
           What's on your mind, {user?.name?.split(' ')[0]}?
@@ -252,10 +283,59 @@ const ClubDetailPage = () => {
   );
 
   const EventsTab = () => (
-    <div className="text-center py-20 bg-white rounded-[3rem] border border-slate-100 animate-in fade-in slide-in-from-bottom-5 duration-500">
-      <Calendar className="w-16 h-16 text-slate-100 mx-auto mb-6" />
-      <h3 className="text-xl font-black text-slate-800 uppercase tracking-tighter">Event Engine Warming Up</h3>
-      <p className="text-slate-400 font-medium max-w-sm mx-auto mt-2">We're finalizing the scheduling system. Stay tuned for upcoming meetups and workshops!</p>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-500">
+      {club.admins.some((a: any) => a._id === user?._id) && (
+        <button 
+          onClick={() => setIsEventModalOpen(true)}
+          className="w-full py-6 border-2 border-dashed border-slate-200 rounded-[2rem] text-slate-400 hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50/30 transition-all font-black uppercase text-xs tracking-widest flex items-center justify-center gap-3"
+        >
+          <Plus className="w-5 h-5" />
+          Schedule New Event
+        </button>
+      )}
+
+      {eventsLoading ? (
+        <div className="flex justify-center py-20">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        </div>
+      ) : events.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6">
+          {events.map(event => (
+            <div key={event._id} className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 flex flex-col md:flex-row shadow-sm hover:shadow-xl hover:shadow-blue-500/5 transition-all">
+               {event.image && (
+                 <div className="w-full md:w-48 h-48 shrink-0">
+                   <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
+                 </div>
+               )}
+               <div className="p-8 flex-1 space-y-4">
+                 <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-blue-600">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        {new Date(event.date).toLocaleString([], { dateStyle: 'long', timeStyle: 'short' })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <MapPin className="w-4 h-4" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">{event.location}</span>
+                    </div>
+                 </div>
+                 <h3 className="text-xl font-black text-slate-800">{event.title}</h3>
+                 <p className="text-slate-600 font-medium line-clamp-2">{event.description}</p>
+                 <button className="text-blue-500 font-black text-[10px] uppercase tracking-widest hover:underline">
+                   View Details & RSVP
+                 </button>
+               </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20 bg-white rounded-[3rem] border border-slate-100">
+          <Calendar className="w-16 h-16 text-slate-100 mx-auto mb-6" />
+          <h3 className="text-xl font-black text-slate-800 uppercase tracking-tighter">No Events Planned</h3>
+          <p className="text-slate-400 font-medium max-w-sm mx-auto mt-2">Check back later for exciting meetups and workshops!</p>
+        </div>
+      )}
     </div>
   );
 
@@ -366,6 +446,20 @@ const ClubDetailPage = () => {
           {activeTab === 'members' && <MembersTab />}
         </div>
       </div>
+
+      <CreatePostModal 
+        isOpen={isPostModalOpen} 
+        onClose={() => setIsPostModalOpen(false)} 
+        clubId={id!} 
+        onSuccess={fetchPosts} 
+      />
+      
+      <CreateEventModal 
+        isOpen={isEventModalOpen} 
+        onClose={() => setIsEventModalOpen(false)} 
+        clubId={id!} 
+        onSuccess={fetchEvents} 
+      />
     </div>
   );
 };
