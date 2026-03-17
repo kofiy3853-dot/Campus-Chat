@@ -478,9 +478,9 @@ const ChatWindow = () => {
         <div 
           className="message-menu"
           style={{ 
-            top: `${Math.max(20, Math.min(menuPosition.y, window.innerHeight - 100))}px`, 
-            left: `${Math.max(100, Math.min(menuPosition.x, window.innerWidth - 100))}px` 
-          }}
+            '--menu-top': `${Math.max(20, Math.min(menuPosition.y, window.innerHeight - 100))}px`, 
+            '--menu-left': `${Math.max(100, Math.min(menuPosition.x, window.innerWidth - 100))}px` 
+          } as React.CSSProperties}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Quick Reactions */}

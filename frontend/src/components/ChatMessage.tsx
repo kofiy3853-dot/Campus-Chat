@@ -171,12 +171,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
         <div 
           className={clsx(
-            "px-[14px] py-[10px] rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300",
+            "px-[14px] py-[10px] rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300 swipe-transform",
             isMe 
               ? "bg-gradient-to-br from-sky-400 to-sky-500 text-white rounded-br-md hover:shadow-sky-200/50" 
               : "bg-white text-slate-700 rounded-bl-md border border-slate-100/50 hover:shadow-slate-300/50"
           )}
-          style={{ transform: `translateX(${swipeOffset}px)` }}
+          style={{ '--swipe-offset': `${swipeOffset}px` } as React.CSSProperties}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}

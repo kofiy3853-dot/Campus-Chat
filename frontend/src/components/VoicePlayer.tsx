@@ -94,12 +94,12 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
               <div
                 key={i}
                 className={clsx(
-                  "flex-1 rounded-full transition-all duration-300",
+                  "flex-1 rounded-full transition-all duration-300 waveform-bar-dynamic",
                   isActive 
                     ? (isMe ? "bg-white" : "bg-sky-500") 
                     : (isMe ? "bg-white/30" : "bg-slate-200")
                 )}
-                style={{ height: `${height * 100}%`, minHeight: '4px' }}
+                style={{ '--bar-height': `${height * 100}%` } as React.CSSProperties}
               />
             );
           })}
