@@ -5,41 +5,46 @@ import mongoose from 'mongoose';
 import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 export const createListing = async (req: AuthRequest, res: Response) => {
-  const { title, price, category } = req.body;
-  
   try {
-    console.log('[MARKETPLACE DEBUG] Request body:', { title, price, category });
-    console.log('[MARKETPLACE DEBUG] File exists:', !!req.file);
-    console.log('[MARKETPLACE DEBUG] User ID:', req.user._id);
+    console.log("=== CREATE LISTING START ===");
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
+    console.log("FILE:", req.file);
 
     if (!req.file) {
-      console.log('[MARKETPLACE DEBUG] No file uploaded');
+      console.log("❌ No file uploaded");
       return res.status(400).json({ message: 'Image upload is required' });
     }
 
-    console.log('[MARKETPLACE DEBUG] Starting file upload...');
-    // Upload to Cloudinary
+    // Upload to Firebase Storage
     const image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'marketplace');
-    console.log('[MARKETPLACE DEBUG] File uploaded successfully:', image);
+    console.log("✅ Image uploaded:", image);
 
-    console.log('[MARKETPLACE DEBUG] Creating product...');
-    const item = await Product.create({
-      title,
-      price,
-      image,
-      category,
-      sellerId: req.user._id,
+    const listing = await Product.create({
+      title: req.body.title,
+      price: req.body.price,
+      category: req.body.category,
+      image: image,
+      sellerId: req.user._id, // Use _id not id
     });
-    console.log('[MARKETPLACE DEBUG] Product created:', item._id);
 
-    console.log('[MARKETPLACE DEBUG] Populating seller...');
-    const populatedItem = await Product.findById(item._id).populate('sellerId', 'name profile_picture status');
-    console.log('[MARKETPLACE DEBUG] Item populated successfully');
-    
-    res.status(201).json(populatedItem);
+    console.log("✅ Listing created:", listing);
+
+    // Populate seller info
+    const populatedListing = await Product.findById(listing._id).populate('sellerId', 'name profile_picture status');
+    console.log("✅ Listing populated:", populatedListing);
+
+    res.status(201).json(populatedListing);
   } catch (error: any) {
-    console.error('[MARKETPLACE ERROR]', error);
-    res.status(500).json({ message: error.message });
+    console.error("❌ CREATE LISTING ERROR:");
+    console.error(error); // FULL ERROR
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+
+    res.status(500).json({
+      message: "Failed to create listing",
+      error: error.message,
+    });
   }
 };
 
