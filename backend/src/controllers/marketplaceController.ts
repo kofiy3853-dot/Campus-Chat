@@ -8,13 +8,21 @@ export const createListing = async (req: AuthRequest, res: Response) => {
   const { title, price, category } = req.body;
   
   try {
+    console.log('[MARKETPLACE DEBUG] Request body:', { title, price, category });
+    console.log('[MARKETPLACE DEBUG] File exists:', !!req.file);
+    console.log('[MARKETPLACE DEBUG] User ID:', req.user._id);
+
     if (!req.file) {
+      console.log('[MARKETPLACE DEBUG] No file uploaded');
       return res.status(400).json({ message: 'Image upload is required' });
     }
 
+    console.log('[MARKETPLACE DEBUG] Starting file upload...');
     // Upload to Cloudinary
     const image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'marketplace');
+    console.log('[MARKETPLACE DEBUG] File uploaded successfully:', image);
 
+    console.log('[MARKETPLACE DEBUG] Creating product...');
     const item = await Product.create({
       title,
       price,
@@ -22,10 +30,15 @@ export const createListing = async (req: AuthRequest, res: Response) => {
       category,
       sellerId: req.user._id,
     });
+    console.log('[MARKETPLACE DEBUG] Product created:', item._id);
 
+    console.log('[MARKETPLACE DEBUG] Populating seller...');
     const populatedItem = await Product.findById(item._id).populate('sellerId', 'name profile_picture status');
+    console.log('[MARKETPLACE DEBUG] Item populated successfully');
+    
     res.status(201).json(populatedItem);
   } catch (error: any) {
+    console.error('[MARKETPLACE ERROR]', error);
     res.status(500).json({ message: error.message });
   }
 };
