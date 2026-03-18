@@ -14,6 +14,9 @@ try {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
     console.log('[Firebase Storage] Service account loaded from environment');
   } else {
+    console.warn('[Firebase Storage] No Firebase service account configuration found');
+    console.warn('[Firebase Storage] Please set FIREBASE_SERVICE_ACCOUNT_KEY environment variable');
+    console.warn('[Firebase Storage] Or place firebase-service-account.json in the backend directory');
     throw new Error('No Firebase service account configuration found');
   }
 } catch (error) {
@@ -24,7 +27,7 @@ try {
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'campus-chat.appspot.com'
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'campus-networking.appspot.com'
   });
 }
 
