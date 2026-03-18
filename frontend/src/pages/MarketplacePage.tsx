@@ -64,7 +64,7 @@ const MarketplacePage: React.FC = () => {
             </div>
             <button 
               onClick={() => setIsComposeOpen(true)}
-              className="hidden md:flex items-center gap-2 px-6 py-3 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 hover:bg-sky-500 hover:shadow-sky-200 hover:-translate-y-1 transition-all"
+              className="flex items-center gap-2 px-6 py-3 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-slate-200 hover:bg-sky-500 hover:shadow-sky-200 hover:-translate-y-1 transition-all"
             >
               <Plus className="w-4 h-4" /> Post Item
             </button>
@@ -166,15 +166,7 @@ const MarketplacePage: React.FC = () => {
         />
       </React.Suspense>
 
-      {/* Mobile Fab */}
-      <button 
-        onClick={() => setIsComposeOpen(true)}
-        aria-label="Create new listing"
-        className="fixed bottom-24 right-6 w-14 h-14 bg-sky-500 text-white rounded-2xl shadow-xl shadow-sky-500/20 flex items-center justify-center md:hidden z-40 active:scale-90 transition-transform"
-      >
-        <Plus className="w-7 h-7" />
-      </button>
-    </div>
+      </div>
   );
 };
 
