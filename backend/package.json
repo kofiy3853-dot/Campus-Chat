@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "tsc && node -e \"const fs = require('fs'); fs.copyFileSync('firebase-service-account.json', 'dist/firebase-service-account.json');\"",
+    "build": "tsc && node -e \"const fs = require('fs'); const path = require('path'); process.chdir('src'); const srcPath = '../firebase-service-account.json'; const destPath = '../dist/firebase-service-account.json'; if (fs.existsSync(srcPath)) { fs.copyFileSync(srcPath, destPath); console.log('Firebase service account copied'); } else { console.log('Firebase service account not found at:', path.resolve(srcPath)); }\"",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
