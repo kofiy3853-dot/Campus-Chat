@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import Product from '../models/Product';
 import mongoose from 'mongoose';
-import { uploadToCloudinary } from '../services/cloudinaryService';
+import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 export const createListing = async (req: AuthRequest, res: Response) => {
   const { title, price, category } = req.body;
@@ -13,7 +13,7 @@ export const createListing = async (req: AuthRequest, res: Response) => {
     }
 
     // Upload to Cloudinary
-    const image = await uploadToCloudinary(req.file.buffer, 'marketplace');
+    const image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'marketplace');
 
     const item = await Product.create({
       title,

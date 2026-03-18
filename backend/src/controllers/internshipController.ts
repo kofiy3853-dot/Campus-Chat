@@ -4,7 +4,7 @@ import User from '../models/User';
 import Application from '../models/Application';
 import mongoose from 'mongoose';
 import { io } from '../server';
-import { uploadToCloudinary } from '../services/cloudinaryService';
+import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 interface AuthRequest extends Request {
   user?: {
@@ -170,7 +170,7 @@ export const applyToInternship = async (req: AuthRequest, res: Response) => {
     }
 
     // Upload resume to Cloudinary
-    const resumeUrl = await uploadToCloudinary(req.file.buffer, 'resumes');
+    const resumeUrl = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'resumes');
 
     const application = new Application({
       internship: id,

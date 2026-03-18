@@ -2,7 +2,7 @@ import express from 'express';
 import { protect } from '../middleware/authMiddleware';
 import { getEvents, createEvent, joinEvent, leaveEvent } from '../controllers/eventController';
 import multer from 'multer';
-import { uploadToCloudinary } from '../services/cloudinaryService';
+import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 const router = express.Router();
 
@@ -19,7 +19,7 @@ router.post('/:id/leave', protect, leaveEvent);
 router.post('/upload', protect, upload.single('image'), (async (req: any, res: any) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'No image uploaded' });
-    const url = await uploadToCloudinary(req.file.buffer, 'events');
+    const url = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'events');
     res.json({ url });
   } catch (error) {
     res.status(500).json({ message: 'Failed to upload image' });

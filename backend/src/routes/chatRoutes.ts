@@ -7,7 +7,7 @@ import { getConversations, getMessages, sendMessage, createConversation, searchM
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter, searchRateLimiter } from '../middleware/rateLimitMiddleware';
 
-import { uploadToCloudinary } from '../services/cloudinaryService';
+import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 const router = express.Router();
 
@@ -37,7 +37,7 @@ router.post('/upload', protect, upload.single('file'), async (req: any, res: Res
     const folder = type === 'image' ? 'chat/images' : (type === 'voice' ? 'chat/voice' : 'chat/files');
     console.log(`[Upload] Target folder: ${folder}`);
     
-    const url = await uploadToCloudinary(req.file.buffer, folder);
+    const url = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, folder);
     console.log(`[Upload] Success! URL: ${url}`);
 
     res.json({ url, type, originalName: req.file.originalname });

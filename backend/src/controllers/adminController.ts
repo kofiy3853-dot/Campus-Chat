@@ -27,7 +27,7 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(id as string)) {
       return res.status(400).json({ message: 'Invalid user ID' });
     }
 
@@ -48,7 +48,7 @@ export const banUser = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(id as string)) {
       return res.status(400).json({ message: 'Invalid user ID' });
     }
 
@@ -72,7 +72,7 @@ export const promoteUser = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(id as string)) {
       return res.status(400).json({ message: 'Invalid user ID' });
     }
 

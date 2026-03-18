@@ -15,7 +15,7 @@ import {
 } from '../controllers/lostFoundController';
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter } from '../middleware/rateLimitMiddleware';
-import { uploadToCloudinary } from '../services/cloudinaryService';
+import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 const router = express.Router();
 
@@ -41,7 +41,7 @@ router.post('/upload', upload.single('file'), async (req: any, res) => {
     }
 
     // Upload to Cloudinary
-    const url = await uploadToCloudinary(req.file.buffer, 'lost-found');
+    const url = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'lost-found');
     res.json({ url, originalName: req.file.originalname });
   } catch (error: any) {
     console.error('Lost & Found upload error:', error);

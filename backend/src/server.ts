@@ -29,7 +29,8 @@ console.log('Resolved .env path:', path.resolve(__dirname, '../.env'));
 console.log('PORT:', process.env.PORT);
 console.log('MONGODB_URI Raw:', process.env.MONGODB_URI);
 console.log('REDIS_URL Raw:', process.env.REDIS_URL);
-console.log('CLOUDINARY_URL set:', !!process.env.CLOUDINARY_URL);
+console.log('FIREBASE_STORAGE_BUCKET set:', !!process.env.FIREBASE_STORAGE_BUCKET);
+console.log('FIREBASE_SERVICE_ACCOUNT_KEY set:', !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
 console.log('-------------------------');
 
 import express from 'express';

@@ -3,7 +3,7 @@ import { createAnnouncement, getAnnouncements } from '../controllers/announcemen
 import { protect } from '../middleware/authMiddleware';
 
 import multer from 'multer';
-import { uploadToCloudinary } from '../services/cloudinaryService';
+import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post('/upload', protect, upload.single('image'), (async (req: any, res: a
     }
     
     console.log(`[Announcements] Uploading file: ${req.file.originalname}, size: ${req.file.size} bytes`);
-    const url = await uploadToCloudinary(req.file.buffer, 'announcements');
+    const url = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'announcements');
     
     console.log('[Announcements] Upload successful:', url);
     res.json({ url });
