@@ -22,6 +22,7 @@ const InternshipPage = lazy(() => import('../pages/InternshipPage'));
 const ClubsPage = lazy(() => import('./ClubsPage'));
 const ClubDetailPage = lazy(() => import('./ClubDetailPage'));
 const Leaderboard = lazy(() => import('../pages/Leaderboard'));
+const AdminPage = lazy(() => import('../pages/AdminPage'));
 
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { clsx } from 'clsx';
@@ -39,7 +40,8 @@ const Dashboard = () => {
                                    location.pathname === '/dashboard/marketplace' || 
                                    location.pathname === '/dashboard/internships' || 
                                    location.pathname === '/dashboard/clubs' ||
-                                   location.pathname === '/dashboard/leaderboard';
+                                   location.pathname === '/dashboard/leaderboard' ||
+                                   location.pathname === '/dashboard/admin';
   const isAnnouncements = location.pathname === '/dashboard/announcements';
 
   return (
@@ -74,6 +76,7 @@ const Dashboard = () => {
             <Route path="clubs" element={<ClubsPage />} />
             <Route path="clubs/:id" element={<ClubDetailPage />} />
             <Route path="leaderboard" element={<Leaderboard />} />
+            <Route path="admin" element={<AdminPage />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
             <Route path="/" element={<LandingDashboard />} />

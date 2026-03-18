@@ -7,7 +7,8 @@ import {
   User as UserIcon,
   Search,
   Home,
-  Compass
+  Compass,
+  Shield
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';

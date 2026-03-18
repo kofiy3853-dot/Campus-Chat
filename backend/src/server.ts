@@ -94,6 +94,7 @@ import connectionRoutes from './routes/connectionRoutes';
 import internshipRoutes from './routes/internshipRoutes';
 import clubRoutes from './routes/clubRoutes';
 import leaderboardRoutes from './routes/leaderboardRoutes';
+import adminRoutes from './routes/adminRoutes';
 import { generalRateLimiter } from './middleware/rateLimitMiddleware';
 
 // Presence tracking (in-memory — Upstash HTTP doesn't support TCP pub/sub)
@@ -316,6 +317,7 @@ app.use('/api/connections', connectionRoutes);
 app.use('/api/internships', internshipRoutes);
 app.use('/api/clubs', clubRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Handler - Must come before error handler
 app.use((req: express.Request, res: express.Response) => {
