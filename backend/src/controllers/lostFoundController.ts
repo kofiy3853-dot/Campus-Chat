@@ -197,23 +197,36 @@ export const deletePost = async (req: AuthRequest, res: Response) => {
     const { postId } = req.params;
     const userId = req.user._id;
 
+    console.log('[DELETE DEBUG] PostId:', postId);
+    console.log('[DELETE DEBUG] UserId:', userId);
+
     const post = await LostFoundPost.findById(postId);
     if (!post || post.is_deleted) {
+      console.log('[DELETE DEBUG] Post not found or already deleted');
       return res.status(404).json({ message: 'Post not found' });
     }
+
+    console.log('[DELETE DEBUG] Post found:', post._id);
+    console.log('[DELETE DEBUG] Post creator:', post.creator);
 
     // Check if user is creator or admin
     const isCreator = (post.creator as any).toString() === userId.toString();
     const user = await User.findById(userId);
     const isAdmin = user?.role === 'admin';
 
+    console.log('[DELETE DEBUG] IsCreator:', isCreator);
+    console.log('[DELETE DEBUG] IsAdmin:', isAdmin);
+    console.log('[DELETE DEBUG] User role:', user?.role);
+
     if (!isCreator && !isAdmin) {
+      console.log('[DELETE DEBUG] Permission denied - not creator or admin');
       return res.status(403).json({ message: 'Only post creator or admin can delete' });
     }
 
     post.is_deleted = true;
     await post.save();
 
+    console.log('[DELETE DEBUG] Post marked as deleted');
     res.json({ message: 'Post deleted successfully' });
   } catch (error: any) {
     console.error('Error deleting post:', error);
