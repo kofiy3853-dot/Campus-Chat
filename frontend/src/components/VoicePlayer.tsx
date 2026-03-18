@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Mic } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface VoicePlayerProps {

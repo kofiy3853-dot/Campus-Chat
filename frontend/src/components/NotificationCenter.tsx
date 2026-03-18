@@ -16,7 +16,7 @@ interface Notification {
 }
 
 const NotificationCenter: React.FC = () => {
-  const { user } = useAuth();
+  useAuth();
   const { socket } = useSocket();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);

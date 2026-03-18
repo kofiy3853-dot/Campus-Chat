@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Users, BookOpen, Calendar, Shield, ShieldOff, Plus, Loader2 } from 'lucide-react';
+import { X, BookOpen, Calendar, Shield, ShieldOff, Plus, Loader2 } from 'lucide-react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';

@@ -11,7 +11,7 @@ interface MessageSearchProps {
 const MessageSearch: React.FC<MessageSearchProps> = ({ conversationId, onSearch, onClose }) => {
   const [query, setQuery] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
 
   const handleSearch = async (e: React.FormEvent) => {

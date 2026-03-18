@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Trash2, Loader2, Search, Edit3, X, MoreVertical, Shield, UserX, Flag, Pin, CheckCircle2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import ProfileView from './ProfileView';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -380,7 +380,8 @@ const ChatWindow = () => {
         <h3 className="text-xl font-bold text-gray-800 mb-2">Select a Conversation</h3>
         <p className="max-w-xs text-center">Pick a friend or start a new chat to begin messaging.</p>
     </div>
-  );  if (error) return (
+  );
+  if (error) return (
     <div className="flex-1 flex flex-col items-center justify-center bg-white p-8 text-center">
       <div className="w-20 h-20 bg-red-50 text-red-500 rounded-[2.5rem] flex items-center justify-center mb-6 border border-red-100">
         <Loader2 className="w-10 h-10 animate-spin opacity-20" />

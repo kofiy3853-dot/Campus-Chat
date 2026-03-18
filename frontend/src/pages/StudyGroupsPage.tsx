@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, BookOpen, Users, Plus, ArrowRight, Loader2, Sparkles, Calendar } from 'lucide-react';
+import { Search, BookOpen, Users, Plus, ArrowRight, Sparkles, Calendar } from 'lucide-react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import StudyGroupCreateModal from '../components/StudyGroupCreateModal';

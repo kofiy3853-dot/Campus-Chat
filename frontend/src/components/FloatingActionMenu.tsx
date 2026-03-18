@@ -8,8 +8,7 @@ import {
   Package, 
   Megaphone,
   X,
-  BookOpen,
-  Briefcase
+  BookOpen
 } from 'lucide-react';
 import { clsx } from 'clsx';
 

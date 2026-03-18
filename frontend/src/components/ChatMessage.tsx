@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import VoicePlayer from './VoicePlayer';
 import { clsx } from 'clsx';
-import { Check, CheckCheck, Smile, Trash2, Edit2, MoreVertical, Paperclip, Clock, Mic, Star } from 'lucide-react';
+import { Check, CheckCheck, Paperclip, Clock, Star } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
@@ -16,12 +16,10 @@ interface ChatMessageProps {
   onSwipe?: (message: any) => void;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, onEdit, onDelete, onMenuOpen, onSwipe }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, onEdit, onMenuOpen, onSwipe }) => {
   const { user } = useAuth();
-  const [showReactions, setShowReactions] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.message_text);
-  const [showMenu, setShowMenu] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   
@@ -30,7 +28,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
   const handleReaction = (emoji: string) => {
     onReaction?.(message._id, emoji);
-    setShowReactions(false);
   };
 
   const reactionCounts = (message.reactions || []).reduce((acc: Record<string, number>, curr: any) => {
@@ -54,20 +51,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      if (message.group_id) {
-        await api.delete(`/api/groups/messages/${message._id}`);
-      } else {
-        await api.delete(`/api/chat/messages/${message._id}`);
-      }
-      onDelete?.(message._id);
-    } catch (error: any) {
-      console.error('Error deleting message:', error);
-      alert(`Deletion failed: ${error.response?.data?.message || error.message}`);
-    }
-  };
-
   const handleMarkHelpful = async () => {
     try {
       await api.post(`/api/groups/messages/${message._id}/helpful`);
@@ -77,8 +60,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
       console.error('Error marking as helpful:', error);
     }
   };
-
-  const reactionEmojis = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
 
   // Enhanced delivery status icons
   const DeliveryStatus = () => {

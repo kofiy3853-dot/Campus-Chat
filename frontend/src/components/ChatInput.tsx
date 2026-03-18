@@ -42,7 +42,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
   const [uploading, setUploading] = useState(false);
   const [previewFile, setPreviewFile] = useState<{ url: string; type: string; name: string } | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const dynamicInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);

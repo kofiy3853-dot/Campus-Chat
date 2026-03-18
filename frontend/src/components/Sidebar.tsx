@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
-  MessageSquare, 
-  Users, 
-  Megaphone, 
-  User, 
   LogOut, 
-  Search, 
-  Plus,
-  Settings,
-  MoreVertical,
-  ChevronLeft
+  Search
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -19,10 +11,9 @@ import { getMediaUrl } from '../utils/imageUrl';
 
 interface SidebarProps {
   isOpen: boolean;
-  toggle: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggle }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState([]);

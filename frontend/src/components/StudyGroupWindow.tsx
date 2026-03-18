@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Loader2, MessageSquare, BookOpen, Calendar, Users as UsersIcon } from 'lucide-react';
-import { useSocket } from '../context/SocketContext';
 import api from '../services/api';
-import ChatWindow from './ChatWindow'; // We can use ChatWindow's internal logic or a simplified version
 import GroupWindow from './GroupWindow';
 import ResourcesTab from './ResourcesTab';
 import SessionsTab from './SessionsTab';

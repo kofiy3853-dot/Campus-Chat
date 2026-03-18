@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Briefcase, MapPin, Calendar, Bookmark, BookmarkCheck, ExternalLink, Plus, Filter, Loader2, X, ChevronRight } from 'lucide-react';
+import { Search, Briefcase, MapPin, Calendar, Bookmark, BookmarkCheck, ExternalLink, Plus, Filter, Loader2, ChevronRight } from 'lucide-react';
 import api from '@/services/api';
 import { clsx } from 'clsx';
 import { useSocket } from '@/context/SocketContext';
@@ -10,7 +10,7 @@ import PostInternshipModal from '@/components/PostInternshipModal';
 
 const InternshipPage: React.FC = () => {
   const { socket } = useSocket();
-  const { user } = useAuth();
+  useAuth();
   const { showToast } = useToast();
   const [internships, setInternships] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

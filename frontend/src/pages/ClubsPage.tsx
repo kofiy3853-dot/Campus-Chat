@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Globe, Users, Plus, ArrowRight, Loader2, Sparkles, Filter, Shield, ShieldCheck } from 'lucide-react';
+import { Search, Globe, Plus, ArrowRight, Sparkles, Filter, Shield, ShieldCheck } from 'lucide-react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import CreateClubModal from '../components/CreateClubModal';

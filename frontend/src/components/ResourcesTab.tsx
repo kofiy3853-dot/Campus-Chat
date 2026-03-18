@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Link as LinkIcon, FileText, ExternalLink, Trash2, Globe, File, MoreVertical, Loader2, BookOpen } from 'lucide-react';
+import { Plus, ExternalLink, Globe, File, Loader2, BookOpen } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 

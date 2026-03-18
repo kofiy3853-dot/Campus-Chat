@@ -2,17 +2,12 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   MessageSquare, 
-  Users, 
-  Megaphone, 
   Settings, 
   LogOut,
   User as UserIcon,
-  Bell,
-  Ghost,
   Search,
   Home,
-  Compass,
-  Trophy
+  Compass
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';

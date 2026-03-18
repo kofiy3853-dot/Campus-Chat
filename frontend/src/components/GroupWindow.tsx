@@ -323,7 +323,6 @@ const GroupWindow = () => {
             {messages.map((msg, index) => {
                 const senderId = typeof msg.sender_id === 'object' ? msg.sender_id?._id : msg.sender_id;
                 const isMe = senderId === user?._id;
-                const senderName = typeof msg.sender_id === 'object' ? msg.sender_id?.name : 'User';
 
                 return (
                     <div key={msg._id || index} className="group/msg relative">

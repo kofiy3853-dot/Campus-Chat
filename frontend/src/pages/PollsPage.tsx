@@ -8,7 +8,7 @@ import PollCompose from '../components/PollCompose';
 import Skeleton from '../components/Skeleton';
 
 const PollsPage: React.FC = () => {
-  const { user } = useAuth();
+  useAuth();
   const { socket } = useSocket();
   const [polls, setPolls] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

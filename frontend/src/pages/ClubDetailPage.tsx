@@ -9,12 +9,8 @@ import {
   Globe, 
   ArrowLeft, 
   Plus, 
-  Send,
-  Image as ImageIcon,
   Sparkles,
   Heart,
-  MoreVertical,
-  Shield,
   ShieldCheck,
   MapPin,
   Trash2
@@ -183,7 +179,7 @@ const ClubDetailPage = () => {
       });
       // socket.emit('send_club_message', { ...data, roomId: id }); // Handled by backend emission
       setMessages(prev => [...prev, data]);
-    } catch (error) {
+    } catch {
       showToast('error', 'Failed', 'Could not send message');
     }
   };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, Users, MessageSquare, Plus, UserPlus, Trash2, Check, Loader2 } from 'lucide-react';
+import { Search, X, Users, Plus, Loader2 } from 'lucide-react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { getMediaUrl } from '../utils/imageUrl';
@@ -18,7 +18,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({ isOpen, onClose }) 
   const [selectedMembers, setSelectedMembers] = useState<any[]>([]);
   const [connectedUsers, setConnectedUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [loadingSuggested, setLoadingSuggested] = useState(false);
+  const [_loadingSuggested, setLoadingSuggested] = useState(false);
   const [creating, setCreating] = useState(false);
   const navigate = useNavigate();
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import clsx from 'clsx';
-import { User, Camera, Mail, Contact, GraduationCap, Shield, Save, LogOut, Lock, ChevronLeft, Smile } from 'lucide-react';
+import { User, Camera, Shield, Save, LogOut, Lock, ChevronLeft, Smile } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 import api from '../services/api';
@@ -11,7 +11,7 @@ import { getMediaUrl } from '../utils/imageUrl';
 import { compressImage } from '../utils/imageCompression';
 
 const ProfileSettings = () => {
-  const { user, login, logout, updateUser } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

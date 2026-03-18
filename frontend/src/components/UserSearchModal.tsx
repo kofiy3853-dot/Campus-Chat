@@ -3,7 +3,6 @@ import { Search, X, MessageSquare, User, GraduationCap, ChevronRight } from 'luc
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { getMediaUrl } from '../utils/imageUrl';
-import { clsx } from 'clsx';
 
 interface UserSearchModalProps {
   isOpen: boolean;

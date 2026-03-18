@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, MapPin, GraduationCap, Clock, Mail, Users, MessageSquare, Shield, ShieldOff, Loader2 } from 'lucide-react';
+import { X, GraduationCap, Clock, Users, MessageSquare, Shield, ShieldOff, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
 import { formatLastSeen } from '../utils/time';
@@ -19,7 +19,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
   const [isBlocked, setIsBlocked] = useState(false);
   const [blockLoading, setBlockLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isOpen || isGroup) return;

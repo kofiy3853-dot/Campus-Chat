@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, UserMinus, UserPlus, Clock } from 'lucide-react';
+import { X, Check, Clock } from 'lucide-react';
 import api from '../services/api';
 import { getMediaUrl } from '../utils/imageUrl';
 

@@ -1,7 +1,6 @@
 import React from 'react';
-import { ShoppingBag, MessageSquare, Tag, User } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import SafeImage from './SafeImage';
-import { clsx } from 'clsx';
 
 interface MarketplaceCardProps {
   item: any;

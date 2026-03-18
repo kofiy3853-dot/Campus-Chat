@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, Clock, MapPin, Trash2, CalendarDays, Loader2, ChevronRight, Check } from 'lucide-react';
+import { Plus, Clock, MapPin, CalendarDays, Loader2, ChevronRight } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 

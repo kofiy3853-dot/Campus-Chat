@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Calendar, Plus, Filter, TrendingUp, Clock, Search, ChevronLeft } from 'lucide-react';
+import { Calendar, Plus, TrendingUp, Clock, Search, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import EventCard from '../components/EventCard';

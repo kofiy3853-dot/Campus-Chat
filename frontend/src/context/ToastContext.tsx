@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { X, Bell, MessageSquare, Users, Info, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, MessageSquare, Info, CheckCircle, AlertCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export type ToastType = 'message' | 'success' | 'info' | 'error';

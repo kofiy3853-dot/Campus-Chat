@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Ghost, Plus, Filter, TrendingUp, Clock, MessageSquare, ShieldAlert, PenLine, ChevronLeft } from 'lucide-react';
+import { Ghost, TrendingUp, Clock, ShieldAlert, PenLine, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ConfessionCard from '../components/ConfessionCard';
@@ -10,7 +10,7 @@ const ConfessionsPage: React.FC = () => {
   const { user } = useAuth();
   const [confessions, setConfessions] = useState<any[]>([]);
   const [sort, setSort] = useState<'newest' | 'top'>('newest');
-  const [page, setPage] = useState(1);
+  const [_page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showCompose, setShowCompose] = useState(false);

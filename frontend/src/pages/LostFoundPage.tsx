@@ -8,7 +8,7 @@ import PostCompose from '../components/PostCompose';
 import Skeleton from '../components/Skeleton';
 
 const LostFoundPage: React.FC = () => {
-  const { user } = useAuth();
+  useAuth();
   const { socket } = useSocket();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

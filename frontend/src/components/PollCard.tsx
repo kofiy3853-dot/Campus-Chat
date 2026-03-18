@@ -12,7 +12,7 @@ interface PollCardProps {
   onReport?: (pollId: string) => void;
 }
 
-const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete, onReport }) => {
+const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showReport, setShowReport] = useState(false);

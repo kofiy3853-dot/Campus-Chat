@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Megaphone, Heart, Bookmark, Share2, Loader2, Calendar, Award, ArrowRight, ChevronLeft, Plus, Pin } from 'lucide-react';
+import { Megaphone, Heart, Bookmark, Share2, Calendar, Award, ArrowRight, ChevronLeft, Pin } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -9,7 +9,7 @@ import Skeleton from './Skeleton';
 import CreateAnnouncementModal from './CreateAnnouncementModal';
 
 const AnnouncementList = () => {
-  const { user } = useAuth();
+  useAuth();
   const { socket } = useSocket();
   const location = useLocation();
   const [announcements, setAnnouncements] = useState<any[]>([]);

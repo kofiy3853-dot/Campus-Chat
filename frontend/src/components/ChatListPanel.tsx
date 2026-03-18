@@ -260,7 +260,6 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
           const participants = item.participants || [];
           const otherParticipant = isGroup ? null : participants.find((p: any) => p?._id !== user?._id);
           const name = isGroup ? item.group_name : (otherParticipant?.name || 'Unknown User');
-          const avatar = isGroup ? null : otherParticipant?.profile_picture;
           const status = isGroup ? null : otherParticipant?.status;
 
           if (!item._id) return null;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Filter, Plus, Tag, Ghost, Package } from 'lucide-react';
+import { ShoppingBag, Search, Plus, Tag, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import MarketplaceCard from '../components/MarketplaceCard';

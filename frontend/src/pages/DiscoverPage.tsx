@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Search, 
-  Users, 
   UserPlus, 
   TrendingUp, 
   Globe, 
@@ -160,7 +159,7 @@ const DiscoverPage: React.FC = () => {
     }
   };
 
-  const startChat = async (userId: string, _connectionStatus: string) => {
+  const startChat = async (userId: string, _: string) => {
     try {
       const { data } = await api.post('/api/chat/conversations', { participantId: userId });
       navigate(`/dashboard/chat/${data._id}`);

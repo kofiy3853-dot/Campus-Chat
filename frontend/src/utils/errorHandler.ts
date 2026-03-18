@@ -157,7 +157,7 @@ export const retryRequest = async (
       lastError = error;
 
       // Don't retry on 4xx errors (except 429)
-      if (error.response?.status && error.response.status < 500 && error.response.status !== 429) {
+      if ((error as any).response?.status && (error as any).response.status < 500 && (error as any).response.status !== 429) {
         throw error;
       }
 
