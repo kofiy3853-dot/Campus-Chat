@@ -97,8 +97,13 @@ const NotificationCenter: React.FC = () => {
 
   const deleteNotification = async (notificationId: string) => {
     try {
+      const target = notifications.find((n) => n._id === notificationId);
       await api.delete(`/api/notifications/${notificationId}`);
       setNotifications((prev) => prev.filter((n) => n._id !== notificationId));
+      // Decrement badge if the deleted notification was unread
+      if (target && !target.read) {
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
     } catch (error) {
       console.error('Error deleting notification:', error);
     }
