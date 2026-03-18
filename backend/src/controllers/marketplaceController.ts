@@ -7,6 +7,13 @@ import { uploadToFirebaseStorage } from '../services/cloudinaryService';
 export const createListing = async (req: AuthRequest, res: Response) => {
   try {
     console.log("=== CREATE LISTING START ===");
+    console.log("USER AUTH CHECK:", req.user);
+    
+    if (!req.user) {
+      console.log("❌ No user found in request");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     console.log("BODY:", req.body);
     console.log("USER:", req.user);
     console.log("FILE:", req.file);
