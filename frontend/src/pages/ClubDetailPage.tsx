@@ -16,7 +16,8 @@ import {
   MoreVertical,
   Shield,
   ShieldCheck,
-  MapPin
+  MapPin,
+  Trash2
 } from 'lucide-react';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
@@ -82,6 +83,17 @@ const ClubDetailPage = () => {
     }
   }, [id]);
 
+  const handleDeletePost = async (postId: string) => {
+    if (!window.confirm('Delete this post?')) return;
+    try {
+      await api.delete(`/api/clubs/${id}/posts/${postId}`);
+      setPosts(prev => prev.filter(p => p._id !== postId));
+      showToast('success', 'Deleted', 'Post removed successfully');
+    } catch (error: any) {
+      showToast('error', 'Error', error.response?.data?.message || 'Failed to delete post');
+    }
+  };
+
   const fetchMessages = useCallback(async () => {
     try {
       setMessagesLoading(true);
@@ -127,6 +139,10 @@ const ClubDetailPage = () => {
       showToast('info', 'New Update', `New post in ${club?.name}`);
     };
 
+    const deletePostHandler = ({ postId }: { postId: string }) => {
+      setPosts(prev => prev.filter(p => p._id !== postId));
+    };
+
     const messageHandler = (message: any) => {
       setMessages(prev => {
         if (prev.some(m => m._id === message._id)) return prev;
@@ -140,11 +156,13 @@ const ClubDetailPage = () => {
     };
 
     socket.on(`new_club_post_${id}`, postHandler);
+    socket.on(`delete_club_post_${id}`, deletePostHandler);
     socket.on('receive_club_message', messageHandler);
     socket.on(`new_club_event_${id}`, eventHandler);
 
     return () => {
       socket.off(`new_club_post_${id}`, postHandler);
+      socket.off(`delete_club_post_${id}`, deletePostHandler);
       socket.off('receive_club_message', messageHandler);
       socket.off(`new_club_event_${id}`, eventHandler);
     };
@@ -217,11 +235,22 @@ const ClubDetailPage = () => {
                     </p>
                   </div>
                 </div>
-                {post.type === 'announcement' && (
-                  <span className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-amber-100">
-                    Announcement
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {post.type === 'announcement' && (
+                    <span className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-amber-100">
+                      Announcement
+                    </span>
+                  )}
+                  {(post.posted_by?._id === user?._id || club?.admins?.some((a: any) => a._id === user?._id)) && (
+                    <button
+                      onClick={() => handleDeletePost(post._id)}
+                      title="Delete post"
+                      className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               </div>
               
               <h3 className="text-xl font-black text-slate-800 tracking-tight">{post.title}</h3>

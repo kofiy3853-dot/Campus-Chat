@@ -8,6 +8,7 @@ import {
   joinClub,
   createClubPost,
   getClubPosts,
+  deleteClubPost,
   getClubMessages,
   sendClubMessage,
   createClubEvent,
@@ -25,6 +26,7 @@ router.get('/:id', protect, getClubDetails);
 router.post('/join/:id', protect, joinClub);
 router.get('/:id/posts', protect, getClubPosts);
 router.post('/:id/posts', protect, upload.single('image'), createClubPost);
+router.delete('/:id/posts/:postId', protect, deleteClubPost);
 router.get('/:id/messages', protect, getClubMessages);
 router.post('/:id/messages', protect, sendClubMessage);
 router.get('/:id/events', protect, getClubEvents);

@@ -160,6 +160,35 @@ export const getClubPosts = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteClubPost = async (req: AuthRequest, res: Response) => {
+  const { id, postId } = req.params;
+  const userId = req.user?._id;
+
+  try {
+    const post = await ClubPost.findById(postId);
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const club = await Club.findById(id);
+    if (!club) return res.status(404).json({ message: 'Club not found' });
+
+    const isAuthor = post.posted_by.toString() === userId?.toString();
+    const isAdmin = club.admins.some((a: any) => a.toString() === userId?.toString());
+
+    if (!isAuthor && !isAdmin) {
+      return res.status(403).json({ message: 'Not authorized to delete this post' });
+    }
+
+    await ClubPost.findByIdAndDelete(postId);
+    io.emit(`delete_club_post_${id}`, { postId });
+
+    res.json({ message: 'Post deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 export const getClubMessages = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   const userId = req.user?._id;
