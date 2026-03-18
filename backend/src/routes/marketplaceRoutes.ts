@@ -11,6 +11,12 @@ import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
+// Test endpoint
+router.get('/test', (req, res) => {
+  console.log('[MARKETPLACE TEST] Route is working');
+  res.json({ message: 'Marketplace routes are working' });
+});
+
 // Multer config for Cloudinary (Memory Storage)
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
