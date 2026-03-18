@@ -48,12 +48,20 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      onSuccess();
-      onClose();
+      // Reset form state first
       setTitle('');
       setPrice('');
       setImage(null);
       setImagePreview(null);
+      
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
+      // Then close modal and refresh list
+      onSuccess();
+      onClose();
     } catch (error) {
       console.error('Error creating listing:', error);
       alert('Failed to post item. Please try again.');
