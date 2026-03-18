@@ -20,7 +20,7 @@ export const createListing = async (req: AuthRequest, res: Response) => {
       price,
       image,
       category,
-      sellerId: req.user.id,
+      sellerId: req.user._id,
     });
 
     const populatedItem = await Product.findById(item._id).populate('sellerId', 'name profile_picture status');
@@ -58,7 +58,7 @@ export const getListings = async (req: AuthRequest, res: Response) => {
 
 export const getMyListings = async (req: AuthRequest, res: Response) => {
   try {
-    const items = await Product.find({ sellerId: req.user.id })
+    const items = await Product.find({ sellerId: req.user._id })
       .populate('sellerId', 'name profile_picture status')
       .sort({ createdAt: -1 });
     res.json(items);
@@ -74,7 +74,7 @@ export const updateListingStatus = async (req: AuthRequest, res: Response) => {
   try {
     // Note: status is not in the user's schema, so this might need updating or adding to ProductSchema
     const item = await Product.findOneAndUpdate(
-      { _id: id, sellerId: req.user.id },
+      { _id: id, sellerId: req.user._id },
       { status },
       { returnDocument: 'after' }
     ).populate('sellerId', 'name profile_picture status');
@@ -90,7 +90,7 @@ export const deleteListing = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
   try {
-    const item = await Product.findOneAndDelete({ _id: id, sellerId: req.user.id });
+    const item = await Product.findOneAndDelete({ _id: id, sellerId: req.user._id });
     if (!item) return res.status(404).json({ message: 'Listing not found or unauthorized' });
     res.json({ message: 'Listing deleted successfully' });
   } catch (error: any) {
