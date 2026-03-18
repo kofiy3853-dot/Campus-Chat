@@ -249,8 +249,10 @@ io.on('connection', async (socket) => {
 app.use(cors(corsOptions));
 app.use(compression());
 app.use(express.json());
+
+// Request logging
 app.use((req, res, next) => {
-  console.log(`[Server] ${req.method} ${req.path}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
 });
 app.use(generalRateLimiter);
@@ -314,6 +316,17 @@ app.use('/api/connections', connectionRoutes);
 app.use('/api/internships', internshipRoutes);
 app.use('/api/clubs', clubRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+
+// 404 Handler - Must come before error handler
+app.use((req: express.Request, res: express.Response) => {
+  console.warn(`[404] Route not found: ${req.method} ${req.path}`);
+  res.status(404).json({ 
+    message: 'Route not found',
+    path: req.path,
+    method: req.method,
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
