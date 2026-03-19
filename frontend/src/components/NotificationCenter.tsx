@@ -27,31 +27,33 @@ const NotificationCenter: React.FC = () => {
     fetchUnreadCount();
 
     // Listen for real-time notifications
-    if (socket) {
-      socket.on('notification', (notification: Notification) => {
-        setNotifications((prev) => [notification, ...prev]);
-        setUnreadCount((prev) => prev + 1);
-      });
+    if (!socket) return;
 
-      socket.on('notification_read', ({ notificationId }: { notificationId: string }) => {
-        setNotifications((prev) =>
-          prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
-        );
-        setUnreadCount((prev) => Math.max(0, prev - 1));
-      });
+    const handleNewNotification = (notification: Notification) => {
+      setNotifications((prev) => [notification, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+    };
 
-      socket.on('all_notifications_read', () => {
-        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-        setUnreadCount(0);
-      });
-    }
+    const handleNotificationRead = ({ notificationId }: { notificationId: string }) => {
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    };
+
+    const handleAllNotificationsRead = () => {
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      setUnreadCount(0);
+    };
+
+    socket.on('notification', handleNewNotification);
+    socket.on('notification_read', handleNotificationRead);
+    socket.on('all_notifications_read', handleAllNotificationsRead);
 
     return () => {
-      if (socket) {
-        socket.off('notification');
-        socket.off('notification_read');
-        socket.off('all_notifications_read');
-      }
+      socket.off('notification', handleNewNotification);
+      socket.off('notification_read', handleNotificationRead);
+      socket.off('all_notifications_read', handleAllNotificationsRead);
     };
   }, [socket]);
 
