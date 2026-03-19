@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';
+import ThemeToggle from './ThemeToggle';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
 import ExploreMenu from './ExploreMenu';
@@ -34,7 +35,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
   return (
     <aside className={clsx(
-      "bg-white border-gray-100 z-50",
+      "bg-white dark:bg-slate-900 border-gray-100 dark:border-gray-800 z-50",
       "fixed bottom-0 left-0 right-0 border-t flex flex-row items-center px-4 h-20 justify-around",
       "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start",
       className
@@ -97,38 +98,53 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
       {/* Bottom Actions */}
       <div className="hidden md:flex flex-col items-center gap-6 mt-auto shrink-0">
+        <ThemeToggle />
         <NavLink
           to="/dashboard/profile"
           className={({ isActive }) => clsx(
             "p-3 rounded-2xl relative group transition-none",
-            isActive 
-              ? "bg-sky-50 text-sky-500" 
-              : "text-gray-400 hover:text-sky-500 hover:bg-gray-50"
-          )}
-          title="Profile Settings"
-        >
-          <Settings className="w-6 h-6" />
-        </NavLink>
-
-        <NavLink
-          to="/dashboard/profile"
-          className={({ isActive }) => clsx(
-            "w-10 h-10 rounded-full border-2 overflow-hidden cursor-pointer transition-none",
-            isActive ? "border-sky-400" : "border-gray-100 hover:border-sky-200"
           )}
         >
-          <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="User Profile" className="w-full h-full object-cover" />
+          <div className="relative">
+            <UserIcon className="w-6 h-6" />
+          </div>
+          <div className="hidden md:block absolute left-full ml-4 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-none">
+            Profile
+          </div>
         </NavLink>
 
         <button
           onClick={logout}
-          className="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-2xl w-12 h-12 flex items-center justify-center group relative transition-none"
+          className="p-2 rounded-2xl md:p-3 text-gray-400 hover:text-red-500 md:hover:bg-red-50 transition-colors"
           title="Logout"
         >
           <LogOut className="w-6 h-6" />
           <div className="absolute left-full ml-4 px-2 py-1 bg-red-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-none">
             Logout
           </div>
+        </button>
+      </div>
+
+      {/* Mobile Bottom Actions */}
+      <div className="flex md:hidden items-center gap-4">
+        <ThemeToggle />
+        <NavLink
+          to="/dashboard/profile"
+          className={({ isActive }) => clsx(
+            isActive
+              ? "p-2 rounded-2xl text-sky-500"
+              : "p-2 rounded-2xl text-gray-400 hover:text-sky-500"
+          )}
+        >
+          <UserIcon className="w-6 h-6" />
+        </NavLink>
+
+        <button
+          onClick={logout}
+          className="p-2 rounded-2xl text-gray-400 hover:text-red-500 transition-colors"
+          title="Logout"
+        >
+          <LogOut className="w-6 h-6" />
         </button>
       </div>
       <ExploreMenu isOpen={isExploreOpen} onClose={() => setIsExploreOpen(false)} />

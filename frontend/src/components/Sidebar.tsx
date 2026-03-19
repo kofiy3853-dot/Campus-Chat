@@ -63,8 +63,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             N
           </div>
         )}
-        <ThemeToggle />
+        {isOpen && <ThemeToggle />}
       </div>
+
+      {/* Theme Toggle for Collapsed State */}
+      {!isOpen && (
+        <div className="px-4 pb-4">
+          <ThemeToggle />
+        </div>
+      )}
 
       {/* Tabs */}
       {isOpen && (
