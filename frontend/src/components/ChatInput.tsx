@@ -348,7 +348,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
             type="text"
             placeholder={uploading ? 'Uploading…' : isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, '0')}` : 'Type message…'}
             className={clsx(
-              "flex-1 bg-transparent border-none outline-none text-on-surface py-2.5 text-[15px] placeholder:text-on-surface-variant/50 min-w-0 font-body",
+              "flex-1 bg-transparent border-none outline-none text-on-surface py-2.5 text-sm placeholder:text-on-surface-variant/50 min-w-0 font-body",
               isRecording && "animate-pulse text-red-500 font-bold"
             )}
             value={text}

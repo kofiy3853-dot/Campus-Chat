@@ -282,11 +282,11 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
               {/* Chat Info */}
               <div className="flex-1 min-w-0">
-                <h4 className="font-black truncate text-[#331c61] text-base mb-1">
+                <h4 className="font-black truncate text-[#331c61] text-sm mb-1">
                   {name}
                 </h4>
                 <p className={clsx(
-                  "text-xs truncate leading-snug font-medium",
+                  "text-[11px] truncate leading-snug font-medium",
                   item.unread_count > 0 ? "text-slate-800 font-bold" : "text-slate-400"
                 )}>
                   {item.last_message?.message_text || (isGroup ? `${item.members?.length || 0} members` : 'Start a conversation')}
@@ -295,7 +295,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
               {/* Meta */}
               <div className="flex flex-col items-end gap-2 shrink-0">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">
+                <span className="text-[0.65rem] text-slate-400 font-bold uppercase tracking-tight">
                   {item.last_message?.timestamp ? new Date(item.last_message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                 </span>
                 {item.unread_count > 0 && (

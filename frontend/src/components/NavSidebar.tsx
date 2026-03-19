@@ -61,12 +61,12 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
                 )}>
                   <item.icon className="w-6 h-6" />
                   {item.label === 'Chats' && unread > 0 && (
-                    <span className="absolute top-0 right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+                    <span className="absolute top-0 right-2 bg-red-500 text-white text-[0.65rem] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
                       {unread > 99 ? '99+' : unread}
                     </span>
                   )}
                 </div>
-                <span className={clsx("text-[9px] font-bold uppercase tracking-widest transition-colors", isActive ? "text-[#8444e2]" : "text-slate-400 group-hover:text-[#8444e2]")}>
+                <span className={clsx("text-[0.6rem] font-bold uppercase tracking-widest transition-colors", isActive ? "text-[#8444e2]" : "text-slate-400 group-hover:text-[#8444e2]")}>
                   {item.label}
                 </span>
                 <div className="hidden md:block absolute left-full ml-4 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">

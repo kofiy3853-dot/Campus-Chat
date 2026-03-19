@@ -377,8 +377,8 @@ const ChatWindow = () => {
         <div className="w-24 h-24 rounded-[2.5rem] bg-surface-container-low flex items-center justify-center mb-6 shadow-ambient">
             <span className="text-4xl">✨</span>
         </div>
-        <h3 className="text-2xl font-display font-black text-on-surface mb-2">Select a Conversation</h3>
-        <p className="max-w-xs text-center text-on-surface-variant/70">Pick a friend or start a new chat to begin messaging.</p>
+        <h3 className="text-xl font-display font-black text-on-surface mb-2">Select a Conversation</h3>
+        <p className="max-w-xs text-center text-[13px] text-on-surface-variant/70">Pick a friend or start a new chat to begin messaging.</p>
     </div>
   );
   if (error) return (

@@ -121,7 +121,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   };
 
   const renderSenderName = !isMe && message.sender_id?.name && (
-    <span className="text-[11px] font-bold text-on-surface-variant/70 mb-1.5 ml-1 uppercase tracking-widest leading-none font-display">
+    <span className="text-[0.7rem] font-bold text-on-surface-variant/70 mb-1.5 ml-1 uppercase tracking-widest leading-none font-display">
       {message.sender_id.name}
     </span>
   );
@@ -183,13 +183,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
             <div 
               onClick={() => scrollToMessage(message.reply_to._id)}
               className={clsx(
-                "mb-2 p-2 px-3 rounded-2xl text-[12px] border-l-4 overflow-hidden cursor-pointer",
+                "mb-2 p-2 px-3 rounded-2xl text-xs border-l-4 overflow-hidden cursor-pointer",
                 isMe 
                   ? "bg-white/10 border-white/40 text-white/90" 
                   : "bg-slate-50 border-sky-400 text-slate-500"
               )}
             >
-              <p className="font-black uppercase tracking-widest text-[10px] mb-0.5 opacity-80">
+              <p className="font-black uppercase tracking-widest text-[0.65rem] mb-0.5 opacity-80">
                 {message.reply_to.sender_id?.name || 'User'}
               </p>
               <p className="line-clamp-1 italic">
@@ -226,7 +226,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           ) : (
             <div className="space-y-2">
               <p className={clsx(
-                "text-[15px] leading-[1.6] whitespace-pre-wrap font-medium tracking-tight",
+                "text-sm leading-[1.6] whitespace-pre-wrap font-medium tracking-tight",
                 message.is_deleted && "italic opacity-60 line-through"
               )}>
                 {message.is_deleted ? 'This message was deleted' : message.message_text}

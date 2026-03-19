@@ -38,10 +38,10 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle,
           )}
         </div>
         <div className="min-w-0">
-          <h3 className="font-display font-extrabold text-on-surface tracking-tight text-base md:text-lg truncate max-w-[120px] md:max-w-none">
+          <h3 className="font-display font-extrabold text-on-surface tracking-tight text-sm md:text-base truncate max-w-[120px] md:max-w-none">
             {user?.name || (user?.isGroup ? 'Unnamed Group' : 'Unknown User')}
           </h3>
-          <p className="text-[10px] md:text-[11px] font-medium tracking-wide">
+          <p className="text-[0.65rem] md:text-[0.7rem] font-medium tracking-wide">
             {isTyping ? (
               <span className="text-primary flex items-center gap-1">
                 typing...
