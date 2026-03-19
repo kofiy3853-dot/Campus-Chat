@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import Product from '../models/Product';
 import mongoose from 'mongoose';
-import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
+import { uploadToSupabaseStorage, deleteFromSupabaseStorage } from '../services/supabaseStorageService';
 import { io } from '../server';
 
 export const createListing = async (req: AuthRequest, res: Response) => {
@@ -124,14 +124,32 @@ export const deleteListing = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
   try {
-    const item = await Product.findOneAndDelete({ _id: id, sellerId: req.user._id });
+    // 1. Find the item first to get image URLs
+    const item = await Product.findOne({ _id: id, sellerId: req.user._id });
     if (!item) return res.status(404).json({ message: 'Listing not found or unauthorized' });
 
-    // Emit real-time event
+    // 2. Delete images from Supabase Storage
+    if (item.image) {
+      const images = Array.isArray(item.image) ? item.image : [item.image];
+      for (const imageUrl of images) {
+        try {
+          await deleteFromSupabaseStorage(imageUrl);
+        } catch (storageErr) {
+          console.error(`[Marketplace] Failed to delete image from storage: ${imageUrl}`, storageErr);
+          // Continue even if storage deletion fails to ensure consistency in DB
+        }
+      }
+    }
+
+    // 3. Delete from database
+    await Product.findByIdAndDelete(id);
+
+    // 4. Emit real-time event
     io.emit('marketplace_item_removed', { itemId: id });
 
     res.json({ message: 'Listing deleted successfully' });
   } catch (error: any) {
+    console.error('[Marketplace Delete Error]:', error);
     res.status(500).json({ message: error.message });
   }
 };

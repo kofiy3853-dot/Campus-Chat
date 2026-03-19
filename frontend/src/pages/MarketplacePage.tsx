@@ -82,12 +82,22 @@ const MarketplacePage: React.FC = () => {
     };
   }, [socket, activeCategory]);
 
-  const handleDelete = (itemId: string) => {
-    setItems((prev) => prev.filter((item) => item._id !== itemId));
-    // Optionally call API to delete from backend
-    // api.delete(`/api/marketplace/${itemId}`).catch(err => {
-    //   console.error('Error deleting item:', err);
-    // });
+  const handleDelete = async (itemId: string) => {
+    if (!window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      // Optimistic upate
+      setItems((prev) => prev.filter((item) => item._id !== itemId));
+      
+      await api.delete(`/api/marketplace/${itemId}`);
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      alert('Failed to delete item. Please try again.');
+      // Revert optimistic update on failure (optional, but good for UX)
+      fetchItems();
+    }
   };
 
   const handleMessageSeller = async (sellerId: string) => {
