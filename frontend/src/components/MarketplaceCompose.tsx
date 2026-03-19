@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { X, Camera, Tag, DollarSign, Package, Loader2 } from 'lucide-react';
+import { X, Camera, Tag, DollarSign, Package, Plus, Loader2, Image as ImageIcon } from 'lucide-react';
 import api from '../services/api';
-
 import { compressImage } from '../utils/imageCompression';
 
 interface MarketplaceComposeProps {
@@ -15,44 +14,63 @@ const CATEGORIES = ['Electronics', 'Books', 'Furniture', 'Clothing', 'Services',
 const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose, onSuccess }) => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('General');
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [category, setCategory] = useState('Other');
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const originalFile = e.target.files?.[0];
-    if (originalFile) {
-      const file = await compressImage(originalFile);
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+    const files = Array.from(e.target.files || []);
+    const newImages: File[] = [];
+    const newPreviews: string[] = [];
+
+    for (const file of files) {
+      if (file.type.startsWith('image/')) {
+        const compressedFile = await compressImage(file);
+        newImages.push(compressedFile);
+        newPreviews.push(URL.createObjectURL(compressedFile));
+      }
     }
+
+    setImages(prev => [...prev, ...newImages]);
+    setImagePreviews(prev => [...prev, ...newPreviews]);
+  };
+
+  const removeImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !price || !image) return;
+    if (!title || !price || images.length === 0) return;
 
     try {
       setLoading(true);
+      
+      // Upload all images
       const formData = new FormData();
       formData.append('title', title);
       formData.append('price', price);
-      formData.append('image', image);
       formData.append('category', category);
+      
+      // Append all images
+      images.forEach((image, index) => {
+        formData.append(`images`, image);
+      });
 
-      await api.post('/api/marketplace', formData, {
+      const response = await api.post('/api/marketplace', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       // Reset form state first
       setTitle('');
       setPrice('');
-      setImage(null);
-      setImagePreview(null);
+      setImages([]);
+      setImagePreviews([]);
       
       // Reset file input
       if (fileInputRef.current) {
@@ -72,94 +90,147 @@ const MarketplaceCompose: React.FC<MarketplaceComposeProps> = ({ isOpen, onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
-      <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden">
-        <div className="p-6 border-b border-slate-50 flex items-center justify-between">
-          <h2 className="text-xl font-black text-slate-800 tracking-tight">Post New Item</h2>
+      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Post New Item</h2>
           <button 
             onClick={onClose} 
             title="Close modal"
-            className="p-2 hover:bg-slate-50 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-50 rounded-full transition-colors"
           >
-            <X className="w-5 h-5 text-slate-400" />
+            <X className="w-6 h-6 text-gray-400" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="relative group flex flex-col items-center justify-center h-48 bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl overflow-hidden hover:border-sky-300">
-            {imagePreview ? (
-              <>
-                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                <button 
-                  type="button"
-                  onClick={() => { setImage(null); setImagePreview(null); }}
-                  title="Remove image"
-                  className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full shadow-sm text-red-500"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </>
-            ) : (
-              <button 
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Image Upload Section */}
+          <div className="space-y-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Photos <span className="text-gray-400">(up to 5 images)</span>
+            </label>
+            
+            {/* Image Preview Grid */}
+            {imagePreviews.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                {imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Remove image"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Upload Button */}
+            <div className="flex items-center justify-center w-full">
+              <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                aria-label="Upload item image"
-                className="flex flex-col items-center gap-2 text-slate-400 group-hover:text-sky-500 transition-colors"
+                className="flex items-center gap-3 px-6 py-4 bg-gray-50 hover:bg-gray-100 border-2 border-dashed border-gray-300 rounded-2xl text-gray-600 hover:text-gray-700 hover:border-gray-400 transition-all"
               >
-                <div className="p-4 rounded-full bg-white shadow-sm ring-1 ring-slate-100" title="Camera icon">
-                  <Camera className="w-6 h-6" />
-                </div>
-                <span className="text-xs font-black uppercase tracking-wider">Add Item Image</span>
+                <Camera className="w-6 h-6" />
+                <span className="font-medium">Add Photos</span>
+                {images.length > 0 && (
+                  <span className="ml-2 text-sm text-gray-500">({images.length}/5)</span>
+                )}
               </button>
-            )}
-            <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" title="Hidden image input" />
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              multiple
+              className="hidden"
+            />
           </div>
 
-          <div className="space-y-4">
-            <div className="relative">
-              <Package className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-              <input 
+          {/* Item Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Title */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Title
+              </label>
+              <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="What are you selling?"
-                title="Item title"
-                className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                 required
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-               <div className="relative">
-                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                <input 
+            {/* Price */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Price
+              </label>
+              <div className="relative">
+                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  placeholder="Price"
-                  title="Item price"
-                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-medium placeholder:text-slate-400 focus:ring-2 focus:ring-sky-500/20"
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0"
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
                   required
                 />
               </div>
+            </div>
+
+            {/* Category */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Category
+              </label>
               <div className="relative">
-                <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                <select 
+                <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  title="Item category"
-                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-medium appearance-none focus:ring-2 focus:ring-sky-500/20"
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm appearance-none"
                 >
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  {CATEGORIES.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
                 </select>
               </div>
             </div>
           </div>
 
-          <button 
+          {/* Submit Button */}
+          <button
             type="submit"
-            disabled={loading}
-            className="w-full py-4 bg-sky-500 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-lg shadow-sky-200 hover:bg-sky-600 flex items-center justify-center gap-2 mt-2"
+            disabled={loading || !title || !price || images.length === 0}
+            className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
           >
-            {loading ? <Loader2 className="w-5 h-5" /> : 'Create Listing'}
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5" />
+                <span>Creating Listing...</span>
+              </>
+            ) : (
+              <>
+                <Package className="w-5 h-5" />
+                <span>Create Listing</span>
+              </>
+            )}
           </button>
         </form>
       </div>

@@ -16,23 +16,28 @@ export const createListing = async (req: AuthRequest, res: Response) => {
 
     console.log("BODY:", req.body);
     console.log("USER:", req.user);
-    console.log("FILE:", req.file);
+    console.log("FILES:", req.files);
 
-    if (!req.file) {
-      console.log("❌ No file uploaded");
-      return res.status(400).json({ message: 'Image upload is required' });
+    if (!req.files || req.files.length === 0) {
+      console.log("❌ No images uploaded");
+      return res.status(400).json({ message: 'At least one image is required' });
     }
 
-    // Upload to Firebase Storage
-    const image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'marketplace');
-    console.log("✅ Image uploaded:", image);
+    // Upload all images to Firebase Storage
+    const imageUrls = [];
+    for (const file of req.files) {
+      console.log("✅ Uploading image:", file.originalname);
+      const imageUrl = await uploadToFirebaseStorage(file.buffer, file.originalname, 'marketplace');
+      imageUrls.push(imageUrl);
+    }
+    console.log("✅ All images uploaded:", imageUrls);
 
     const listing = await Product.create({
       title: req.body.title,
       price: req.body.price,
       category: req.body.category,
-      image: image,
-      sellerId: req.user._id, // Use _id not id
+      image: imageUrls, // Store array of image URLs
+      sellerId: req.user._id,
     });
 
     console.log("✅ Listing created:", listing);
@@ -44,7 +49,7 @@ export const createListing = async (req: AuthRequest, res: Response) => {
     res.status(201).json(populatedListing);
   } catch (error: any) {
     console.error("❌ CREATE LISTING ERROR:");
-    console.error(error); // FULL ERROR
+    console.error(error);
     console.error("Message:", error.message);
     console.error("Stack:", error.stack);
 
