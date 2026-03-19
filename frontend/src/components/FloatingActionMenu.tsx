@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Plus, 
   MessageSquare, 
@@ -15,6 +15,8 @@ import { clsx } from 'clsx';
 const FloatingActionMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isMarketplace = location.pathname.includes('/marketplace');
 
   const options = [
     { 
@@ -81,8 +83,13 @@ const FloatingActionMenu: React.FC = () => {
           onClick={() => setIsOpen(!isOpen)}
           title={isOpen ? "Close menu" : "Open menu"}
           className={clsx(
-            "w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-sky-200 transition-all duration-300 active:scale-90",
-            isOpen ? "bg-slate-800 text-white rotate-45" : "bg-sky-500 text-white"
+            "w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 active:scale-90",
+            isMarketplace ? "shadow-[#6A35FF]/40" : "shadow-sky-200",
+            isOpen 
+              ? "bg-slate-800 text-white rotate-45" 
+              : isMarketplace 
+                ? "bg-[#6A35FF] text-white" 
+                : "bg-sky-500 text-white"
           )}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >

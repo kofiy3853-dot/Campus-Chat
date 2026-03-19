@@ -138,7 +138,7 @@ const MarketplacePage: React.FC = () => {
             </div>
 
             {/* Category Pills (Unified Mobile & Desktop) */}
-            <div className="flex overflow-x-auto gap-2 no-scrollbar pb-1">
+            <div className="flex overflow-x-auto gap-2 [&::-webkit-scrollbar]:hidden pb-1">
               {CATEGORIES.map(cat => (
                  <button
                    key={cat}
@@ -187,15 +187,6 @@ const MarketplacePage: React.FC = () => {
           )}
         </div>
       </main>
-
-      {/* Floating Action Button for Post Item */}
-      <button
-        onClick={() => setIsComposeOpen(true)}
-        className="absolute bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-[#6A35FF] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#6A35FF]/40 hover:scale-105 active:scale-95 transition-all z-40"
-        aria-label="Post Item"
-      >
-        <Plus className="w-6 h-6" />
-      </button>
 
       <React.Suspense fallback={<div className="animate-pulse bg-slate-100 h-96 rounded-[2.5rem]" />}>
         <MarketplaceCompose 

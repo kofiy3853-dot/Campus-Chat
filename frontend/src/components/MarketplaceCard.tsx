@@ -13,8 +13,8 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
   const { user } = useAuth();
 
   return (
-    <div className="market-card bg-white dark:bg-slate-800 rounded-[1.5rem] p-3 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:shadow-[#6A35FF]/10 transition-all duration-300 flex flex-col h-full">
-      <div className="relative h-[200px] rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-900 group">
+    <div className="market-card bg-white dark:bg-slate-800 rounded-[1.5rem] shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:shadow-[#6A35FF]/10 transition-all duration-300 flex flex-col h-full overflow-hidden">
+      <div className="relative h-[200px] w-full bg-slate-100 dark:bg-slate-900 group">
         {/* Handle multiple images */}
         {Array.isArray(item.image) ? (
           <div className="grid grid-cols-2 gap-1 h-full">
@@ -49,7 +49,7 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
         </div>
       </div>
       
-      <div className="flex flex-col flex-1 px-1">
+      <div className="flex flex-col flex-1 p-4 pt-5">
         <div className="flex items-start justify-between gap-2 mb-3">
           <h3 className="text-base font-black text-slate-800 dark:text-slate-200 truncate flex-1">
             {item.title}
