@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Trash2, User, Phone } from 'lucide-react';
+import { MessageSquare, Trash2, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import SafeImage from './SafeImage';
 
@@ -13,8 +13,8 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
   const { user } = useAuth();
 
   return (
-    <div className="market-card group bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-500 flex flex-col h-full">
-      <div className="relative h-[180px] overflow-hidden">
+    <div className="market-card bg-white dark:bg-slate-800 rounded-[1.5rem] p-3 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:shadow-[#6A35FF]/10 transition-all duration-300 flex flex-col h-full">
+      <div className="relative h-[200px] rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-900 group">
         {/* Handle multiple images */}
         {Array.isArray(item.image) ? (
           <div className="grid grid-cols-2 gap-1 h-full">
@@ -38,25 +38,29 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
           />
         )}
         
-        {/* Glassmorphism Price Tag */}
-        <div className="absolute top-4 right-4 px-4 py-2 bg-white/70 backdrop-blur-md rounded-2xl shadow-sm border border-white/40 ring-1 ring-black/5">
-          <span className="text-sm font-black text-sky-600">₵{item.price}</span>
-        </div>
+        {/* Heart Icon (Top Right) */}
+        <button className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-sm hover:bg-white transition-colors z-10" aria-label="Favorite">
+          <Heart className="w-4 h-4 text-slate-700 hover:text-red-500 hover:fill-red-500 transition-colors" />
+        </button>
 
-        {/* Glassmorphism Category Tag */}
-        <div className="absolute top-4 left-4">
-          <span className="text-[10px] font-black uppercase tracking-widest bg-slate-900/40 backdrop-blur-md text-white px-4 py-1.5 rounded-xl border border-white/20">
-            {item.category}
+        {/* Price Tag (Bottom Left) */}
+        <div className="absolute bottom-3 left-3 px-3 py-1 bg-[#4F23C0] text-white rounded-full text-xs font-black shadow-lg z-10">
+          ₵{item.price}
+        </div>
+      </div>
+      
+      <div className="flex flex-col flex-1 px-1">
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <h3 className="text-base font-black text-slate-800 dark:text-slate-200 truncate flex-1">
+            {item.title}
+          </h3>
+          <span className="shrink-0 text-[9px] font-black uppercase tracking-widest bg-[#E8F8EE] text-[#00A843] dark:bg-green-900/30 dark:text-green-400 px-2 py-1 rounded-md">
+            {item.condition || 'NEW'}
           </span>
         </div>
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      </div>
-      
-      <div className="flex flex-col min-w-0 p-6 flex-1 bg-gradient-to-b from-white dark:from-slate-800 to-slate-50/30 dark:to-slate-900/30">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-slate-700 shadow-sm">
+        <div className="flex items-center gap-2 mb-4 mt-auto">
+          <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-100 shrink-0">
             <SafeImage 
               src={item.sellerId?.profile_picture} 
               alt={item.sellerId?.name} 
@@ -64,34 +68,39 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-[10px] font-black text-slate-800 dark:text-slate-200 truncate leading-none">{item.sellerId?.name}</span>
-            <span className="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tight">Seller</span>
-          </div>
+          <span className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+            {item.sellerId?.name || 'Unknown'}
+          </span>
         </div>
-
-        <h3 className="text-lg font-black text-slate-800 dark:text-slate-200 mb-6 truncate group-hover:text-sky-600 transition-colors leading-tight">
-          {item.title}
-        </h3>
         
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <button 
-            onClick={() => onMessageSeller(item.sellerId?._id)}
-            className="flex-1 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-sky-500 transition-all duration-300 shadow-lg shadow-slate-200 hover:shadow-sky-200 active:scale-95 mt-auto"
-          >
-            <User className="w-4 h-4" /> 
-            <span>Contact</span>
-          </button>
-          
-          {/* Delete Button - Show only for item owner */}
-          {user?._id === item.sellerId?._id && onDelete && (
+          {user?._id === item.sellerId?._id ? (
+            <>
+              <button 
+                onClick={() => { /* Edit functionality to be connected if available */ console.log("Edit clicked"); }}
+                className="flex-[2] py-2.5 bg-white dark:bg-slate-800 text-[#6A35FF] dark:text-purple-400 border border-[#6A35FF] dark:border-purple-400 rounded-[0.8rem] text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#F3E8FF] dark:hover:bg-slate-700 transition-all"
+              >
+                Edit
+              </button>
+              {onDelete && (
+                <button 
+                  onClick={() => onDelete?.(item._id)}
+                  className="flex-1 py-2.5 bg-[#FF3B30] text-white rounded-[0.8rem] flex items-center justify-center hover:bg-red-600 transition-all shadow-md shadow-red-500/20"
+                  aria-label="Delete item"
+                  title="Delete item"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </>
+          ) : (
             <button 
-              onClick={() => onDelete(item._id)}
-              className="flex-1 py-3 bg-red-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-600 transition-all duration-300 shadow-lg shadow-red-200 active:scale-95 mt-auto"
+              onClick={() => onMessageSeller(item.sellerId?._id)}
+              className="w-full py-2.5 bg-[#6A35FF] text-white rounded-[0.8rem] text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#4F23C0] transition-all shadow-md shadow-[#6A35FF]/20"
             >
-              <Trash2 className="w-4 h-4" /> 
-              <span>Delete</span>
+              <MessageSquare className="w-4 h-4 fill-current" /> 
+              <span>Contact</span>
             </button>
           )}
         </div>
