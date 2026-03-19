@@ -24,11 +24,48 @@ if (import.meta.env.PROD && API_URL === 'http://localhost:5000') {
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000, // 10 second timeout for better performance
+  timeout: 30000, // 30 second timeout for Render cold starts
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Add retry logic for failed requests
+const MAX_RETRIES = 2;
+const RETRY_DELAY = 1000; // 1 second
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const config = error.config;
+    
+    // Don't retry if it's not a network error or timeout
+    if (!error.code && error.response) {
+      return Promise.reject(error);
+    }
+    
+    // Don't retry if we've already retried the maximum times
+    if (!config._retryCount) {
+      config._retryCount = 0;
+    }
+    
+    if (config._retryCount >= MAX_RETRIES) {
+      return Promise.reject(error);
+    }
+    
+    // Increment retry count
+    config._retryCount += 1;
+    
+    // Log retry attempt
+    console.log(`[API] Retrying request (${config._retryCount}/${MAX_RETRIES}): ${config.method?.toUpperCase()} ${config.url}`);
+    
+    // Wait before retrying
+    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * config._retryCount));
+    
+    // Retry the request
+    return api(config);
+  }
+);
 
 // Request interceptor - Add token and logging
 api.interceptors.request.use((config) => {
@@ -74,6 +111,8 @@ api.interceptors.response.use(
       message: error.message,
       status,
       data: error.response?.data,
+      code: error.code,
+      isRetry: !!error.config._retryCount,
     });
 
     // Handle 404 errors
@@ -102,10 +141,20 @@ api.interceptors.response.use(
       console.error('[API] Server error. Check backend logs.');
     }
 
-    // Handle network errors
+    // Handle network errors and timeouts
     if (!error.response) {
-      console.error('[API] Network error - Backend may be unreachable');
+      if (error.code === 'ECONNABORTED') {
+        console.error('[API] Request timeout - Backend may be slow or unresponsive');
+        console.error(`[API] Timeout after ${error.config?.timeout || 30000}ms`);
+      } else {
+        console.error('[API] Network error - Backend may be unreachable');
+      }
       console.error(`[API] Trying to reach: ${API_URL}`);
+      console.error('[API] Troubleshooting steps:');
+      console.error('  1. Check if backend is running');
+      console.error('  2. Verify API URL in .env file');
+      console.error('  3. Check network connection');
+      console.error('  4. Try refreshing the page');
     }
 
     return Promise.reject(error);
