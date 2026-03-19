@@ -102,11 +102,17 @@ const ProfileView: React.FC<ProfileViewProps> = ({ isOpen, onClose, targetId, is
                   <Users className="w-12 h-12" />
                 </div>
               ) : (
-                <img 
-                  src={getMediaUrl(data?.profile_picture) || `https://ui-avatars.com/api/?name=${data?.name || 'User'}&background=0EA5E9&color=fff`} 
-                  alt="" 
-                  className="w-full h-full object-cover"
-                />
+                <div 
+                  onClick={() => window.open(getMediaUrl(data?.profile_picture), '_blank')}
+                  className="cursor-pointer"
+                  title="Click to view full size"
+                >
+                  <img 
+                    src={getMediaUrl(data?.profile_picture) || `https://ui-avatars.com/api/?name=${data?.name || 'User'}&background=0EA5E9&color=fff`} 
+                    alt="" 
+                    className="w-full h-full object-cover transition-transform hover:scale-105"
+                  />
+                </div>
               )}
             </div>
           </div>

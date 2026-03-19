@@ -147,7 +147,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
     >
       {!isMe && (
         <div className="w-9 h-9 md:w-10 md:h-10 rounded-2xl overflow-hidden mr-3 shrink-0 border-2 border-white bg-slate-100 self-end mb-1 shadow-md cursor-pointer transition-transform hover:scale-105 active:scale-95">
-          <img src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}&background=0EA5E9&color=fff`} alt={senderName} className="w-full h-full object-cover" />
+          <img 
+            src={avatarUrl || `https://ui-avatars.com/api/?name=${senderName}&background=0EA5E9&color=fff`} 
+            alt={senderName} 
+            className="w-full h-full object-cover"
+            onClick={() => window.open(avatarUrl, '_blank')}
+            title="Click to view full size"
+          />
         </div>
       )}
       
@@ -234,7 +240,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
                       <img 
                         src={getMediaUrl(message.media_thumbnail || message.media_url)} 
                         alt="Shared media" 
-                        className="max-h-80 object-cover w-full rounded-2xl transition-transform hover:scale-[1.02] duration-500"
+                        className="max-h-80 object-cover w-full rounded-2xl transition-transform hover:scale-[1.02] duration-500 cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(getMediaUrl(message.media_url), '_blank');
+                        }}
                       />
                     </a>
                   ) : (message.message_type === 'voice' || message.media_url?.match(/\.(mp3|ogg|wav|webm|m4a|aac)$/i)) ? (
