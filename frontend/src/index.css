@@ -3,18 +3,48 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Core Colors */
+  --primary: #7c42b3;
+  --primary-dim: #6f34a6;
+  --on-primary: #ffffff;
+  
+  /* Surface Hierarchy */
+  --surface: #fff7fe;
+  --surface-container-low: #fcf0ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-high: #f5e8ff;
+  --surface-container-highest: #f0dbff;
+  --surface-bright: #fff7fe;
+  
+  /* Text Colors */
+  --on-surface: #3e2a51;
+  --on-surface-variant: #6c5680;
+  
+  /* Accents */
+  --outline-variant: #c2a8d7;
+  --secondary-container: #dafad2;
+  --on-secondary-container: #466143;
+
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+
+  font-family: var(--font-body);
+  line-height: 1.6;
   font-weight: 400;
 
   color-scheme: light;
-  color: #333333;
-  background-color: #FFFFFF;
+  color: var(--on-surface);
+  background-color: var(--surface);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Spacing Tokens */
+  --space-2-5: 0.85rem;
+  --space-6: 2rem;
   
   /* Safe Area Insets for iOS */
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
@@ -46,17 +76,47 @@ body {
 
 .glass {
   background: rgba(255, 255, 255, 0.7);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: none !important; /* The No-Line Rule */
 }
 
-/* For Firefox */
-@supports (scrollbar-width: thin) {
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: theme('colors.sky.400') transparent;
-  }
+/* Ambient Shadow Utility */
+.shadow-ambient {
+  box-shadow: 0 24px 24px 0 rgba(62, 42, 81, 0.04);
+}
+
+/* Surface Hierarchy Utilities */
+.bg-surface { background-color: var(--surface); }
+.bg-surface-low { background-color: var(--surface-container-low); }
+.bg-surface-lowest { background-color: var(--surface-container-lowest); }
+.bg-surface-high { background-color: var(--surface-container-high); }
+.bg-surface-highest { background-color: var(--surface-container-highest); }
+.bg-surface-bright { background-color: var(--surface-bright); }
+
+/* Typography Utilities */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+
+.text-on-surface { color: var(--on-surface); }
+.text-on-surface-variant { color: var(--on-surface-variant); }
+
+/* CTA Gradient Button */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dim) 100%);
+  color: white;
+  border-radius: 9999px;
+  border: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-primary-gradient:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-primary-gradient:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Chrome, Safari, Edge */
@@ -109,6 +169,27 @@ body {
   left: var(--menu-left, 0);
   animation: menuIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: all;
+}
+
+.btn-primary-gradient {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+  color: var(--on-primary);
+  border: none;
+}
+
+/* Asymmetrical Bubble Tokens (DESIGN.md Point 80) */
+.bubble-me {
+  border-bottom-right-radius: 0.5rem !important; /* Design Point 80 says bm: xl, xl, xl, sm? Actually the mockup shows me is sharp at bottom-right */
+  border-top-right-radius: 2rem !important;
+  border-top-left-radius: 2rem !important;
+  border-bottom-left-radius: 2rem !important;
+}
+
+.bubble-other {
+  border-bottom-left-radius: 0.5rem !important;
+  border-top-left-radius: 2rem !important;
+  border-top-right-radius: 2rem !important;
+  border-bottom-right-radius: 2rem !important;
 }
 
 @keyframes menuIn {

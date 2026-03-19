@@ -373,12 +373,12 @@ const ChatWindow = () => {
   }, []);
 
   if (!id || id === 'null') return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-white text-gray-400">
-        <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
-            <span className="text-3xl opacity-20">👋</span>
+    <div className="flex-1 flex flex-col items-center justify-center bg-surface text-on-surface-variant font-body">
+        <div className="w-24 h-24 rounded-[2.5rem] bg-surface-container-low flex items-center justify-center mb-6 shadow-ambient">
+            <span className="text-4xl">✨</span>
         </div>
-        <h3 className="text-xl font-bold text-gray-800 mb-2">Select a Conversation</h3>
-        <p className="max-w-xs text-center">Pick a friend or start a new chat to begin messaging.</p>
+        <h3 className="text-2xl font-display font-black text-on-surface mb-2">Select a Conversation</h3>
+        <p className="max-w-xs text-center text-on-surface-variant/70">Pick a friend or start a new chat to begin messaging.</p>
     </div>
   );
   if (error) return (
@@ -402,7 +402,7 @@ const ChatWindow = () => {
   const displayMessages = searchResults || messages;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white relative overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-surface relative overflow-hidden font-body">
       {/* Header component */}
       <ChatHeader 
         user={otherUser} 
@@ -430,10 +430,10 @@ const ChatWindow = () => {
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-32 md:pb-32 space-y-6 scrollbar-hide bg-slate-50/30">
+      <div className="flex-1 overflow-y-auto p-4 md:p-10 pb-32 md:pb-32 space-y-6 scrollbar-hide">
         {loading ? (
-          <div className="h-full flex flex-col items-center justify-center gap-4 text-slate-400 font-bold uppercase tracking-widest text-[10px]">
-            <Loader2 className="w-8 h-8 animate-spin text-sky-500 mb-2" />
+          <div className="h-full flex flex-col items-center justify-center gap-4 text-on-surface-variant font-display font-bold uppercase tracking-widest text-[10px]">
+            <Loader2 className="w-8 h-8 animate-spin text-primary mb-2" />
             Synchronizing...
           </div>
         ) : (

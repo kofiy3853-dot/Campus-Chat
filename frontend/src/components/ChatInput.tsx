@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Smile, ImageIcon, Mic, Send, Paperclip, X, StopCircle,
+  Smile, ImageIcon, Mic, Send, Paperclip, X, StopCircle, Plus,
   FileText, Calendar, Contact, FolderOpen, ChevronUp, Edit2
 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -189,7 +189,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
   };
 
   return (
-    <footer className="p-2.5 md:p-6 bg-white/90 backdrop-blur-xl border-t border-gray-100 relative">
+    <footer className="p-4 md:p-6 bg-surface/70 backdrop-blur-2xl border-none relative">
       {/* Reply Preview Area */}
       {reply && (
         <div className="max-w-6xl mx-auto mb-3 flex items-center justify-between px-4 py-3 bg-sky-50 border-l-4 border-sky-400 rounded-xl animate-in slide-in-from-bottom-2 duration-200">
@@ -327,68 +327,69 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
 
       <form
         onSubmit={handleSend}
-        className="flex items-center gap-1.5 md:gap-3 max-w-6xl mx-auto ring-1 ring-gray-100 p-1.5 md:p-2.5 rounded-2xl md:rounded-[1.5rem] bg-gray-50 shadow-sm focus-within:ring-sky-500/20 transition-none"
+        className="flex items-center gap-3 max-w-6xl mx-auto rounded-full bg-transparent transition-none"
       >
-        <div className="flex items-center gap-0.5 md:gap-1 px-0.5">
-          {/* Attachment toggle */}
-          <button
-            type="button"
-            aria-label="Add attachment"
-            title="Attachments"
-            disabled={uploading}
-            onClick={() => { setShowAttach(v => !v); setShowEmoji(false); }}
-            className={`p-2 md:p-2.5 hover:bg-gray-100 rounded-xl disabled:opacity-40 transition-none ${showAttach ? 'text-sky-500 bg-gray-100' : 'text-gray-400 hover:text-sky-500'}`}
-          >
-            {showAttach ? <ChevronUp className="w-4.5 h-4.5 md:w-5 md:h-5" /> : <Paperclip className="w-4.5 h-4.5 md:w-5 md:h-5" />}
-          </button>
+        <button
+          type="button"
+          aria-label="Add attachment"
+          title="Attachments"
+          disabled={uploading}
+          onClick={() => { setShowAttach(v => !v); setShowEmoji(false); }}
+          className={clsx(
+            "w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-highest transition-all hover:scale-105 active:scale-95 shrink-0",
+            showAttach ? "text-primary" : "text-on-surface-variant"
+          )}
+        >
+          <Plus className="w-6 h-6" />
+        </button>
 
-          {/* Emoji */}
+        <div className="flex-1 flex items-center bg-surface-container-highest rounded-full px-4 py-1.5 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+          <input
+            type="text"
+            placeholder={uploading ? 'Uploading…' : isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, '0')}` : 'Type message…'}
+            className={clsx(
+              "flex-1 bg-transparent border-none outline-none text-on-surface py-2.5 text-[15px] placeholder:text-on-surface-variant/50 min-w-0 font-body",
+              isRecording && "animate-pulse text-red-500 font-bold"
+            )}
+            value={text}
+            onChange={e => { setText(e.target.value); onTyping(); }}
+            disabled={uploading || isRecording}
+          />
+
+          {/* Emoji inside input */}
           <button
             type="button"
             aria-label="Insert emoji"
             title="Emoji"
             onClick={() => { setShowEmoji(v => !v); setShowAttach(false); }}
-            className={`p-2 md:p-2.5 hover:bg-gray-100 rounded-xl hidden sm:flex transition-none ${showEmoji ? 'text-sky-500 bg-gray-100' : 'text-gray-400 hover:text-sky-500'}`}
+            className={clsx(
+              "p-2 hover:bg-black/5 rounded-full transition-none",
+              showEmoji ? 'text-primary' : 'text-on-surface-variant/60'
+            )}
           >
-            <Smile className="w-4.5 h-4.5 md:w-5 md:h-5" />
+            <Smile className="w-5 h-5" />
           </button>
         </div>
 
-        <input
-          type="text"
-          placeholder={uploading ? 'Uploading…' : isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, '0')}` : 'Type message…'}
-          className={clsx(
-            "flex-1 bg-transparent border-none outline-none text-gray-800 py-2 md:py-2.5 px-1 md:px-2 text-sm md:text-[15px] placeholder:text-gray-400 min-w-0",
-            isRecording && "animate-pulse text-red-500 font-bold"
-          )}
-          value={text}
-          onChange={e => { setText(e.target.value); onTyping(); }}
-          disabled={uploading || isRecording}
-        />
-
-        <div className="flex items-center gap-0.5 md:gap-1 px-0.5">
-          {/* Image quick-pick */}
-          <button
-            type="button"
-            aria-label="Send image"
-            title="Send image"
-            disabled={uploading}
-            onClick={() => imageInputRef.current?.click()}
-            className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-100 rounded-xl hidden sm:flex disabled:opacity-40 transition-none"
-          >
-            <ImageIcon className="w-4.5 h-4.5 md:w-5 md:h-5" />
-          </button>
-
-          {/* Mic / Stop */}
-          {isRecording ? (
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Mic / Stop / Send - Dynamic Choice based on text */}
+          {text.trim() || previewFile ? (
+            <button
+              type="submit"
+              aria-label="Send message"
+              className="w-12 h-12 btn-primary-gradient flex items-center justify-center shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          ) : isRecording ? (
             <button
               type="button"
               aria-label="Stop recording"
               title="Stop recording"
               onClick={stopRecording}
-              className="p-2 md:p-2.5 text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
+              className="w-12 h-12 bg-red-500 text-white flex items-center justify-center rounded-full shadow-lg shadow-red-500/20 animate-pulse"
             >
-              <StopCircle className="w-4.5 h-4.5 md:w-5 md:h-5" />
+              <StopCircle className="w-5 h-5" />
             </button>
           ) : (
             <button
@@ -397,21 +398,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
               title="Voice message"
               disabled={uploading}
               onClick={startRecording}
-              className="p-2 md:p-2.5 text-gray-400 hover:text-sky-500 hover:bg-gray-100 rounded-xl disabled:opacity-40 transition-none"
+              className="w-12 h-12 btn-primary-gradient flex items-center justify-center shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
             >
-              <Mic className="w-4.5 h-4.5 md:w-5 md:h-5" />
+              <Mic className="w-5 h-5" />
             </button>
           )}
-
-          {/* Send */}
-          <button
-            type="submit"
-            disabled={!text.trim() && !previewFile}
-            aria-label="Send message"
-            className="p-2 md:p-3 bg-sky-400 hover:bg-sky-500 disabled:opacity-50 disabled:hover:bg-sky-400 text-white rounded-xl md:rounded-2xl shadow-sm ml-1 md:ml-2 transition-none shrink-0"
-          >
-            <Send className="w-4.5 h-4.5 md:w-5 md:h-5" />
-          </button>
         </div>
       </form>
     </footer>

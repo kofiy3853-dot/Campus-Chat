@@ -15,7 +15,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle,
   const navigate = useNavigate();
 
   return (
-    <header className="h-16 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 flex items-center justify-between shrink-0">
+    <header className="h-20 bg-surface/70 backdrop-blur-2xl border-none px-4 md:px-8 flex items-center justify-between shrink-0 z-50">
       <div className="flex items-center gap-2 md:gap-4">
         <button 
           onClick={() => navigate(user?.isGroup ? '/dashboard/groups/null' : '/dashboard/chats')}
@@ -28,7 +28,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle,
           <div className="relative">
           <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl md:rounded-2xl overflow-hidden border-2 border-gray-100 group-hover:border-sky-300 bg-gray-50 flex items-center justify-center transition-none">
             {user?.isGroup ? (
-                <Users className="w-5 h-5 md:w-6 md:h-6 text-sky-400" />
+                <Users className="w-5 h-5 md:w-6 md:h-6 text-primary" />
             ) : (
                 <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name || 'User'}`} alt="" className="w-full h-full object-cover" />
             )}
@@ -38,12 +38,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ user, isTyping, onSearchToggle,
           )}
         </div>
         <div className="min-w-0">
-          <h3 className="font-bold text-gray-800 tracking-tight text-sm md:text-base truncate max-w-[120px] md:max-w-none">
+          <h3 className="font-display font-extrabold text-on-surface tracking-tight text-base md:text-lg truncate max-w-[120px] md:max-w-none">
             {user?.name || (user?.isGroup ? 'Unnamed Group' : 'Unknown User')}
           </h3>
           <p className="text-[10px] md:text-[11px] font-medium tracking-wide">
             {isTyping ? (
-              <span className="text-sky-400 flex items-center gap-1">
+              <span className="text-primary flex items-center gap-1">
                 typing...
               </span>
             ) : (

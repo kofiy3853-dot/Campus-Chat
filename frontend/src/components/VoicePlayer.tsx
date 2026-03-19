@@ -16,7 +16,7 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
   const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [waveformBars] = useState(() => 
-    Array.from({ length: 22 }, () => Math.random() * 0.8 + 0.2)
+    [0.4, 0.6, 0.8, 0.5, 0.7, 0.9, 0.6, 0.8, 0.4, 0.6, 0.8, 0.5, 0.7, 0.9, 0.6, 0.8, 0.4, 0.6, 0.8]
   );
 
   useEffect(() => {
@@ -113,8 +113,8 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
         onClick={togglePlay}
         disabled={isLoading || isError}
         className={clsx(
-          "w-6 h-6 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95 disabled:opacity-50",
-          isMe ? "bg-white text-sky-500" : "bg-sky-500 text-white shadow-md shadow-sky-200/50"
+          "w-8 h-8 flex items-center justify-center rounded-full shrink-0 transition-transform active:scale-95 disabled:opacity-50",
+          isMe ? "bg-white text-primary" : "bg-primary text-white shadow-lg shadow-primary/20"
         )}
       >
         {isError ? (
@@ -138,8 +138,8 @@ const VoicePlayer: React.FC<VoicePlayerProps> = ({ url, isMe }) => {
                 className={clsx(
                   "flex-1 rounded-full transition-all duration-300 waveform-bar-dynamic",
                   isActive 
-                    ? (isMe ? "bg-white" : "bg-sky-500") 
-                    : (isMe ? "bg-white/30" : "bg-slate-200")
+                    ? (isMe ? "bg-white" : "bg-primary") 
+                    : (isMe ? "bg-white/30" : "bg-surface-container-highest")
                 )}
                 style={{ '--bar-height': `${height * 100}%` } as React.CSSProperties}
               />

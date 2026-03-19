@@ -121,7 +121,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
   };
 
   const renderSenderName = !isMe && message.sender_id?.name && (
-    <span className="text-[11px] font-bold text-slate-400 mb-1.5 ml-1 uppercase tracking-widest leading-none">
+    <span className="text-[11px] font-bold text-on-surface-variant/70 mb-1.5 ml-1 uppercase tracking-widest leading-none font-display">
       {message.sender_id.name}
     </span>
   );
@@ -168,10 +168,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
         <div 
           className={clsx(
-            "px-[14px] py-[10px] rounded-3xl relative shadow-xl shadow-slate-200/50 transition-all duration-300 swipe-transform",
+            "px-5 py-3 relative transition-all duration-300 swipe-transform font-body",
             isMe 
-              ? "bg-gradient-to-br from-sky-400 to-sky-500 text-white rounded-br-md hover:shadow-sky-200/50" 
-              : "bg-white text-slate-700 rounded-bl-md border border-slate-100/50 hover:shadow-slate-300/50"
+              ? "btn-primary-gradient bubble-me" 
+              : "bg-surface-lowest bubble-other shadow-ambient border-none text-on-surface"
           )}
           style={{ '--swipe-offset': `${swipeOffset}px` } as React.CSSProperties}
           onTouchStart={handleTouchStart}
@@ -226,7 +226,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
           ) : (
             <div className="space-y-2">
               <p className={clsx(
-                "text-[14px] leading-[1.6] whitespace-pre-wrap font-medium tracking-tight",
+                "text-[15px] leading-[1.6] whitespace-pre-wrap font-medium tracking-tight",
                 message.is_deleted && "italic opacity-60 line-through"
               )}>
                 {message.is_deleted ? 'This message was deleted' : message.message_text}
@@ -270,14 +270,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isMe, onReaction, on
 
               {/* Timestamp and Status */}
               <div className={clsx(
-                "flex items-center gap-1.5 pt-1 justify-end",
-                isMe ? "text-sky-50/70" : "text-slate-400"
+                "flex items-center gap-1.5 pt-1 justify-end font-display",
+                isMe ? "text-white/70" : "text-on-surface-variant/50"
               )}>
-                <span className="text-[10px] font-black uppercase tracking-wider">
+                <span className="text-[10px] font-bold uppercase tracking-wider">
                   {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
                 {message.edited_at && !message.is_deleted && (
-                  <span className="text-[10px] font-black uppercase tracking-widest opacity-60">• Edited</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">• Edited</span>
                 )}
                 {isMe && <DeliveryStatus />}
               </div>

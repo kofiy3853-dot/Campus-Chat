@@ -135,7 +135,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
   }
 
   return (
-    <div className={clsx("w-full md:w-[400px] bg-[#fffbfe] flex flex-col h-full border-r border-purple-50", className)}>
+    <div className={clsx("w-full md:w-[400px] bg-surface-container-low flex flex-col h-full border-none", className)}>
       {/* Header */}
       <div className="p-6 flex flex-col gap-6">
         <div className="flex items-center justify-between">
@@ -147,13 +147,13 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                   className="w-full h-full object-cover" 
                 />
               </div>
-              <h2 className="text-2xl font-black text-[#331c61] tracking-tight">Messages</h2>
+              <h2 className="text-3xl font-display font-black text-on-surface tracking-tight">Messages</h2>
           </div>
           <button 
             onClick={() => setIsSearchOpen(true)}
             aria-label="New Message"
             title="New Message"
-            className="p-2.5 bg-white border border-purple-50 rounded-xl text-[#7c3aed] hover:bg-purple-50 shadow-sm transition-all"
+            className="w-12 h-12 flex items-center justify-center bg-surface-lowest rounded-2xl text-primary hover:bg-primary/5 shadow-ambient transition-all"
           >
             <Edit3 className="w-5 h-5" />
           </button>
@@ -161,19 +161,19 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#c084fc]" />
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant/40" />
           <input
             type="text"
-            placeholder="Search students or study groups..."
+            placeholder="Search students..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#f3e8ff] rounded-[2rem] py-4 pl-14 pr-6 text-sm font-medium text-[#7c3aed] placeholder:text-[#d8b4fe] focus:ring-2 focus:ring-[#c084fc]/50 outline-none transition-all"
+            className="w-full bg-surface-container-highest rounded-full py-4.5 pl-16 pr-6 text-sm font-body font-medium text-on-surface placeholder:text-on-surface-variant/30 outline-none transition-all focus:ring-2 focus:ring-primary/10"
           />
         </div>
 
         {/* Online Now */}
         <div>
-          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#a78bfa] mb-4">Online Now</h3>
+          <h3 className="text-[10px] font-display font-black uppercase tracking-[0.2em] text-on-surface-variant/50 mb-4 px-1">Online Now</h3>
           <div className="flex overflow-x-auto gap-5 no-scrollbar pb-2">
             {onlineItems.length > 0 ? (
               onlineItems.map((item: any, idx) => {
@@ -230,10 +230,10 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
               key={item._id}
               to={isGroup ? `/dashboard/groups/${item._id}` : `/dashboard/chat/${item._id}`}
               className={({ isActive }) => clsx(
-                "flex items-center gap-4 p-5 rounded-[2rem] group relative transition-all duration-300 border border-transparent shadow-[0_4px_20px_rgba(0,0,0,0.02)]",
+                "flex items-center gap-4 p-5 rounded-[2rem] group relative transition-all duration-300 border-none",
                 isActive 
-                  ? "bg-[#f3e8ff] border-purple-100 shadow-purple-500/5" 
-                  : "bg-white hover:border-purple-50 hover:shadow-lg"
+                  ? "bg-surface-lowest shadow-ambient scale-[1.02] z-10" 
+                  : "bg-transparent hover:bg-surface-lowest/50"
               )}
             >
               {/* Avatar */}
@@ -255,12 +255,12 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
               {/* Chat Info */}
               <div className="flex-1 min-w-0">
-                <h4 className="font-black truncate text-[#331c61] text-base mb-1">
+                <h4 className="font-display font-black truncate text-on-surface text-base mb-0.5">
                   {name}
                 </h4>
                 <p className={clsx(
-                  "text-xs truncate leading-snug font-medium",
-                  item.unread_count > 0 ? "text-slate-800 font-bold" : "text-slate-400"
+                  "text-xs truncate leading-snug font-body font-medium",
+                  item.unread_count > 0 ? "text-primary font-bold" : "text-on-surface-variant/60"
                 )}>
                   {item.last_message?.message_text || (isGroup ? `${item.members?.length || 0} members` : 'Start a conversation')}
                 </p>
@@ -268,11 +268,11 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
               {/* Meta */}
               <div className="flex flex-col items-end gap-2 shrink-0">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">
+                <span className="text-[10px] text-on-surface-variant/40 font-display font-bold uppercase tracking-tight">
                   {item.last_message?.timestamp ? new Date(item.last_message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                 </span>
                 {item.unread_count > 0 && (
-                  <span className="bg-[#7c3aed] text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full shadow-lg shadow-purple-500/30">
+                  <span className="bg-primary text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full shadow-lg shadow-primary/30">
                     {item.unread_count}
                   </span>
                 )}
