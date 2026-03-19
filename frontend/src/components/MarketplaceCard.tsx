@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, Trash2 } from 'lucide-react';
+import { MessageSquare, Trash2, User, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import SafeImage from './SafeImage';
 
@@ -17,9 +17,9 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = ({ item, onMessageSeller
       <div className="relative h-[180px] overflow-hidden">
         {/* Handle multiple images */}
         {Array.isArray(item.image) ? (
-          <div className="grid grid-cols-2 gap-2 h-full">
+          <div className="grid grid-cols-2 gap-1 h-full">
             {item.image.slice(0, 4).map((img: string, index: number) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative overflow-hidden">
                 <SafeImage 
                   src={img} 
                   alt={`${item.title} - Image ${index + 1}`} 
@@ -55,8 +55,8 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = ({ item, onMessageSeller
       </div>
       
       <div className="flex flex-col min-w-0 p-6 flex-1 bg-gradient-to-b from-white to-slate-50/30">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-9 h-9">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
             <SafeImage 
               src={item.sellerId?.profile_picture} 
               alt={item.sellerId?.name} 
@@ -65,8 +65,8 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = ({ item, onMessageSeller
             />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-[11px] font-black text-slate-800 truncate leading-none mb-0.5">{item.sellerId?.name}</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Seller</span>
+            <span className="text-[10px] font-black text-slate-800 truncate leading-none">{item.sellerId?.name}</span>
+            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tight">Seller</span>
           </div>
         </div>
 
@@ -78,20 +78,20 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = ({ item, onMessageSeller
         <div className="flex gap-2">
           <button 
             onClick={() => onMessageSeller(item.sellerId?._id)}
-            className="w-full py-3.5 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2.5 hover:bg-sky-500 transition-all duration-300 shadow-lg shadow-slate-200 hover:shadow-sky-200 active:scale-95 mt-auto"
+            className="flex-1 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-sky-500 transition-all duration-300 shadow-lg shadow-slate-200 hover:shadow-sky-200 active:scale-95 mt-auto"
           >
-            <MessageSquare className="w-4 h-4 stroke-[3px]" /> 
-            <span>Message Seller</span>
+            <User className="w-4 h-4" /> 
+            <span>Contact</span>
           </button>
           
           {/* Delete Button - Show only for item owner */}
           {user?._id === item.sellerId?._id && onDelete && (
             <button 
               onClick={() => onDelete(item._id)}
-              className="w-full py-3.5 bg-red-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2.5 hover:bg-red-600 transition-all duration-300 shadow-lg shadow-red-200 active:scale-95 mt-auto"
+              className="flex-1 py-3 bg-red-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-red-600 transition-all duration-300 shadow-lg shadow-red-200 active:scale-95 mt-auto"
             >
-              <Trash2 className="w-4 h-4 stroke-[3px]" /> 
-              <span>Delete Item</span>
+              <Trash2 className="w-4 h-4" /> 
+              <span>Delete</span>
             </button>
           )}
         </div>
