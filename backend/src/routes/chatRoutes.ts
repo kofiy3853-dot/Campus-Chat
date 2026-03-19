@@ -3,7 +3,7 @@ import { AuthRequest } from '../types/express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { getConversations, getMessages, sendMessage, createConversation, searchMessages, editMessage, deleteMessage, addMessageReaction, blockUser, getBlockedUsers, markMessagesAsRead, getUnreadCount } from '../controllers/chatController';
+import { getConversations, getMessages, sendMessage, createConversation, searchMessages, editMessage, deleteMessage, addMessageReaction, blockUser, getBlockedUsers, markMessagesAsRead, getUnreadCount, deleteConversation } from '../controllers/chatController';
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter, searchRateLimiter } from '../middleware/rateLimitMiddleware';
 

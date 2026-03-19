@@ -29,23 +29,6 @@
   --font-display: 'Plus Jakarta Sans', sans-serif;
   --font-body: 'Manrope', sans-serif;
 
-  font-family: var(--font-body);
-  line-height: 1.6;
-  font-weight: 400;
-
-  color-scheme: light;
-  color: var(--on-surface);
-  background-color: var(--surface);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  
-  /* Spacing Tokens */
-  --space-2-5: 0.85rem;
-  --space-6: 2rem;
-  
   /* Safe Area Insets for iOS */
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
@@ -61,13 +44,9 @@
 body {
   margin: 0;
   display: flex;
-  place-content: center;
+  place-items: center;
   min-width: 320px;
-  height: 100vh;
-  height: -webkit-fill-available;
-  height: 100dvh;
-  overflow: initial; /* Allow global scrolling on mobile/small screens */
-  padding: var(--safe-area-inset-top) var(--safe-area-inset-right) var(--safe-area-inset-bottom) var(--safe-area-inset-left);
+  min-height: 100vh;
 }
 
 #root {

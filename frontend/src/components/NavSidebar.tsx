@@ -34,13 +34,13 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
   return (
     <aside className={clsx(
-      "glass shadow-ambient z-50",
-      "fixed bottom-0 left-0 right-0 flex flex-row items-center px-4 h-20 justify-around py-0",
-      "md:relative md:w-24 md:flex-col md:py-8 md:h-full md:px-0 md:justify-start",
+      "bg-white dark:bg-slate-900 border-gray-100 dark:border-gray-800 z-50",
+      "fixed bottom-0 left-0 right-0 border-t flex flex-row items-center px-4 h-20 justify-around",
+      "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start",
       className
     )}>
       {/* Logo */}
-      <div className="hidden md:flex w-14 h-14 btn-primary-gradient rounded-[1.5rem] items-center justify-center font-display font-black text-white text-2xl mb-12 shrink-0 shadow-lg shadow-primary/20">
+      <div className="hidden md:flex w-12 h-12 bg-sky-400 rounded-2xl items-center justify-center font-bold text-white text-xl mb-10 shrink-0">
         C
       </div>
 
@@ -56,8 +56,8 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
             {({ isActive }) => (
               <>
                 <div className={clsx(
-                  "flex items-center justify-center w-12 h-12 rounded-[1.2rem] transition-all duration-300",
-                  isActive ? "bg-primary text-white shadow-lg shadow-primary/30 scale-110" : "text-on-surface-variant/40 hover:bg-primary/5 hover:text-primary"
+                  "flex items-center justify-center w-12 h-12 rounded-[1.2rem] transition-all",
+                  isActive ? "bg-[#8444e2] text-white shadow-md shadow-[#8444e2]/30" : "text-slate-400 hover:bg-purple-50 group-hover:text-[#8444e2]"
                 )}>
                   <item.icon className="w-6 h-6" />
                   {item.label === 'Chats' && unread > 0 && (

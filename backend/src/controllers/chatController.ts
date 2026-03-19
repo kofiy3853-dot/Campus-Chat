@@ -13,8 +13,11 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user._id;
 
-    // 1. Fetch all conversations the user is part of
-    const conversations = await Conversation.find({ participants: userId })
+    // 1. Fetch all conversations the user is part of (and NOT hidden for this user)
+    const conversations = await Conversation.find({ 
+      participants: userId,
+      hidden_for: { $ne: userId }
+    })
       .populate('participants', 'name email profile_picture status last_seen')
       .populate('last_message')
       .sort({ last_message_time: -1 });
@@ -144,6 +147,12 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 
     conversation.last_message = message._id as any;
     conversation.last_message_time = new Date();
+    
+    // Clear recipient from hidden_for if they were there (so chat reappears)
+    if (conversation.hidden_for?.some(id => id.toString() === recipientId.toString())) {
+      conversation.hidden_for = conversation.hidden_for.filter(id => id.toString() !== recipientId.toString());
+    }
+    
     await conversation.save();
 
     // Trigger notification for recipient - wrap in try/catch since it's not awaited
@@ -301,6 +310,39 @@ export const deleteMessage = async (req: AuthRequest, res: Response) => {
     });
 
     res.json({ success: true, message: 'Message deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete/Hide conversation
+export const deleteConversation = async (req: AuthRequest, res: Response) => {
+  const { conversationId } = req.params;
+  const userId = req.user._id;
+
+  if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
+    return res.status(400).json({ message: 'Invalid conversation ID format' });
+  }
+
+  try {
+    const conversation = await Conversation.findById(conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversation not found' });
+    }
+
+    if (!conversation.participants.some(p => p.toString() === userId.toString())) {
+      return res.status(403).json({ message: 'You are not a participant in this conversation' });
+    }
+
+    // Add user to hidden_for if not already there
+    if (!conversation.hidden_for?.some(id => id.toString() === userId.toString())) {
+      if (!conversation.hidden_for) conversation.hidden_for = [];
+      conversation.hidden_for.push(userId);
+      await conversation.save();
+    }
+
+    res.json({ success: true, message: 'Conversation deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
