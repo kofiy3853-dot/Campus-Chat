@@ -1,18 +1,9 @@
 import express, { RequestHandler } from 'express';
-import { 
-  createGroup, 
-  getGroups, 
-  joinGroup, 
-  getGroupMessages, 
-  sendGroupMessage,
-  discoverGroups,
-  searchGroups,
-  addGroupMessageReaction,
-  markGroupMessagesAsRead,
-  deleteGroupMessage,
-  addGroupResource,
-  scheduleStudySession,
-  markMessageHelpful
+  deleteGroupMessage, 
+  addGroupResource, 
+  scheduleStudySession, 
+  markMessageHelpful,
+  leaveGroup
 } from '../controllers/groupController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -31,5 +22,6 @@ router.post('/resources', protect as RequestHandler, addGroupResource as Request
 router.post('/sessions', protect as RequestHandler, scheduleStudySession as RequestHandler);
 router.post('/messages/:messageId/react', protect as RequestHandler, addGroupMessageReaction as RequestHandler);
 router.post('/messages/:messageId/helpful', protect as RequestHandler, markMessageHelpful as RequestHandler);
+router.post('/:groupId/leave', protect as RequestHandler, leaveGroup as RequestHandler);
 
 export default router;

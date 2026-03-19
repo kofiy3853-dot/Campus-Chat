@@ -114,9 +114,10 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       if (location.pathname.includes(conversationId)) {
         navigate('/dashboard/chats');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to delete conversation:', err);
-      alert('Failed to delete conversation');
+      const errorMsg = err.response?.data?.message || err.message || 'Unknown error';
+      alert(`Failed to delete conversation: ${errorMsg}`);
     }
   };
 

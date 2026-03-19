@@ -473,3 +473,31 @@ export const markMessageHelpful = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Leave group
+export const leaveGroup = async (req: any, res: Response) => {
+  const { groupId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      return res.status(404).json({ message: 'Group not found' });
+    }
+
+    // Remove member from group
+    group.members = group.members.filter((id: any) => id.toString() !== userId.toString());
+
+    // If no members left, delete the group? (Optional, following common patterns)
+    if (group.members.length === 0) {
+      await Group.findByIdAndDelete(groupId);
+      return res.json({ message: 'Left group and group deleted as no members left' });
+    }
+
+    await group.save();
+    res.json({ message: 'Left group successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
