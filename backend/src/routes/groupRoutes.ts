@@ -1,7 +1,17 @@
 import express, { RequestHandler } from 'express';
-  deleteGroupMessage, 
-  addGroupResource, 
-  scheduleStudySession, 
+import { 
+  createGroup, 
+  getGroups, 
+  joinGroup, 
+  getGroupMessages, 
+  sendGroupMessage,
+  discoverGroups,
+  searchGroups,
+  addGroupMessageReaction,
+  markGroupMessagesAsRead,
+  deleteGroupMessage,
+  addGroupResource,
+  scheduleStudySession,
   markMessageHelpful,
   leaveGroup
 } from '../controllers/groupController';
