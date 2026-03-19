@@ -3,6 +3,7 @@ import { MapPin, Calendar, Users, CheckCircle2, ChevronRight } from 'lucide-reac
 import api from '../services/api';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
+import SafeImage from './SafeImage';
 
 interface EventCardProps {
   event: any;
@@ -41,8 +42,8 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
     <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden hover:border-sky-100 transition-none group">
       {/* Banner / Image */}
       <div className="relative h-48 bg-gray-50 transition-none">
-        <img 
-          src={getMediaUrl(event.image) || '/default-event.jpg'} 
+        <SafeImage 
+          src={event.image} 
           alt={event.title}
           className="w-full h-full object-cover transition-none"
         />
@@ -81,7 +82,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
           </div>
           <div className="flex items-center gap-3 text-gray-400 transition-none">
             <div className="w-4 h-4 rounded-full bg-gray-100 border border-gray-200 overflow-hidden shrink-0 transition-none">
-               <img src={getMediaUrl(event.organizerId?.profile_picture) || `https://ui-avatars.com/api/?name=${event.organizerId?.name}`} alt="" />
+               <SafeImage 
+                 src={event.organizerId?.profile_picture} 
+                 alt={event.organizerId?.name}
+                 fallback={`https://ui-avatars.com/api/?name=${event.organizerId?.name}`}
+                 className="w-full h-full object-cover"
+               />
             </div>
             <span className="text-xs text-gray-400 font-medium">By <span className="text-sky-500">{event.organizerId?.name}</span></span>
           </div>

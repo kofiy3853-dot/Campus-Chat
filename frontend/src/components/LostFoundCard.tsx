@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { getMediaUrl } from '../utils/imageUrl';
+import SafeImage from './SafeImage';
 
 interface LostFoundCardProps {
   post: any;
@@ -117,8 +118,8 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
       <div className="relative h-48 bg-gray-50 overflow-hidden transition-none">
         {post.image_url ? (
           <>
-            <img
-              src={getMediaUrl(post.image_thumbnail || post.image_url)}
+            <SafeImage
+              src={post.image_thumbnail || post.image_url}
               alt={post.title}
               className="w-full h-full object-cover cursor-pointer transition-none"
               onClick={() => setShowImage(true)}
@@ -274,13 +275,14 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
         )}
       </div>
 
-      {/* Image Viewer */}
-      {showImage && post.image_url && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-          onClick={() => setShowImage(false)}
-        >
-          <img src={getMediaUrl(post.image_url)} alt={post.title} className="max-w-full max-h-[90vh] object-contain rounded-lg" />
+      {/* Image Viewer Modal */}
+      {showImage && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setShowImage(false)}>
+          <SafeImage 
+            src={post.image_url} 
+            alt={post.title} 
+            className="max-w-full max-h-[90vh] object-contain rounded-lg" 
+          />
         </div>
       )}
     </div>
