@@ -12,8 +12,8 @@ h3 { @apply text-lg font-bold tracking-tight; }
 
 :root {
   /* Core Colors */
-  --primary: #7c42b3;
-  --primary-dim: #6f34a6;
+  --primary: #5b21b6;
+  --primary-dim: #4c1d95;
   --on-primary: #ffffff;
   
   /* Surface Hierarchy */
@@ -90,7 +90,7 @@ body {
 
 /* CTA Gradient Button */
 .btn-primary-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dim) 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
   color: white;
   border-radius: 9999px;
   border: none;

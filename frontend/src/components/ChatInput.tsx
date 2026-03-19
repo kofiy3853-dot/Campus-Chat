@@ -356,6 +356,18 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onTyping, editingValue, o
             disabled={uploading || isRecording}
           />
 
+          {/* Image button inside input */}
+          <button
+            type="button"
+            aria-label="Send image"
+            title="Send image"
+            disabled={uploading}
+            onClick={() => imageInputRef.current?.click()}
+            className="p-2 hover:bg-black/5 rounded-full transition-none text-on-surface-variant/60 disabled:opacity-40"
+          >
+            <ImageIcon className="w-5 h-5" />
+          </button>
+
           {/* Emoji inside input */}
           <button
             type="button"
