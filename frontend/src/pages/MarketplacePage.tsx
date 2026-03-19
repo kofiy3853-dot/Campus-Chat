@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ShoppingBag, Search, Plus, Tag, Package } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import MarketplaceCard from '../components/MarketplaceCard';
 const MarketplaceCompose = React.lazy(() => import('../components/MarketplaceCompose'));
@@ -58,6 +58,28 @@ const MarketplacePage: React.FC = () => {
   useEffect(() => {
     fetchItems();
   }, [activeCategory, debouncedSearchQuery]);
+
+  // Handle ?compose=true query param
+  const location = useLocation();
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('compose') === 'true') {
+      setIsComposeOpen(true);
+      // Optional: clear the query param after opening to avoid re-opening on manual refresh
+      // window.history.replaceState({}, '', location.pathname);
+    }
+  }, [location.search]);
+
+  const handleCloseCompose = () => {
+    setIsComposeOpen(false);
+    // Remove the ?compose=true from the URL when closing the modal
+    if (location.search.includes('compose=true')) {
+      const searchParams = new URLSearchParams(location.search);
+      searchParams.delete('compose');
+      const newSearch = searchParams.toString();
+      navigate(location.pathname + (newSearch ? `?${newSearch}` : ''), { replace: true });
+    }
+  };
 
   useEffect(() => {
     if (!socket) return;
@@ -201,7 +223,7 @@ const MarketplacePage: React.FC = () => {
       <React.Suspense fallback={<div className="animate-pulse bg-slate-100 h-96 rounded-[2.5rem]" />}>
         <MarketplaceCompose 
           isOpen={isComposeOpen} 
-          onClose={() => setIsComposeOpen(false)} 
+          onClose={handleCloseCompose} 
           onSuccess={fetchItems}
         />
       </React.Suspense>

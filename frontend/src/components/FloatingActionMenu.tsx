@@ -65,6 +65,15 @@ const FloatingActionMenu: React.FC = () => {
       }
     },
     { 
+      label: 'Sell an Item', 
+      icon: Package, 
+      color: 'bg-purple-50 text-[#6A35FF]',
+      action: () => {
+        navigate('/dashboard/marketplace?compose=true');
+        setIsOpen(false);
+      }
+    },
+    { 
       label: 'Report Lost Item', 
       icon: Package, 
       color: 'bg-orange-50 text-orange-600',
