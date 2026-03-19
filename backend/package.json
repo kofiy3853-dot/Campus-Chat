@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "tsc && node -e \"const fs = require('fs'); const srcPath = './firebase-service-account.json'; const destPath = './dist/firebase-service-account.json'; if (fs.existsSync(srcPath)) { fs.copyFileSync(srcPath, destPath); console.log('Firebase service account copied to dist/'); } else { console.log('Firebase service account file not found at:', fs.realpathSync(srcPath)); }\"",
+    "build": "tsc && node -e \"const fs = require('fs'); const path = require('path'); const srcPath = path.join(process.cwd(), 'firebase-service-account.json'); const destPath = path.join(process.cwd(), 'dist/firebase-service-account.json'); if (fs.existsSync(srcPath)) { fs.copyFileSync(srcPath, destPath); console.log('Firebase service account copied to dist/'); } else { console.log('Firebase service account file not found at:', srcPath); console.log('Current working directory:', process.cwd()); }\"",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
