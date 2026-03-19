@@ -3,7 +3,21 @@ import { AuthRequest } from '../types/express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { getConversations, getMessages, sendMessage, createConversation, searchMessages, editMessage, deleteMessage, addMessageReaction, blockUser, getBlockedUsers, markMessagesAsRead, getUnreadCount, deleteConversation } from '../controllers/chatController';
+import { 
+  getConversations, 
+  getMessages, 
+  sendMessage, 
+  createConversation, 
+  searchMessages, 
+  editMessage, 
+  deleteMessage, 
+  addMessageReaction, 
+  blockUser, 
+  getBlockedUsers, 
+  markMessagesAsRead, 
+  getUnreadCount,
+  deleteConversation 
+} from '../controllers/chatController';
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter, searchRateLimiter } from '../middleware/rateLimitMiddleware';
 
@@ -68,6 +82,7 @@ router.post('/messages/:messageId/reaction', protect, addMessageReaction);
 router.post('/block/:userId', protect, blockUser);
 router.get('/blocked-users', protect, getBlockedUsers);
 router.post('/conversations/:conversationId/read', protect, markMessagesAsRead);
+router.delete('/conversations/:conversationId', protect, deleteConversation);
 router.get('/unread-count', protect, getUnreadCount);
 
 export default router;
