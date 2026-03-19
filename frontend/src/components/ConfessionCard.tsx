@@ -65,15 +65,17 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-sky-100 w-full transition-none">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-sm font-bold text-white shrink-0">
-          👤
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-gray-800">Anonymous</p>
-          <p className="text-[11px] text-gray-400">{timeAgo(confession.createdAt)}</p>
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col gap-4">
+      {/* Top Section */}
+      <div className="flex justify-between items-start">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-sm font-bold text-white shrink-0">
+            👤
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-gray-800">Anonymous</p>
+            <p className="text-[11px] text-gray-400">{timeAgo(confession.createdAt)}</p>
+          </div>
         </div>
         {isAdmin && (
           <span className="text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full">

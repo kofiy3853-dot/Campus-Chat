@@ -110,10 +110,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
   };
 
   return (
-    <div className={clsx(
-      'bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm mb-4 transition-none',
-      post.is_resolved && 'opacity-60'
-    )}>
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 mb-4">
       {/* Image and Status */}
       <div className="relative h-48 bg-gray-50 overflow-hidden transition-none">
         {post.image_url ? (

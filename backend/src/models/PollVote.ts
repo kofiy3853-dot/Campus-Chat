@@ -4,7 +4,7 @@ export interface IPollVote extends Document {
   _id: mongoose.Types.ObjectId;
   poll: mongoose.Types.ObjectId;
   user: mongoose.Types.ObjectId;
-  selected_option: string; // Index of the selected option
+  selected_option: number; // Index of the selected option
   created_at: Date;
 }
 
@@ -21,7 +21,7 @@ const pollVoteSchema = new Schema<IPollVote>(
       required: true,
     },
     selected_option: {
-      type: String,
+      type: Number,
       required: true,
     },
     created_at: {

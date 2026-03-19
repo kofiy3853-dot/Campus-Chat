@@ -4,6 +4,8 @@ import { AuthRequest } from '../types/express';
 import Notification from '../models/Notification';
 import User from '../models/User';
 import DeviceToken from '../models/DeviceToken';
+import { io } from '../server';
+import admin from '../utils/firebaseAdmin';
 
 // Get user notifications
 export const getNotifications = async (req: AuthRequest, res: Response) => {
@@ -151,8 +153,7 @@ export const updateNotificationPreferences = async (req: any, res: Response) => 
   }
 };
 
-import { io } from '../server';
-import admin from '../utils/firebaseAdmin';
+
 
 // Create notification (internal helper)
 export const createNotification = async (

@@ -12,7 +12,7 @@ export const getMediaUrl = (path: string | undefined | null) => {
   const cleanPath = path.startsWith('/') ? path.substring(1) : path;
   
   // For Firebase URLs, they're already full URLs, so just return them
-  if (cleanPath.startsWith('campus-chat/') {
+  if (cleanPath.startsWith('campus-chat/')) {
     return `https://storage.googleapis.com/${process.env.VITE_FIREBASE_STORAGE_BUCKET || 'campus-networking.appspot.com'}/${cleanPath}`;
   }
   

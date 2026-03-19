@@ -257,7 +257,7 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
 });
-app.use(generalRateLimiter);
+app.use(generalRateLimiter as express.RequestHandler);
 
 const PORT = Number(process.env.PORT) || 6000;
 let MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/campus-chat';
@@ -358,15 +358,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// Error handling middleware
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('[GLOBAL ERROR]', err);
-  console.error('[ERROR STACK]', err.stack);
-  res.status(500).json({ 
-    message: err.message || 'Internal Server Error',
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
-  });
-});
 
 console.log('--- Server Starting ---');
 

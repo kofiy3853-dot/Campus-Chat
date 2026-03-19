@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import { 
   createGroup, 
   getGroups, 
@@ -18,18 +18,18 @@ import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
-router.post('/create', protect, createGroup);
-router.get('/', protect, getGroups);
-router.get('/discover', protect, discoverGroups);
-router.get('/search', protect, searchGroups);
-router.post('/join', protect, joinGroup);
-router.get('/messages/:groupId', protect, getGroupMessages);
-router.post('/send', protect, sendGroupMessage);
-router.post('/messages/:groupId/read', protect, markGroupMessagesAsRead);
-router.delete('/messages/:id', protect, deleteGroupMessage);
-router.post('/resources', protect, addGroupResource);
-router.post('/sessions', protect, scheduleStudySession);
-router.post('/messages/:messageId/react', protect, addGroupMessageReaction);
-router.post('/messages/:messageId/helpful', protect, markMessageHelpful);
+router.post('/create', protect as RequestHandler, createGroup as RequestHandler);
+router.get('/', protect as RequestHandler, getGroups as RequestHandler);
+router.get('/discover', protect as RequestHandler, discoverGroups as RequestHandler);
+router.get('/search', protect as RequestHandler, searchGroups as RequestHandler);
+router.post('/join', protect as RequestHandler, joinGroup as RequestHandler);
+router.get('/messages/:groupId', protect as RequestHandler, getGroupMessages as RequestHandler);
+router.post('/send', protect as RequestHandler, sendGroupMessage as RequestHandler);
+router.post('/messages/:groupId/read', protect as RequestHandler, markGroupMessagesAsRead as RequestHandler);
+router.delete('/messages/:id', protect as RequestHandler, deleteGroupMessage as RequestHandler);
+router.post('/resources', protect as RequestHandler, addGroupResource as RequestHandler);
+router.post('/sessions', protect as RequestHandler, scheduleStudySession as RequestHandler);
+router.post('/messages/:messageId/react', protect as RequestHandler, addGroupMessageReaction as RequestHandler);
+router.post('/messages/:messageId/helpful', protect as RequestHandler, markMessageHelpful as RequestHandler);
 
 export default router;

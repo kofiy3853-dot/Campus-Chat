@@ -76,9 +76,9 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
   };
 
   return (
-    <div className="bg-slate-800/80 border border-slate-700/30 rounded-2xl p-6 shadow-lg backdrop-blur-sm mb-4 hover:border-slate-600/50 transition">
+    <div className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col gap-4">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3 flex-1">
           {creatorAvatar && (
             <img
