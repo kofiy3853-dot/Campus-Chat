@@ -25,7 +25,8 @@ export const createListing = async (req: AuthRequest, res: Response) => {
 
     // Upload all images to Firebase Storage
     const imageUrls = [];
-    for (const file of req.files) {
+    const files = req.files as any[]; // Type assertion for iteration
+    for (const file of files) {
       console.log("✅ Uploading image:", file.originalname);
       const imageUrl = await uploadToFirebaseStorage(file.buffer, file.originalname, 'marketplace');
       imageUrls.push(imageUrl);
