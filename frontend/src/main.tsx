@@ -10,12 +10,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 
 // Global handler for chunk loading errors (typical after new deployments)
-window.addEventListener('error', (event) => {
-  const message = event.message || '';
-  if (message.includes('Failed to fetch dynamically imported module') || 
-      message.includes('MIME type') ||
-      (event.target && (event.target as any).src && (event.target as any).src.includes('/assets/'))) {
-    
+const handleChunkError = (error: any) => {
+  const message = (error?.message || error?.reason?.message || '').toLowerCase();
+  const isChunkError = 
+    message.includes('failed to fetch dynamically imported module') || 
+    message.includes('loading chunk') ||
+    message.includes('mime type') ||
+    (error?.target && (error.target as any).src && (error.target as any).src.includes('/assets/'));
+
+  if (isChunkError) {
     // Use a small delay and a session flag to avoid infinite reload loops
     const reloadKey = 'last-reload-failed-chunk';
     const lastReload = sessionStorage.getItem(reloadKey);
@@ -27,7 +30,10 @@ window.addEventListener('error', (event) => {
       window.location.reload();
     }
   }
-}, true);
+};
+
+window.addEventListener('error', (event) => handleChunkError(event), true);
+window.addEventListener('unhandledrejection', (event) => handleChunkError(event));
 
 /*
 // Register Service Workers

@@ -40,6 +40,7 @@ const Dashboard = () => {
                                    location.pathname === '/dashboard/discover' || 
                                    location.pathname === '/dashboard/marketplace' || 
                                    location.pathname === '/dashboard/internships' || 
+                                   location.pathname === '/dashboard/study-groups' ||
                                    location.pathname === '/dashboard/clubs' ||
                                    location.pathname === '/dashboard/leaderboard' ||
                                    location.pathname === '/dashboard/admin';
