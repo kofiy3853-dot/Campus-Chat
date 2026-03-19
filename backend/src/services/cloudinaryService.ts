@@ -1,3 +1,5 @@
-import { uploadToFirebaseStorage, deleteFromFirebaseStorage } from './firebaseStorageService';
+// Re-export from Supabase Storage service
+// (Formerly Firebase Storage — now migrated to Supabase)
+import { uploadToSupabaseStorage, deleteFromSupabaseStorage } from './supabaseStorageService';
 
-export { uploadToFirebaseStorage, deleteFromFirebaseStorage };
+export { uploadToSupabaseStorage as uploadToStorage, deleteFromSupabaseStorage as deleteFromStorage };

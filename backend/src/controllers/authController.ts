@@ -216,7 +216,7 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
   }
 };
 
-import { uploadToFirebaseStorage } from '../services/cloudinaryService';
+import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 
 export const uploadProfilePicture = async (req: Request, res: Response) => {
   try {
@@ -226,8 +226,8 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
 
     const userId = (req as any).user._id;
     
-    // Upload to Cloudinary
-    const imageUrl = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'profiles');
+    // Upload to Supabase Storage
+    const imageUrl = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, 'profiles');
 
     const user = await User.findById(userId).select('-password_hash');
     if (!user) {

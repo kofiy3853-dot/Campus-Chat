@@ -2,7 +2,6 @@ import express, { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import { 
   getConversations,
   getConversationById,
@@ -21,12 +20,11 @@ import {
 } from '../controllers/chatController';
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter, searchRateLimiter } from '../middleware/rateLimitMiddleware';
-
-import { uploadToFirebaseStorage } from '../services/cloudinaryService';
+import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 
 const router = express.Router();
 
-// Multer config for Cloudinary (Memory Storage)
+// Multer config — Memory Storage for Supabase
 const storage = multer.memoryStorage();
 
 const upload = multer({
@@ -48,22 +46,19 @@ router.post('/upload', protect, upload.single('file'), async (req: any, res: Res
 
     console.log(`[Upload] Detected type: ${type}`);
 
-    // Upload to Cloudinary
     const folder = type === 'image' ? 'chat/images' : (type === 'voice' ? 'chat/voice' : 'chat/files');
     console.log(`[Upload] Target folder: ${folder}`);
-    console.log(`[Upload] Using bucket env: ${process.env.FIREBASE_STORAGE_BUCKET}`);
+    console.log(`[Upload] Using Supabase bucket: ${process.env.SUPABASE_BUCKET || 'chat-media'}`);
     
-    const url = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, folder);
+    const url = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, folder);
     console.log(`[Upload] Success! URL: ${url}`);
 
     res.json({ url, type, originalName: req.file.originalname });
   } catch (error: any) {
     console.error('[Upload] Chat media upload error:', error);
-    // Log full error details for debugging
     res.status(500).json({ 
-      message: 'Failed to upload media to Firebase Storage',
+      message: 'Failed to upload media to Supabase Storage',
       error: error.message || String(error),
-      details: error.response?.data || error
     });
   }
 });
@@ -87,4 +82,3 @@ router.delete('/conversations/:conversationId', protect, deleteConversation);
 router.get('/unread-count', protect, getUnreadCount);
 
 export default router;
-
