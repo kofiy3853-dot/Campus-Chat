@@ -29,7 +29,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       reconnectionAttempts: 5, // Limit reconnection attempts
       reconnectionDelay: 2000, // Increase delay between attempts
       reconnectionDelayMax: 5000, // Maximum delay
-      transports: ['websocket'], // Use only websocket for better performance
+      transports: ['polling', 'websocket'], // Allow polling fallback for better mobile reliability
       autoConnect: true,
       withCredentials: true,
     });

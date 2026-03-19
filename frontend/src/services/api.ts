@@ -146,19 +146,32 @@ api.interceptors.response.use(
       if (error.code === 'ECONNABORTED') {
         console.error('[API] Request timeout - Backend may be slow or unresponsive');
         console.error(`[API] Timeout after ${error.config?.timeout || 30000}ms`);
+        // Add a more user-friendly message for cold starts
+        if (error.config?.timeout <= 30000) {
+          console.warn('[API] Suggestion: Consider increasing timeout for cold starts or wait 30s and refresh.');
+        }
       } else {
         console.error('[API] Network error - Backend may be unreachable');
       }
       console.error(`[API] Trying to reach: ${API_URL}`);
-      console.error('[API] Troubleshooting steps:');
-      console.error('  1. Check if backend is running');
-      console.error('  2. Verify API URL in .env file');
-      console.error('  3. Check network connection');
-      console.error('  4. Try refreshing the page');
     }
 
     return Promise.reject(error);
   }
 );
+
+/**
+ * Pre-warm function to wake up the backend if it's on a cold start.
+ * Call this in App.tsx or early in the lifecycle.
+ */
+export const preWarmServer = async () => {
+  try {
+    console.log('[API] Pre-warming server...');
+    await api.get('/health', { timeout: 60000 }); // Longer timeout for the first wake-up call
+    console.log('[API] Server is awake and healthy');
+  } catch (err) {
+    console.warn('[API] Pre-warm failed. Server may still be waking up or unreachable.', err);
+  }
+};
 
 export default api;

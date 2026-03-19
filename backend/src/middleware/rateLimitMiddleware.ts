@@ -89,5 +89,5 @@ export const searchRateLimiter = createRateLimiter({
 
 export const generalRateLimiter = createRateLimiter({
   windowMs: 60 * 1000, // 1 minute
-  maxRequests: 100, // Max 100 requests per minute
+  maxRequests: 300, // Max 300 requests per minute
 });

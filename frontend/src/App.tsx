@@ -15,10 +15,14 @@ import OfflineBanner from './components/OfflineBanner';
 import ProtectedRoute from './components/ProtectedRoute';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapApp } from '@capacitor/app';
+import { preWarmServer } from './services/api';
 import './App.css';
 
 function App() {
   useEffect(() => {
+    // Wake up the server
+    preWarmServer();
+
     // Hide the splash screen after the app is mounted
     const hideSplash = async () => {
       try {
