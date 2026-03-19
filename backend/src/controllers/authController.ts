@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import path from 'path';
 import fs from 'fs';
+import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 
 const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'secret', {
@@ -216,7 +217,7 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
   }
 };
 
-import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
+
 
 export const uploadProfilePicture = async (req: Request, res: Response) => {
   try {

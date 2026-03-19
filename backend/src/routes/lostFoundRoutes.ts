@@ -15,7 +15,7 @@ import {
 } from '../controllers/lostFoundController';
 import { protect } from '../middleware/authMiddleware';
 import { messageRateLimiter } from '../middleware/rateLimitMiddleware';
-import { uploadToFirebaseStorage } from '../services/cloudinaryService';
+import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 
 const router = express.Router();
 
@@ -40,8 +40,8 @@ router.post('/upload', upload.single('file'), async (req: any, res) => {
       return res.status(400).json({ message: 'Only image files are allowed' });
     }
 
-    // Upload to Cloudinary
-    const url = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'lost-found');
+    // Upload to Supabase
+    const url = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, 'lost-found');
     res.json({ url, originalName: req.file.originalname });
   } catch (error: any) {
     console.error('Lost & Found upload error:', error);

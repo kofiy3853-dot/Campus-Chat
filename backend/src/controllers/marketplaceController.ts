@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import Product from '../models/Product';
 import mongoose from 'mongoose';
-import { uploadToFirebaseStorage } from '../services/cloudinaryService';
+import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 import { io } from '../server';
 
 export const createListing = async (req: AuthRequest, res: Response) => {
@@ -28,7 +28,7 @@ export const createListing = async (req: AuthRequest, res: Response) => {
     const imageUrls = [];
     for (const file of (req.files as Express.Multer.File[])) {
       console.log("✅ Uploading image:", file.originalname);
-      const imageUrl = await uploadToFirebaseStorage(file.buffer, file.originalname, 'marketplace');
+      const imageUrl = await uploadToSupabaseStorage(file.buffer, file.originalname, 'marketplace');
       imageUrls.push(imageUrl);
     }
     console.log("✅ All images uploaded:", imageUrls);

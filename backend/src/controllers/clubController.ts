@@ -5,7 +5,7 @@ import ClubMessage from '../models/ClubMessage';
 import ClubEvent from '../models/ClubEvent';
 import mongoose from 'mongoose';
 import { io } from '../server';
-import { uploadToFirebaseStorage } from '../services/cloudinaryService';
+import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 
 import { AuthRequest } from '../types/express';
 
@@ -16,7 +16,7 @@ export const createClub = async (req: AuthRequest, res: Response) => {
   try {
     let profile_image = '';
     if (req.file) {
-      profile_image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'clubs');
+      profile_image = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, 'clubs');
     }
 
     const club = await Club.create({
@@ -124,7 +124,7 @@ export const createClubPost = async (req: AuthRequest, res: Response) => {
 
     let image = '';
     if (req.file) {
-      image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'club_posts');
+      image = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, 'club_posts');
     }
 
     const post = await ClubPost.create({
@@ -256,7 +256,7 @@ export const createClubEvent = async (req: AuthRequest, res: Response) => {
 
     let image = '';
     if (req.file) {
-      image = await uploadToFirebaseStorage(req.file.buffer, req.file.originalname, 'club_events');
+      image = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, 'club_events');
     }
 
     const event = await ClubEvent.create({
