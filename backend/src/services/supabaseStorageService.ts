@@ -1,7 +1,7 @@
 import { supabase } from '../config/supabase';
 import path from 'path';
 
-const BUCKET = process.env.SUPABASE_BUCKET || 'chat-media';
+const BUCKET = process.env.SUPABASE_BUCKET || 'upload';
 
 /**
  * Upload a file buffer to Supabase Storage.

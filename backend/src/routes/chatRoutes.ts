@@ -48,7 +48,7 @@ router.post('/upload', protect, upload.single('file'), async (req: any, res: Res
 
     const folder = type === 'image' ? 'chat/images' : (type === 'voice' ? 'chat/voice' : 'chat/files');
     console.log(`[Upload] Target folder: ${folder}`);
-    console.log(`[Upload] Using Supabase bucket: ${process.env.SUPABASE_BUCKET || 'chat-media'}`);
+    console.log(`[Upload] Using Supabase bucket: ${process.env.SUPABASE_BUCKET || 'upload'}`);
     
     const url = await uploadToSupabaseStorage(req.file.buffer, req.file.originalname, folder);
     console.log(`[Upload] Success! URL: ${url}`);
