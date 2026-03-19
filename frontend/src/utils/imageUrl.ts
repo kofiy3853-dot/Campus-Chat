@@ -1,5 +1,6 @@
 export const getMediaUrl = (path: string | undefined | null) => {
-  if (!path) return '';
+  // Ensure path is actually a string to prevent startsWith TypeError
+  if (!path || typeof path !== 'string') return '';
   
   // If it's already a full URL (http, https, data:, or Firebase storage URL), return as-is
   if (path.startsWith('http') || path.startsWith('data:') || path.startsWith('https://storage.googleapis.com')) {
@@ -13,7 +14,12 @@ export const getMediaUrl = (path: string | undefined | null) => {
   
   // For Firebase URLs, they're already full URLs, so just return them
   if (cleanPath.startsWith('campus-chat/')) {
-    return `https://storage.googleapis.com/${process.env.VITE_FIREBASE_STORAGE_BUCKET || 'campus-networking.appspot.com'}/${cleanPath}`;
+    return `https://storage.googleapis.com/${import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'campus-networking.appspot.com'}/${cleanPath}`;
+  }
+  
+  // Prevent double uploads/ prefix
+  if (cleanPath.startsWith('uploads/')) {
+    return `${baseUrl}/${cleanPath}`;
   }
   
   // For legacy local uploads, add uploads/ prefix
