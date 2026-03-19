@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';
-import ThemeToggle from './ThemeToggle';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
 import ExploreMenu from './ExploreMenu';
@@ -98,7 +97,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
       {/* Bottom Actions */}
       <div className="hidden md:flex flex-col items-center gap-6 mt-auto shrink-0">
-        <ThemeToggle />
         <NavLink
           to="/dashboard/profile"
           className={({ isActive }) => clsx(
@@ -127,7 +125,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
       {/* Mobile Bottom Actions */}
       <div className="flex md:hidden items-center gap-4">
-        <ThemeToggle />
         <NavLink
           to="/dashboard/profile"
           className={({ isActive }) => clsx(

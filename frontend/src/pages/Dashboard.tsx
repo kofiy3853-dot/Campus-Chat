@@ -45,7 +45,7 @@ const Dashboard = () => {
   const isAnnouncements = location.pathname === '/dashboard/announcements';
 
   return (
-    <div className="flex h-[100dvh] min-h-screen overflow-hidden bg-white font-sans selection:bg-sky-500/30">
+    <div className="flex h-[100dvh] min-h-screen overflow-hidden bg-white dark:bg-slate-900 font-sans selection:bg-sky-500/30">
       {/* NavSidebar is now persistent across all dashboard views */}
       <NavSidebar className={isConversation ? "hidden md:flex" : "flex"} />
       
@@ -55,7 +55,7 @@ const Dashboard = () => {
       )}
       
       <main className={clsx(
-        "flex-1 flex flex-col h-full overflow-hidden bg-white",
+        "flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-slate-900",
         (isListView && !isLanding && !isProfileOrNotifications && !isAnnouncements) ? 'hidden md:flex' : 'flex w-full'
       )}>
         <Suspense fallback={null}>

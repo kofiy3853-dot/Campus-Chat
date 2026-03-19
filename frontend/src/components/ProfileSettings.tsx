@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import clsx from 'clsx';
 import { User, Camera, Shield, Save, LogOut, Lock, ChevronLeft, Smile } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 
 import api from '../services/api';
 import BlockList from './BlockList';
@@ -111,18 +112,18 @@ const ProfileSettings = () => {
   };
 
   return (
-    <div className="flex-1 min-h-[100dvh] overflow-y-auto bg-slate-50/50 p-4 md:p-6 pb-32 md:pb-32">
+    <div className="flex-1 min-h-[100dvh] overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-4 md:p-6 pb-32 md:pb-32">
       <div className="max-w-2xl mx-auto">
         <header className="mb-6 md:mb-10 text-center relative mt-2 md:mt-0">
           <button 
             onClick={() => window.history.back()}
-            className="md:hidden absolute left-0 top-0 p-2 text-slate-400 hover:text-sky-600 hover:bg-white rounded-xl shadow-sm border border-slate-100 transition-all"
+            className="md:hidden absolute left-0 top-0 p-2 text-slate-400 hover:text-sky-600 hover:bg-white rounded-xl shadow-sm border border-slate-100 transition-all dark:hover:bg-slate-800 dark:hover:text-slate-400"
             aria-label="Back"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <div className="relative inline-block group mb-4 md:mb-6 mt-6 md:mt-0">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] overflow-hidden border-4 border-white shadow-xl shadow-sky-900/10 relative bg-slate-100">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl shadow-sky-900/10 relative bg-slate-100 dark:bg-slate-800">
               <img 
                 src={previewUrl || getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=0ea5e9&color=fff`} 
                 className="w-full h-full object-cover" 
@@ -155,8 +156,8 @@ const ProfileSettings = () => {
         </header>
 
         <div className="space-y-4 md:space-y-6">
-          <section className="bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-5 md:mb-8 flex items-center gap-2">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 dark:border-slate-700 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
+            <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-200 mb-5 md:mb-8 flex items-center gap-2">
               <User className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Personal Information
             </h3>
@@ -214,49 +215,57 @@ const ProfileSettings = () => {
             </div>
           </section>
 
-          <section className="bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 flex items-center gap-2">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 dark:border-slate-700 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
+            <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 md:mb-6 flex items-center gap-2">
               <Shield className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Security & Preferences
             </h3>
             <button 
               onClick={() => setIsPasswordModalOpen(true)}
-              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 text-left group transition-all border border-transparent hover:border-slate-100">
-              <div className="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 transition-colors">
+              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 text-left group transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-600">
+              <div className="w-10 h-10 bg-sky-50 dark:bg-sky-900/50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 dark:group-hover:bg-sky-800/50 transition-colors">
                 <Lock className="w-5 h-5 text-sky-500" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-slate-800">Change Password</p>
-                <p className="text-[11px] font-medium text-slate-500 tracking-wide mt-0.5">Update your secure login credentials</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Change Password</p>
+                <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Update your secure login credentials</p>
               </div>
             </button>
 
             <button 
               onClick={() => setIsBlockListOpen(true)}
-              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 text-left group transition-all border border-transparent hover:border-slate-100 mt-2"
+              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 text-left group transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-600 mt-2"
             >
-              <div className="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 transition-colors">
+              <div className="w-10 h-10 bg-sky-50 dark:bg-sky-900/50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 dark:group-hover:bg-sky-800/50 transition-colors">
                 <Shield className="w-5 h-5 text-sky-500" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-bold text-slate-800">Blocked Users</p>
-                <p className="text-[11px] font-medium text-slate-500 tracking-wide mt-0.5">Manage your restricted contacts</p>
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Blocked Users</p>
+                <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Manage your restricted contacts</p>
               </div>
             </button>
           </section>
 
-          <section className="bg-white rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 flex items-center gap-2">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 dark:border-slate-700 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
+            <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 md:mb-6 flex items-center gap-2">
               <Smile className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
               Chat Appearance
             </h3>
             <div className="space-y-5">
-              <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl border border-slate-100 dark:border-slate-600">
                 <div>
-                  <p className="text-sm font-bold text-slate-800">Delivery Status Color</p>
-                  <p className="text-[11px] font-medium text-slate-500 tracking-wide mt-0.5">Personalize your message double-ticks</p>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Dark Mode</p>
+                  <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Switch between light and dark themes</p>
                 </div>
-                <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm">
+                <ThemeToggle />
+              </div>
+              
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl border border-slate-100 dark:border-slate-600">
+                <div>
+                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Delivery Status Color</p>
+                  <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Personalize your message double-ticks</p>
+                </div>
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-200 dark:border-slate-600 shadow-sm">
                   <input 
                     type="color" 
                     id="tick_color"

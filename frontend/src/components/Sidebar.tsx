@@ -5,7 +5,6 @@ import {
   Search
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import ThemeToggle from './ThemeToggle';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
@@ -63,15 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             N
           </div>
         )}
-        {isOpen && <ThemeToggle />}
       </div>
-
-      {/* Theme Toggle for Collapsed State */}
-      {!isOpen && (
-        <div className="px-4 pb-4">
-          <ThemeToggle />
-        </div>
-      )}
 
       {/* Tabs */}
       {isOpen && (
