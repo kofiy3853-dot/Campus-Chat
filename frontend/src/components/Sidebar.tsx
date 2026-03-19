@@ -164,36 +164,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         
         <div className="pt-2 flex items-center justify-between">
           {isOpen ? (
-            <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 cursor-pointer flex-1 group transition-none" onClick={() => navigate('/dashboard/profile')}>
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-100">
-                <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
-              </div>
+            <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer flex-1 group transition-none">
               <div className="flex-1 min-w-0 transition-none">
-                <p className="text-sm font-semibold truncate text-gray-800">{user?.name}</p>
-                <p className="text-[10px] text-gray-400 truncate">{user?.email}</p>
+                <p className="text-sm font-semibold truncate text-gray-800 dark:text-gray-200">{user?.name}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
               </div>
-              <button 
-                onClick={(e) => { e.stopPropagation(); handleLogout(); }}
-                aria-label="Logout"
-                className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-none"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4 w-full transition-none">
-              <div 
-                className="w-10 h-10 rounded-full overflow-hidden border-2 border-sky-100 cursor-pointer transition-none" 
-                onClick={() => navigate('/dashboard/profile')}
-                role="button"
-                aria-label="View Profile"
-              >
-                <img src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}`} alt="" />
-              </div>
               <button 
                 onClick={handleLogout} 
                 aria-label="Logout"
-                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-none"
+                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-none"
               >
                 <LogOut className="w-6 h-6" />
               </button>

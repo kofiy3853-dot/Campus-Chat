@@ -29,7 +29,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
     { icon: Home, label: 'Home', to: '/dashboard' },
     { icon: Search, label: 'Discover', to: '/dashboard/discover' },
     { icon: MessageSquare, label: 'Chats', to: '/dashboard/chats' },
-    { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },
   ];
 
   return (
@@ -97,20 +96,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
       {/* Bottom Actions */}
       <div className="hidden md:flex flex-col items-center gap-6 mt-auto shrink-0">
-        <NavLink
-          to="/dashboard/profile"
-          className={({ isActive }) => clsx(
-            "p-3 rounded-2xl relative group transition-none",
-          )}
-        >
-          <div className="relative">
-            <UserIcon className="w-6 h-6" />
-          </div>
-          <div className="hidden md:block absolute left-full ml-4 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-none">
-            Profile
-          </div>
-        </NavLink>
-
         <button
           onClick={logout}
           className="p-2 rounded-2xl md:p-3 text-gray-400 hover:text-red-500 md:hover:bg-red-50 transition-colors"
@@ -125,17 +110,6 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
       {/* Mobile Bottom Actions */}
       <div className="flex md:hidden items-center gap-4">
-        <NavLink
-          to="/dashboard/profile"
-          className={({ isActive }) => clsx(
-            isActive
-              ? "p-2 rounded-2xl text-sky-500"
-              : "p-2 rounded-2xl text-gray-400 hover:text-sky-500"
-          )}
-        >
-          <UserIcon className="w-6 h-6" />
-        </NavLink>
-
         <button
           onClick={logout}
           className="p-2 rounded-2xl text-gray-400 hover:text-red-500 transition-colors"
