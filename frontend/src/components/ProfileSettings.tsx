@@ -1,330 +1,264 @@
 import React, { useState, useRef } from 'react';
 import clsx from 'clsx';
-import { User, Camera, Shield, Save, LogOut, Lock, ChevronLeft, Smile } from 'lucide-react';
+import { 
+  User, 
+  Settings, 
+  ChevronLeft, 
+  MapPin, 
+  GraduationCap, 
+  Bell, 
+  Shield, 
+  LogOut,
+  ChevronRight,
+  CreditCard,
+  Award,
+  Users,
+  Trophy,
+  BookOpen
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import ThemeToggle from './ThemeToggle';
-
-import api from '../services/api';
-import BlockList from './BlockList';
-import ChangePasswordModal from './ChangePasswordModal';
 import { getMediaUrl } from '../utils/imageUrl';
-
 import { compressImage } from '../utils/imageCompression';
+import api from '../services/api';
 
 const ProfileSettings = () => {
   const { user, logout, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isBlockListOpen, setIsBlockListOpen] = useState(false);
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    department: user?.department || '',
-    level: user?.level || '300 Level',
-    profile_picture: user?.profile_picture || '',
-    tick_color: user?.tick_color || '#38BDF8'
-  });
 
-  React.useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await api.get('/api/auth/profile');
-        updateUser(data);
-        setFormData({
-          name: data.name || '',
-          department: data.department || '',
-          level: data.level || '300 Level',
-          profile_picture: data.profile_picture || '',
-          tick_color: data.tick_color || '#38BDF8'
-        });
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-    fetchProfile();
-  }, []);
+  // Mock data for the dashboard (as per mockup)
+  const stats = [
+    { label: 'CREDITS', value: '92', icon: BookOpen },
+    { label: 'CLUBS', value: '4', icon: Users },
+    { label: 'PERCENTILE', value: 'Rank 12', icon: Trophy },
+  ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
+  const courses = [
+    { name: 'Advanced UI Algorithms', grade: 'A+', color: 'bg-green-50 text-green-600' },
+    { name: 'Systems Architecture', grade: 'B', color: 'bg-purple-50 text-purple-600' },
+    { name: 'Human-Computer Interaction', grade: 'A', color: 'bg-green-50 text-green-600' },
+  ];
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const originalFile = e.target.files[0];
-      
       const file = await compressImage(originalFile);
       
-      // Basic validation (optional but good practice)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('File is too large. Please select an image under 5MB.');
-        return;
-      }
-      
-      setSelectedFile(file);
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = async () => {
-    setLoading(true);
-    try {
-      // 1. Upload profile picture if one is selected
-      if (selectedFile) {
+      setLoading(true);
+      try {
         const uploadFormData = new FormData();
-        uploadFormData.append('image', selectedFile);
+        uploadFormData.append('image', file);
         
         const { data: uploadData } = await api.post('/api/auth/profile-picture', uploadFormData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
         
         updateUser(uploadData);
-        // CRITICAL: Update local variable to avoid race condition with state
-        const updatedProfilePicture = uploadData.profile_picture;
-        setFormData(prev => ({ ...prev, profile_picture: updatedProfilePicture }));
-        
-        // Use updated image URL directly for the next API call
-        const { data } = await api.put('/api/auth/profile', { ...formData, profile_picture: updatedProfilePicture });
-        updateUser(data);
-        setSelectedFile(null);
-      } else {
-        // 2. Update other profile details
-        const { data } = await api.put('/api/auth/profile', formData);
-        updateUser(data);
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        alert('Failed to upload image');
+      } finally {
+        setLoading(false);
       }
-      alert('Profile updated successfully!');
-    } catch (error: any) {
-      console.error('Error updating profile:', error);
-      alert(error.response?.data?.message || 'Failed to update profile');
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="flex-1 min-h-[100dvh] overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50 p-4 md:p-6 pb-32 md:pb-32">
-      <div className="max-w-2xl mx-auto">
-        <header className="mb-6 md:mb-10 text-center relative mt-2 md:mt-0">
-          <button 
-            onClick={() => window.history.back()}
-            className="md:hidden absolute left-0 top-0 p-2 text-slate-400 hover:text-sky-600 hover:bg-white rounded-xl shadow-sm border border-slate-100 transition-all dark:hover:bg-slate-800 dark:hover:text-slate-400"
-            aria-label="Back"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <div className="relative inline-block group mb-4 md:mb-6 mt-6 md:mt-0">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl shadow-sky-900/10 relative bg-slate-100 dark:bg-slate-800">
+    <div className="flex-1 h-full overflow-y-auto bg-[#fffbfe] pb-24">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-[#fffbfe]/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+        <button 
+          onClick={() => window.history.back()}
+          className="p-2 text-slate-800 hover:bg-purple-50 rounded-xl transition-colors"
+          title="Go Back"
+          aria-label="Go Back"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <h1 className="text-xl font-bold text-[#44337a]">Profile</h1>
+        <button 
+          className="p-2 text-slate-800 hover:bg-purple-50 rounded-xl transition-colors"
+          title="Settings"
+          aria-label="Settings"
+        >
+          <Settings className="w-6 h-6" />
+        </button>
+      </div>
+
+      <div className="max-w-md mx-auto px-4 space-y-6">
+        {/* User Hero Section */}
+        <div className="relative pt-8 pb-6 flex flex-col items-center text-center bg-white rounded-[2.5rem] shadow-sm border border-purple-50/50">
+          <div className="relative mb-6">
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl shadow-purple-200/50 relative group">
               <img 
-                src={previewUrl || getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=0ea5e9&color=fff`} 
+                src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=8444e2&color=fff`} 
                 className="w-full h-full object-cover" 
-                alt="Profile Preview" 
+                alt="Profile" 
               />
               <input 
                 type="file" 
+                id="profile-picture-input"
                 ref={fileInputRef} 
                 onChange={handleFileChange} 
-                accept="image/jpeg, image/png, image/jpg" 
                 className="hidden" 
-                aria-label="Upload profile picture"
-                title="Upload profile picture file input"
+                accept="image/*"
+                title="Change profile picture"
+                aria-label="Change profile picture"
               />
               <button 
-                type="button"
                 onClick={() => fileInputRef.current?.click()}
-                aria-label="Upload profile picture"
-                className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer border-none transition-opacity"
+                className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                title="Upload new profile picture"
+                aria-label="Upload new profile picture"
               >
-                <Camera className="text-white w-6 h-6 md:w-8 md:h-8" />
+                <User className="text-white w-8 h-8" />
               </button>
             </div>
-            <div className="absolute -bottom-2 -right-2 bg-sky-500 p-2 md:p-2.5 rounded-xl md:rounded-2xl border-4 border-slate-50 text-white select-none pointer-events-none shadow-lg shadow-sky-500/20">
-              <Camera className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/50 rounded-full">
+                <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
+          </div>
+
+          <h2 className="text-3xl font-black text-[#2d1a47] tracking-tight">{user?.name || 'Sophie Laurent'}</h2>
+          
+          <div className="mt-2 inline-flex items-center px-4 py-1.5 bg-[#f3e8ff] text-[#8444e2] rounded-full text-sm font-bold">
+            {user?.department || 'Computer Science & Design'}
+          </div>
+
+          <div className="mt-4 flex items-center gap-4 text-slate-400 text-sm font-semibold">
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-[#8444e2]" />
+              Paris Campus
+            </span>
+            <span className="text-slate-200">•</span>
+            <span className="flex items-center gap-1.5">
+              <GraduationCap className="w-4 h-4 text-[#8444e2]" />
+              Class of 2025
+            </span>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          {stats.map((stat, i) => (
+            <div key={i} className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default">
+              <span className="text-2xl font-black text-[#8444e2] mb-1">{stat.value}</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Academic Progress */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-black text-[#2d1a47] flex items-center gap-2">
+            Academic Progress
+            <span className="w-2 h-2 rounded-full bg-[#8444e2]" />
+          </h3>
+          
+          <div className="bg-[#fcf8ff] rounded-[2.5rem] p-6 border border-purple-50">
+            <div className="flex justify-between items-end mb-3">
+              <span className="text-sm font-bold text-[#2d1a47]">Degree Completion</span>
+              <span className="text-base font-black text-[#8444e2]">76%</span>
+            </div>
+            <div className="h-3 w-full bg-[#f3e8ff] rounded-full overflow-hidden">
+              <div className="h-full bg-[#8444e2] rounded-full" style={{ width: '76%' }} />
+            </div>
+
+            <div className="mt-8 space-y-3">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Current Semester</span>
+              {courses.map((course, i) => (
+                <div key={i} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-purple-50/50 shadow-sm">
+                  <span className="text-sm font-bold text-[#44337a]">{course.name}</span>
+                  <span className={clsx("px-3 py-1 rounded-lg text-xs font-black", course.color)}>
+                    {course.grade}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight">{user?.name}</h2>
-          <p className="text-slate-500 mt-1 text-xs md:text-sm font-medium tracking-wide">{user?.student_id}</p>
-        </header>
+        </div>
 
-        <div className="space-y-4 md:space-y-6">
-          <section className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 dark:border-slate-700 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-200 mb-5 md:mb-8 flex items-center gap-2">
-              <User className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
-              Personal Information
-            </h3>
+        {/* Student ID Card */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-black text-[#2d1a47] flex items-center gap-2">
+            Student ID
+            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+          </h3>
+          
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#8444e2] via-[#7c3aed] to-[#6d28d9] rounded-[2.5rem] p-8 text-white shadow-xl shadow-purple-500/20">
+            {/* Background pattern */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-xl" />
+
+            <div className="relative flex justify-between items-start mb-8">
+              <div>
+                <p className="text-[10px] font-black text-purple-100 uppercase tracking-widest opacity-80">Student ID Number</p>
+                <p className="text-2xl font-black mt-1">VC-2022-8941</p>
+              </div>
+              <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                <CreditCard className="w-6 h-6" />
+              </div>
+            </div>
+
+            <div className="relative grid grid-cols-2 gap-4 mt-auto">
+              <div>
+                <p className="text-[10px] font-black text-purple-100 uppercase tracking-widest opacity-80">Year of Study</p>
+                <p className="text-sm font-bold mt-1">3rd Year (Junior)</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-purple-100 uppercase tracking-widest opacity-80">Validation</p>
+                <p className="text-sm font-bold mt-1">Expires Aug 2025</p>
+              </div>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
-                <input 
-                  id="name"
-                  type="text" 
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Your full name"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all font-medium"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
-                <input 
-                  id="email"
-                  type="email" 
-                  defaultValue={user?.email}
-                  readOnly
-                  placeholder="Your email address"
-                  className="w-full bg-slate-100/50 border border-slate-200/50 rounded-xl py-3 px-4 text-sm md:text-base text-slate-400 cursor-not-allowed outline-none font-medium"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="department" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Department</label>
-                <input 
-                  id="department"
-                  type="text" 
-                  value={formData.department}
-                  onChange={handleChange}
-                  placeholder="Your department"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all font-medium"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="level" className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Study Level</label>
-                <select 
-                  id="level"
-                  value={formData.level}
-                  onChange={handleChange}
-                  aria-label="Select study level"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm md:text-base text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none appearance-none transition-all font-medium cursor-pointer"
-                >
-                  <option value="100 Level">100 Level</option>
-                  <option value="200 Level">200 Level</option>
-                  <option value="300 Level">300 Level</option>
-                  <option value="400 Level">400 Level</option>
-                  <option value="500 Level">500 Level</option>
-                </select>
-              </div>
-            </div>
-          </section>
+            {/* ID Bar */}
+            <div className="absolute bottom-6 left-8 right-8 h-1 bg-[#10b981] rounded-full mt-6" />
+          </div>
+        </div>
 
-          <section className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 dark:border-slate-700 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 md:mb-6 flex items-center gap-2">
-              <Shield className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
-              Security & Preferences
-            </h3>
-            <button 
-              onClick={() => setIsPasswordModalOpen(true)}
-              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 text-left group transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-600">
-              <div className="w-10 h-10 bg-sky-50 dark:bg-sky-900/50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 dark:group-hover:bg-sky-800/50 transition-colors">
-                <Lock className="w-5 h-5 text-sky-500" />
+        {/* Account & Settings */}
+        <div className="space-y-4 pt-4">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Account & Settings</h3>
+          
+          <div className="bg-white rounded-[2.5rem] overflow-hidden border border-purple-50/50 shadow-sm">
+            <button className="w-full flex items-center gap-4 p-5 hover:bg-purple-50 transition-colors group">
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#8444e2] group-hover:bg-[#8444e2] group-hover:text-white transition-colors">
+                <Bell className="w-5 h-5" />
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Change Password</p>
-                <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Update your secure login credentials</p>
-              </div>
+              <span className="flex-1 text-left font-bold text-[#44337a]">Notifications</span>
+              <ChevronRight className="w-5 h-5 text-slate-300" />
             </button>
-
-            <button 
-              onClick={() => setIsBlockListOpen(true)}
-              className="flex items-center gap-4 w-full p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 text-left group transition-all border border-transparent hover:border-slate-100 dark:hover:border-slate-600 mt-2"
-            >
-              <div className="w-10 h-10 bg-sky-50 dark:bg-sky-900/50 rounded-xl flex items-center justify-center group-hover:bg-sky-100 dark:group-hover:bg-sky-800/50 transition-colors">
-                <Shield className="w-5 h-5 text-sky-500" />
+            
+            <div className="h-px bg-purple-50 mx-5" />
+            
+            <button className="w-full flex items-center gap-4 p-5 hover:bg-purple-50 transition-colors group">
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#8444e2] group-hover:bg-[#8444e2] group-hover:text-white transition-colors">
+                <Shield className="w-5 h-5" />
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Blocked Users</p>
-                <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Manage your restricted contacts</p>
-              </div>
+              <span className="flex-1 text-left font-bold text-[#44337a]">Privacy & Security</span>
+              <ChevronRight className="w-5 h-5 text-slate-300" />
             </button>
-          </section>
-
-          <section className="bg-white dark:bg-slate-800 rounded-2xl md:rounded-[2rem] p-5 md:p-8 border border-slate-100 dark:border-slate-700 shadow-[0_2px_20px_-8px_rgba(0,0,0,0.05)]">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 md:mb-6 flex items-center gap-2">
-              <Smile className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
-              Chat Appearance
-            </h3>
-            <div className="space-y-5">
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl border border-slate-100 dark:border-slate-600">
-                <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Dark Mode</p>
-                  <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Switch between light and dark themes</p>
-                </div>
-                <ThemeToggle />
-              </div>
-              
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700 rounded-2xl border border-slate-100 dark:border-slate-600">
-                <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">Delivery Status Color</p>
-                  <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 tracking-wide mt-0.5">Personalize your message double-ticks</p>
-                </div>
-                <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-200 dark:border-slate-600 shadow-sm">
-                  <input 
-                    type="color" 
-                    id="tick_color"
-                    value={formData.tick_color}
-                    onChange={handleChange}
-                    className="absolute -top-2 -left-2 w-16 h-16 cursor-pointer"
-                    title="Choose tick color"
-                  />
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-3 pt-2">
-                {['#0EA5E9', '#3B82F6', '#10B981', '#8B5CF6', '#F43F5E', '#F59E0B'].map(color => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, tick_color: color }))}
-                    className={clsx(
-                      "w-10 h-10 rounded-xl shadow-sm transition-all duration-300",
-                      formData.tick_color === color ? "scale-110 shadow-md ring-4 ring-offset-2 ring-slate-100" : "hover:scale-105"
-                    )}
-                    style={{ backgroundColor: color }}
-                    title={`Select ${color}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <div className="flex flex-col sm:flex-row items-center gap-3 pt-4">
-            <button 
-              onClick={handleSave}
-              disabled={loading}
-              className="w-full sm:flex-1 bg-sky-500 hover:bg-sky-600 active:scale-[0.98] disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed py-3.5 md:py-4 rounded-2xl font-black text-sm md:text-base text-white shadow-xl shadow-sky-500/20 flex items-center justify-center gap-2 transition-all uppercase tracking-widest"
-            >
-              <Save className="w-5 h-5" />
-              {loading ? 'Saving Changes...' : 'Save Profile'}
-            </button>
+            
+            <div className="h-px bg-purple-50 mx-5" />
+            
             <button 
               onClick={logout}
-              className="w-full sm:w-auto px-6 py-3.5 md:py-4 border-2 border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200 active:scale-[0.98] rounded-2xl text-sm md:text-base font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
+              className="w-full flex items-center gap-4 p-5 hover:bg-red-50 transition-colors group"
             >
-              <LogOut className="w-5 h-5" />
-              Sign Out
+              <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                <LogOut className="w-5 h-5" />
+              </div>
+              <span className="flex-1 text-left font-bold text-red-500">Logout</span>
+              <ChevronRight className="w-5 h-5 text-red-200" />
             </button>
           </div>
         </div>
       </div>
-      
-      {/* Modals */}
-      <ChangePasswordModal 
-        isOpen={isPasswordModalOpen} 
-        onClose={() => setIsPasswordModalOpen(false)} 
-      />
-      {isBlockListOpen && (
-        <BlockList onClose={() => setIsBlockListOpen(false)} />
-      )}
     </div>
   );
 };
 
 export default ProfileSettings;
+

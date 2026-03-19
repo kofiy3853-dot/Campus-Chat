@@ -7,7 +7,8 @@ import {
   Search,
   Home,
   Compass,
-  Shield
+  Shield,
+  User as UserIcon
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';
@@ -28,6 +29,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
     { icon: Search, label: 'Discover', to: '/dashboard/discover' },
     { icon: Compass, label: 'Explore', to: '/dashboard/explore' },
     { icon: MessageSquare, label: 'Chats', to: '/dashboard/chats' },
+    { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },
   ];
 
   return (
@@ -76,30 +78,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
         ))}
       </nav>
 
-      {/* Bottom Actions */}
-      <div className="hidden md:flex flex-col items-center gap-6 mt-auto shrink-0">
-        <button
-          onClick={logout}
-          className="p-2 rounded-2xl md:p-3 text-gray-400 hover:text-red-500 md:hover:bg-red-50 transition-colors"
-          title="Logout"
-        >
-          <LogOut className="w-6 h-6" />
-          <div className="absolute left-full ml-4 px-2 py-1 bg-red-500 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-none">
-            Logout
-          </div>
-        </button>
-      </div>
-
-      {/* Mobile Bottom Actions */}
-      <div className="flex md:hidden items-center gap-4">
-        <button
-          onClick={logout}
-          className="p-2 rounded-2xl text-gray-400 hover:text-red-500 transition-colors"
-          title="Logout"
-        >
-          <LogOut className="w-6 h-6" />
-        </button>
-      </div>
+      {/* Bottom Actions removed as per user request */}
     </aside>
   );
 };
