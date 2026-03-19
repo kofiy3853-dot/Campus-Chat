@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getMediaUrl } from '../utils/imageUrl';
 
 interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -18,6 +18,25 @@ const SafeImage: React.FC<SafeImageProps> = ({
   const [errorCount, setErrorCount] = useState(0);
   const [showViewer, setShowViewer] = useState(false);
   const imageUrl = getMediaUrl(src || undefined);
+
+  // Close on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowViewer(false);
+      }
+    };
+
+    if (showViewer) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showViewer]);
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (errorCount < 2) {

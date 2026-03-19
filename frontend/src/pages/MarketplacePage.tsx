@@ -40,6 +40,14 @@ const MarketplacePage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [activeCategory, searchQuery]);
 
+  const handleDelete = (itemId: string) => {
+    setItems((prev) => prev.filter((item) => item._id !== itemId));
+    // Optionally call API to delete from backend
+    // api.delete(`/api/marketplace/${itemId}`).catch(err => {
+    //   console.error('Error deleting item:', err);
+    // });
+  };
+
   const handleMessageSeller = async (sellerId: string) => {
     try {
       const { data } = await api.post('/api/chat/conversations', { participantId: sellerId });
@@ -136,7 +144,8 @@ const MarketplacePage: React.FC = () => {
                   <MarketplaceCard 
                     key={item._id} 
                     item={item} 
-                    onMessageSeller={handleMessageSeller} 
+                    onMessageSeller={handleMessageSeller}
+                    onDelete={handleDelete}
                   />
                 ))}
             </div>
