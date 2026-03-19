@@ -12,17 +12,32 @@ export const uploadToSupabaseStorage = async (
   fileName: string,
   folder: string = 'chat'
 ): Promise<string> => {
-  const ext = path.extname(fileName);
+  const ext = path.extname(fileName).toLowerCase();
   const baseName = path.basename(fileName, ext);
   const uniqueFileName = `${folder}/${Date.now()}-${baseName}${ext}`;
 
-  console.log(`[Supabase Storage] Uploading to: ${uniqueFileName}, size: ${fileBuffer.length}`);
+  let contentType = 'application/octet-stream';
+  if (['.jpg', '.jpeg'].includes(ext)) contentType = 'image/jpeg';
+  else if (ext === '.png') contentType = 'image/png';
+  else if (ext === '.gif') contentType = 'image/gif';
+  else if (ext === '.webp') contentType = 'image/webp';
+  else if (ext === '.mp3') contentType = 'audio/mpeg';
+  else if (ext === '.ogg') contentType = 'audio/ogg';
+  else if (ext === '.wav') contentType = 'audio/wav';
+  else if (ext === '.webm') contentType = 'audio/webm';
+  else if (ext === '.m4a') contentType = 'audio/mp4';
+  else if (ext === '.mp4') contentType = 'video/mp4';
+  else if (ext === '.aac') contentType = 'audio/aac';
+  else if (ext === '.pdf') contentType = 'application/pdf';
+
+  console.log(`[Supabase Storage] Uploading to: ${uniqueFileName}, size: ${fileBuffer.length}, type: ${contentType}`);
 
   const { data, error } = await supabase.storage
     .from(BUCKET)
     .upload(uniqueFileName, fileBuffer, {
       cacheControl: '31536000',
       upsert: false,
+      contentType,
     });
 
   if (error) {
