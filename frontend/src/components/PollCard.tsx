@@ -161,7 +161,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
                         'h-full transition-all duration-300',
                         isSelected ? 'bg-primary-500' : 'bg-primary-600/60'
                       )}
-                      style={{ width: `${percentage}%` }}
+                      style={{ width: `${percentage}%` } as React.CSSProperties}
                     />
                   </div>
                   <p className="text-xs text-slate-400">{result.votes} vote{result.votes !== 1 ? 's' : ''}</p>
