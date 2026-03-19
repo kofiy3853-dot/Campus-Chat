@@ -5,6 +5,7 @@ import {
   Search
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
@@ -43,17 +44,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   return (
     <aside className={clsx(
-      "h-full bg-white border-r border-gray-100 flex flex-col transition-none",
+      "h-full bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-gray-800 flex flex-col transition-none",
       isOpen ? "w-80" : "w-20"
     )}>
       {/* Header */}
-      <div className="p-4 flex items-center justify-between border-b border-gray-50">
+      <div className="p-4 flex items-center justify-between border-b border-gray-50 dark:border-gray-800">
         {isOpen ? (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-sky-400 rounded-xl flex items-center justify-center font-bold text-lg text-white">
               N
             </div>
-            <span className="font-bold text-xl tracking-tight text-gray-800">
+            <span className="font-bold text-xl tracking-tight text-gray-800 dark:text-gray-200">
               Campus-Networking
             </span>
           </div>
@@ -62,6 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             N
           </div>
         )}
+        <ThemeToggle />
       </div>
 
       {/* Tabs */}

@@ -13,7 +13,7 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
   const { user } = useAuth();
 
   return (
-    <div className="market-card group bg-white border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-500 flex flex-col h-full">
+    <div className="market-card group bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-500 flex flex-col h-full">
       <div className="relative h-[180px] overflow-hidden">
         {/* Handle multiple images */}
         {Array.isArray(item.image) ? (
@@ -54,9 +54,9 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
       
-      <div className="flex flex-col min-w-0 p-6 flex-1 bg-gradient-to-b from-white to-slate-50/30">
+      <div className="flex flex-col min-w-0 p-6 flex-1 bg-gradient-to-b from-white dark:from-slate-800 to-slate-50/30 dark:to-slate-900/30">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm">
+          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-slate-700 shadow-sm">
             <SafeImage 
               src={item.sellerId?.profile_picture} 
               alt={item.sellerId?.name} 
@@ -65,12 +65,12 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
             />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-[10px] font-black text-slate-800 truncate leading-none">{item.sellerId?.name}</span>
-            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-tight">Seller</span>
+            <span className="text-[10px] font-black text-slate-800 dark:text-slate-200 truncate leading-none">{item.sellerId?.name}</span>
+            <span className="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tight">Seller</span>
           </div>
         </div>
 
-        <h3 className="text-lg font-black text-slate-800 mb-6 truncate group-hover:text-sky-600 transition-colors leading-tight">
+        <h3 className="text-lg font-black text-slate-800 dark:text-slate-200 mb-6 truncate group-hover:text-sky-600 transition-colors leading-tight">
           {item.title}
         </h3>
         

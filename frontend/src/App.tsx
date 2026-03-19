@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
@@ -44,18 +45,19 @@ function App() {
 
   return (
     <Router>
-      <AuthProvider>
-        <ToastProvider>
-          <SocketProvider>
-            <UnreadProvider>
-              <ChatProvider>
-                <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-primary-500/30">
-                  <OfflineBanner />
-                  <Suspense fallback={null}>
-                    <Routes>
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <ThemeProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <SocketProvider>
+              <UnreadProvider>
+                <ChatProvider>
+                  <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-primary-500/30">
+                    <OfflineBanner />
+                    <Suspense fallback={null}>
+                      <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
                       <Route 
                         path="/dashboard/*" 
                         element={
@@ -74,6 +76,7 @@ function App() {
           </SocketProvider>
         </ToastProvider>
       </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }
