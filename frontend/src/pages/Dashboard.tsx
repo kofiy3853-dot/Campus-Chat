@@ -23,6 +23,7 @@ const ClubsPage = lazy(() => import('./ClubsPage'));
 const ClubDetailPage = lazy(() => import('./ClubDetailPage'));
 const Leaderboard = lazy(() => import('../pages/Leaderboard'));
 const AdminPage = lazy(() => import('../pages/AdminPage'));
+const ExplorerPage = lazy(() => import('../pages/ExplorerPage'));
 
 import FloatingActionMenu from '../components/FloatingActionMenu';
 import { clsx } from 'clsx';
@@ -76,6 +77,7 @@ const Dashboard = () => {
             <Route path="clubs" element={<ClubsPage />} />
             <Route path="clubs/:id" element={<ClubDetailPage />} />
             <Route path="leaderboard" element={<Leaderboard />} />
+            <Route path="explore" element={<ExplorerPage />} />
             <Route path="admin" element={<AdminPage />} />
             <Route path="profile" element={<ProfileSettings />} />
             <Route path="chats" element={<div className="flex-1 flex items-center justify-center text-gray-400 font-medium">Select a conversation to start chatting</div>} />
