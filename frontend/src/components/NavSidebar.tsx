@@ -4,11 +4,11 @@ import {
   MessageSquare, 
   Settings, 
   LogOut,
-  User as UserIcon,
   Search,
   Home,
   Compass,
-  Shield
+  Calendar,
+  User as UserIcon
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';
@@ -26,9 +26,10 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
 
   const navItems = [
     { icon: Home, label: 'Home', to: '/dashboard' },
-    { icon: Search, label: 'Discover', to: '/dashboard/discover' },
-    { icon: Compass, label: 'Explore', to: '/dashboard/explore' },
-    { icon: MessageSquare, label: 'Chats', to: '/dashboard/chats' },
+    { icon: Search, label: 'Connect', to: '/dashboard/discover' },
+    { icon: MessageSquare, label: 'Chat', to: '/dashboard/chats' },
+    { icon: Calendar, label: 'Events', to: '/dashboard/explore' },
+    { icon: UserIcon, label: 'Profile', to: '/dashboard/profile' },
   ];
 
   return (
@@ -58,9 +59,9 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
                   "flex items-center justify-center w-12 h-12 rounded-[1.2rem] transition-all",
                   isActive ? "bg-[#8444e2] text-white shadow-md shadow-[#8444e2]/30" : "text-slate-400 hover:bg-purple-50 group-hover:text-[#8444e2]"
                 )}>
-                  <item.icon className="w-6 h-6" />
-                  {item.label === 'Chats' && unread > 0 && (
-                    <span className="absolute top-0 right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+                  <item.icon className="w-5 h-5 md:w-6 md:h-6" />
+                  {item.label === 'Chat' && unread > 0 && (
+                    <span className="absolute -top-1 -right-1 md:top-0 md:right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
                       {unread > 99 ? '99+' : unread}
                     </span>
                   )}
