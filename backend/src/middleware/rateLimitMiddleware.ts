@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { AuthRequest } from '../types/express';
 import { isRedisReady, redisIncr, redisExpire } from '../config/redis';
 
 interface RateLimitConfig {
@@ -10,7 +11,7 @@ interface RateLimitConfig {
 const memoryStore = new Map<string, { count: number; resetTime: number }>();
 
 export const createRateLimiter = (config: RateLimitConfig) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: AuthRequest, res: Response, next: NextFunction) => {
     // Skip rate limiting for preflight requests
     if (req.method === 'OPTIONS') {
       return next();
