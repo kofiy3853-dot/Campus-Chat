@@ -148,9 +148,20 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
     conversation.last_message = message._id as any;
     conversation.last_message_time = new Date();
     
-    // Clear recipient from hidden_for if they were there (so chat reappears)
-    if (conversation.hidden_for?.some(id => id.toString() === recipientId.toString())) {
-      conversation.hidden_for = conversation.hidden_for.filter(id => id.toString() !== recipientId.toString());
+    // Clear participants from hidden_for if they were there (so chat reappears)
+    const senderIdStr = req.user._id.toString();
+    const recipientIdStr = recipientId.toString();
+    
+    if (conversation.hidden_for && conversation.hidden_for.length > 0) {
+      const originalCount = conversation.hidden_for.length;
+      conversation.hidden_for = conversation.hidden_for.filter(id => 
+        id.toString() !== recipientIdStr && id.toString() !== senderIdStr
+      );
+      
+      // Only save if we actually removed someone
+      if (conversation.hidden_for.length !== originalCount) {
+        await conversation.save();
+      }
     }
     
     await conversation.save();
@@ -199,9 +210,48 @@ export const createConversation = async (req: AuthRequest, res: Response) => {
         participants: [req.user.id, participantId],
       });
       conversation = await conversation.populate('participants', 'name email profile_picture status');
+    } else {
+      // If found, clear current user from hidden_for
+      const userIdStr = req.user._id.toString();
+      if (conversation.hidden_for && conversation.hidden_for.some(id => id.toString() === userIdStr)) {
+        conversation.hidden_for = conversation.hidden_for.filter(id => id.toString() !== userIdStr);
+        await conversation.save();
+      }
     }
 
     res.status(200).json(conversation);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getConversationById = async (req: AuthRequest, res: Response) => {
+  const { conversationId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
+    return res.status(400).json({ message: 'Invalid conversation ID format' });
+  }
+
+  try {
+    const conversation = await Conversation.findOne({
+      _id: conversationId,
+      participants: req.user.id
+    })
+    .populate('participants', 'name email profile_picture status last_seen')
+    .populate('last_message');
+
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversation not found or access denied' });
+    }
+
+    // Auto-unhide if fetching directly
+    const userIdStr = req.user._id.toString();
+    if (conversation.hidden_for && conversation.hidden_for.some(id => id.toString() === userIdStr)) {
+      conversation.hidden_for = conversation.hidden_for.filter(id => id.toString() !== userIdStr);
+      await conversation.save();
+    }
+
+    res.json(conversation);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

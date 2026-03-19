@@ -64,7 +64,7 @@ const ChatWindow = () => {
 
       const [msgRes, convRes] = await Promise.all([
         api.get(`/api/chat/messages/${id}`),
-        api.get(`/api/chat/conversations`)
+        api.get(`/api/chat/conversations/${id}`)
       ]);
       
       const remoteMsgs = msgRes.data;
@@ -73,14 +73,12 @@ const ChatWindow = () => {
       // Cache messages to local DB
       if (id && id !== 'null') {
         await db.transaction('rw', db.messages, async () => {
-          // Find which messages to add (don't clear everything to preserve 'pending' local ones if any)
-          // For now, simple clear and refresh for simplicity, but in future reconcile
           await db.messages.where('conversation_id').equals(id).delete();
           await db.messages.bulkPut(remoteMsgs.map((m: any) => ({ ...m, conversation_id: id })));
         });
       }
 
-      const currentConv = convRes.data.find((c: any) => c._id === id);
+      const currentConv = convRes.data;
       if (!currentConv) {
         throw new Error('Conversation not found');
       }

@@ -4,7 +4,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { 
-  getConversations, 
+  getConversations,
+  getConversationById,
   getMessages, 
   sendMessage, 
   createConversation, 
@@ -72,6 +73,9 @@ router.post('/upload', protect, upload.single('file'), async (req: any, res: Res
 
 router.get('/test', (req, res) => res.json({ message: 'Chat routes are working' }));
 router.get('/conversations', protect, getConversations);
+
+// Get single conversation by ID
+router.get('/conversations/:conversationId', protect, getConversationById);
 router.post('/conversations', protect, createConversation);
 router.get('/messages/:conversationId', protect, getMessages);
 router.post('/send', protect, messageRateLimiter, sendMessage);
