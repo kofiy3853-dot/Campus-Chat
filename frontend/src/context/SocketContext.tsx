@@ -26,9 +26,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const newSocket = io(socketUrl, {
       query: { userId },
       path: '/socket.io',
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5, // Limit reconnection attempts
+      reconnectionDelay: 2000, // Increase delay between attempts
+      reconnectionDelayMax: 5000, // Maximum delay
+      transports: ['websocket'], // Use only websocket for better performance
       autoConnect: true,
       withCredentials: true,
     });

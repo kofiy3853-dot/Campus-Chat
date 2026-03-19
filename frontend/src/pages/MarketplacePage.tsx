@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ShoppingBag, Search, Plus, Tag, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -6,6 +6,23 @@ import MarketplaceCard from '../components/MarketplaceCard';
 const MarketplaceCompose = React.lazy(() => import('../components/MarketplaceCompose'));
 import Skeleton from '../components/Skeleton';
 import { clsx } from 'clsx';
+
+// Debounce hook
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 const CATEGORIES = ['All', 'Electronics', 'Books', 'Furniture', 'Clothing', 'Services', 'Other'];
 
@@ -17,12 +34,15 @@ const MarketplacePage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [isComposeOpen, setIsComposeOpen] = useState(false);
 
+  // Debounce search query to reduce API calls
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
   const fetchItems = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
       if (activeCategory !== 'All') params.append('category', activeCategory);
-      if (searchQuery) params.append('search', searchQuery);
+      if (debouncedSearchQuery) params.append('search', debouncedSearchQuery);
       
       const { data } = await api.get(`/api/marketplace?${params.toString()}`);
       setItems(data);
@@ -34,11 +54,8 @@ const MarketplacePage: React.FC = () => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-        fetchItems();
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [activeCategory, searchQuery]);
+    fetchItems();
+  }, [activeCategory, debouncedSearchQuery]);
 
   const handleDelete = (itemId: string) => {
     setItems((prev) => prev.filter((item) => item._id !== itemId));

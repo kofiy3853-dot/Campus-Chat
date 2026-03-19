@@ -3,13 +3,15 @@ import axios from 'axios';
 // Get API URL from environment variables
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-// Log API configuration
-console.log('[API] Configuration:', {
-  environment: import.meta.env.MODE,
-  apiUrl: API_URL,
-  isDevelopment: import.meta.env.DEV,
-  isProduction: import.meta.env.PROD,
-});
+// Log API configuration only in development
+if (import.meta.env.DEV) {
+  console.log('[API] Configuration:', {
+    environment: import.meta.env.MODE,
+    apiUrl: API_URL,
+    isDevelopment: import.meta.env.DEV,
+    isProduction: import.meta.env.PROD,
+  });
+}
 
 // Validate API URL in production
 if (import.meta.env.PROD && !API_URL) {
@@ -22,7 +24,7 @@ if (import.meta.env.PROD && API_URL === 'http://localhost:5000') {
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 30000, // 30 second timeout
+  timeout: 10000, // 10 second timeout for better performance
   headers: {
     'Content-Type': 'application/json',
   },

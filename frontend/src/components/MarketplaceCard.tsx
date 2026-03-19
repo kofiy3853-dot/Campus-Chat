@@ -9,7 +9,7 @@ interface MarketplaceCardProps {
   onDelete?: (itemId: string) => void;
 }
 
-const MarketplaceCard: React.FC<MarketplaceCardProps> = ({ item, onMessageSeller, onDelete }) => {
+const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMessageSeller, onDelete }) => {
   const { user } = useAuth();
 
   return (
@@ -98,6 +98,8 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = ({ item, onMessageSeller
       </div>
     </div>
   );
-};
+});
+
+MarketplaceCard.displayName = 'MarketplaceCard';
 
 export default MarketplaceCard;
