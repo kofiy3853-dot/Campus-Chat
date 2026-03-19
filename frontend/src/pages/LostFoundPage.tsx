@@ -81,19 +81,16 @@ const LostFoundPage: React.FC = () => {
 
   const handlePostCreated = (newPost: any) => {
     setPosts((prev) => [newPost, ...prev]);
-    socket?.emit('lost_found_posted', { post: newPost });
   };
 
   const handleResolve = (postId: string) => {
     setPosts((prev) =>
       prev.map((p) => (p._id === postId ? { ...p, is_resolved: true } : p))
     );
-    socket?.emit('lost_found_resolved', { postId });
   };
 
   const handleDelete = (postId: string) => {
     setPosts((prev) => prev.filter((p) => p._id !== postId));
-    socket?.emit('lost_found_deleted', { postId });
   };
 
   const handleLoadMore = () => {

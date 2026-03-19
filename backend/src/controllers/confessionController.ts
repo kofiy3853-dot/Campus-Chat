@@ -5,6 +5,7 @@ import Confession from '../models/Confession';
 import ConfessionComment from '../models/ConfessionComment';
 import ConfessionReaction from '../models/ConfessionReaction';
 import User from '../models/User';
+import { io } from '../server';
 
 // GET /api/confessions?page=1&sort=newest|top
 export const getConfessions = async (req: AuthRequest, res: Response) => {
@@ -55,6 +56,10 @@ export const postConfession = async (req: AuthRequest, res: Response) => {
     const confession = await Confession.create({ userId: req.user._id, text: text.trim() });
     // Return without userId
     const safe = confession.toJSON();
+    
+    // Emit real-time event
+    io.emit('new_confession', safe);
+
     res.status(201).json(safe);
   } catch (err: any) {
     res.status(500).json({ message: err.message });
@@ -72,11 +77,13 @@ export const toggleLike = async (req: AuthRequest, res: Response) => {
 
     if (existing) {
       await existing.deleteOne();
-      await Confession.findByIdAndUpdate(confessionId, { $inc: { likesCount: -1 } });
+      const updated = await Confession.findByIdAndUpdate(confessionId, { $inc: { likesCount: -1 } }, { new: true });
+      io.emit('confession_updated', { confessionId, poll: updated }); // Consistent with frontend expectations if needed, or use confession_updated
       return res.json({ liked: false });
     } else {
       await ConfessionReaction.create({ confessionId, userId, type: 'like' });
-      await Confession.findByIdAndUpdate(confessionId, { $inc: { likesCount: 1 } });
+      const updated = await Confession.findByIdAndUpdate(confessionId, { $inc: { likesCount: 1 } }, { new: true });
+      io.emit('confession_updated', { confessionId, confession: updated });
       return res.json({ liked: true });
     }
   } catch (err: any) {
@@ -137,7 +144,11 @@ export const addComment = async (req: AuthRequest, res: Response) => {
   try {
     const confessionId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     await ConfessionComment.create({ confessionId, userId: req.user._id, text: text.trim() });
-    await Confession.findByIdAndUpdate(confessionId, { $inc: { commentsCount: 1 } });
+    const updated = await Confession.findByIdAndUpdate(confessionId, { $inc: { commentsCount: 1 } }, { new: true });
+    
+    // Emit update for comment count
+    io.emit('confession_updated', { confessionId, confession: updated });
+    
     res.status(201).json({ message: 'Comment added.' });
   } catch (err: any) {
     res.status(500).json({ message: err.message });

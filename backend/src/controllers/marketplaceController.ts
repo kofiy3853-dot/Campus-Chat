@@ -3,6 +3,7 @@ import { AuthRequest } from '../types/express';
 import Product from '../models/Product';
 import mongoose from 'mongoose';
 import { uploadToFirebaseStorage } from '../services/cloudinaryService';
+import { io } from '../server';
 
 export const createListing = async (req: AuthRequest, res: Response) => {
   try {
@@ -45,6 +46,9 @@ export const createListing = async (req: AuthRequest, res: Response) => {
     // Populate seller info
     const populatedListing = await Product.findById(listing._id).populate('sellerId', 'name profile_picture status');
     console.log("✅ Listing populated:", populatedListing);
+
+    // Emit real-time event
+    io.emit('new_marketplace_item', populatedListing);
 
     res.status(201).json(populatedListing);
   } catch (error: any) {
@@ -122,6 +126,10 @@ export const deleteListing = async (req: AuthRequest, res: Response) => {
   try {
     const item = await Product.findOneAndDelete({ _id: id, sellerId: req.user._id });
     if (!item) return res.status(404).json({ message: 'Listing not found or unauthorized' });
+
+    // Emit real-time event
+    io.emit('marketplace_item_removed', { itemId: id });
+
     res.json({ message: 'Listing deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

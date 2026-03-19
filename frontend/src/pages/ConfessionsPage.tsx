@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Ghost, TrendingUp, Clock, ShieldAlert, PenLine, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import ConfessionCard from '../components/ConfessionCard';
 import ConfessionCompose from '../components/ConfessionCompose';
 
 const ConfessionsPage: React.FC = () => {
   const { user } = useAuth();
+  const { socket } = useSocket();
   const [confessions, setConfessions] = useState<any[]>([]);
   const [sort, setSort] = useState<'newest' | 'top'>('newest');
   const [_page, setPage] = useState(1);
@@ -81,6 +83,29 @@ const ConfessionsPage: React.FC = () => {
   const handlePosted = (confession: any) => {
     setConfessions(prev => [{ ...confession, isLiked: false, likesCount: 0, commentsCount: 0 }, ...prev]);
   };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('new_confession', (newConfession: any) => {
+      // Only add if not already in list and if we are on newest sort
+      setConfessions(prev => {
+        if (prev.find(c => c._id === newConfession._id)) return prev;
+        return [newConfession, ...prev];
+      });
+    });
+
+    socket.on('confession_updated', (data: { confessionId: string, confession: any }) => {
+      setConfessions(prev => 
+        prev.map(c => c._id === data.confessionId ? { ...c, ...data.confession } : c)
+      );
+    });
+
+    return () => {
+      socket.off('new_confession');
+      socket.off('confession_updated');
+    };
+  }, [socket]);
 
   const handleDelete = (id: string) => {
     setConfessions(prev => prev.filter(c => c._id !== id));

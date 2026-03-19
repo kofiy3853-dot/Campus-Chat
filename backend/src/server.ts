@@ -197,30 +197,6 @@ io.on('connection', async (socket) => {
     io.to(`notification:${data.userId}`).emit('notification', data.notification);
   });
 
-  socket.on('poll_created', (data: { poll: any }) => {
-    socket.broadcast.emit('new_poll', data.poll);
-  });
-
-  socket.on('poll_voted', (data: { pollId: string, poll: any }) => {
-    socket.broadcast.emit('poll_updated', { pollId: data.pollId, poll: data.poll });
-  });
-
-  socket.on('poll_deleted', (data: { pollId: string }) => {
-    socket.broadcast.emit('poll_removed', { pollId: data.pollId });
-  });
-
-  socket.on('lost_found_posted', (data: { post: any }) => {
-    socket.broadcast.emit('new_lost_found', data.post);
-  });
-
-  socket.on('lost_found_resolved', (data: { postId: string, post: any }) => {
-    socket.broadcast.emit('lost_found_updated', { postId: data.postId, post: data.post });
-  });
-
-  socket.on('lost_found_deleted', (data: { postId: string }) => {
-    socket.broadcast.emit('lost_found_removed', { postId: data.postId });
-  });
-
   socket.on('disconnect', async () => {
     if (userId && userId !== 'null' && userId !== 'undefined') {
       const userSockets = onlineUsers.get(userId);

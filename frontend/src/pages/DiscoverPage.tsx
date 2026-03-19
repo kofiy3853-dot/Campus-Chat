@@ -12,10 +12,12 @@ import { clsx } from 'clsx';
 import Skeleton from '../components/Skeleton';
 import SafeImage from '../components/SafeImage';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 
 const DiscoverPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { socket } = useSocket();
   
   const [popularConfessions, setPopularConfessions] = useState<any[]>([]);
   const [featuredGroup, setFeaturedGroup] = useState<any>(null);
@@ -53,6 +55,54 @@ const DiscoverPage: React.FC = () => {
   useEffect(() => {
     fetchDiscoveryData();
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    // Real-time confessions
+    socket.on('new_confession', (newConfession: any) => {
+      setPopularConfessions(prev => {
+        const updated = [newConfession, ...prev];
+        return updated.slice(0, 3);
+      });
+    });
+
+    socket.on('confession_updated', (data: { confessionId: string, confession: any }) => {
+      setPopularConfessions(prev => 
+        prev.map(c => c._id === data.confessionId ? { ...c, ...data.confession } : c)
+      );
+    });
+
+    // Real-time events
+    socket.on('new_event', (newEvent: any) => {
+      setUpcomingEvents(prev => {
+        const updated = [newEvent, ...prev];
+        // Sort by date if possible, or just slice
+        return updated.sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()).slice(0, 3);
+      });
+    });
+
+    socket.on('event_updated', (data: { eventId: string, event: any }) => {
+      setUpcomingEvents(prev => 
+        prev.map(e => e._id === data.eventId ? { ...e, ...data.event } : e)
+      );
+    });
+
+    // Real-time groups/clubs
+    socket.on('group_updated', (updatedGroup: any) => {
+      if (featuredGroup && featuredGroup._id === updatedGroup._id) {
+        setFeaturedGroup(updatedGroup);
+      }
+    });
+
+    return () => {
+      socket.off('new_confession');
+      socket.off('confession_updated');
+      socket.off('new_event');
+      socket.off('event_updated');
+      socket.off('group_updated');
+    };
+  }, [socket, featuredGroup]);
 
   // Helper for joining group
   const joinGroup = async (groupId: string) => {

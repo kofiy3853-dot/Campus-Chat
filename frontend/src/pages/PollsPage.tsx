@@ -77,19 +77,16 @@ const PollsPage: React.FC = () => {
 
   const handlePollCreated = (newPoll: any) => {
     setPolls((prev) => [newPoll, ...prev]);
-    socket?.emit('poll_created', { poll: newPoll });
   };
 
   const handleVote = (pollId: string, updatedPoll: any) => {
     setPolls((prev) =>
       prev.map((p) => (p._id === pollId ? { ...p, ...updatedPoll, has_voted: true } : p))
     );
-    socket?.emit('poll_voted', { pollId, poll: updatedPoll });
   };
 
   const handleDelete = (pollId: string) => {
     setPolls((prev) => prev.filter((p) => p._id !== pollId));
-    socket?.emit('poll_deleted', { pollId });
   };
 
   const handleLoadMore = () => {

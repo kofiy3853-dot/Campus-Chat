@@ -4,6 +4,7 @@ import { AuthRequest } from '../types/express';
 import LostFoundPost from '../models/LostFoundPost';
 import LostFoundReport from '../models/LostFoundReport';
 import User from '../models/User';
+import { io } from '../server';
 
 // Create a lost/found post
 export const createPost = async (req: AuthRequest, res: Response) => {
@@ -46,6 +47,9 @@ export const createPost = async (req: AuthRequest, res: Response) => {
     });
 
     const populatedPost = await LostFoundPost.findById(post._id).populate('creator', 'name profile_picture');
+
+    // Emit real-time event
+    io.emit('new_lost_found', populatedPost);
 
     res.status(201).json(populatedPost);
   } catch (error: any) {
@@ -184,6 +188,9 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
     await post.save();
     const updatedPost = await LostFoundPost.findById(postId).populate('creator', 'name profile_picture');
 
+    // Emit real-time update
+    io.emit('lost_found_updated', { postId, post: updatedPost });
+
     res.json(updatedPost);
   } catch (error: any) {
     console.error('Error updating post:', error);
@@ -225,6 +232,9 @@ export const deletePost = async (req: AuthRequest, res: Response) => {
 
     post.is_deleted = true;
     await post.save();
+
+    // Emit removal
+    io.emit('lost_found_removed', { postId });
 
     console.log('[DELETE DEBUG] Post marked as deleted');
     res.json({ message: 'Post deleted successfully' });
@@ -352,7 +362,11 @@ export const resolvePost = async (req: AuthRequest, res: Response) => {
     post.resolved_date = new Date();
     await post.save();
 
-    res.json({ message: 'Post marked as resolved', post });
+    // Emit update
+    const updated = await LostFoundPost.findById(postId).populate('creator', 'name profile_picture');
+    io.emit('lost_found_updated', { postId, post: updated });
+
+    res.json({ message: 'Post marked as resolved', post: updated });
   } catch (error: any) {
     console.error('Error resolving post:', error);
     res.status(500).json({ message: error.message || 'Failed to resolve post' });

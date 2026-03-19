@@ -3,6 +3,7 @@ import { Types } from 'mongoose';
 import { AuthRequest } from '../types/express';
 import Event from '../models/Event';
 import EventAttendee from '../models/EventAttendee';
+import { io } from '../server';
 
 // GET /api/events
 export const getEvents = async (req: AuthRequest, res: Response) => {
@@ -54,6 +55,9 @@ export const createEvent = async (req: AuthRequest, res: Response) => {
       organizerId: req.user._id
     });
 
+    const populatedEvent = await Event.findById(newEvent._id).populate('organizerId', 'name profile_picture');
+    io.emit('new_event', populatedEvent);
+
     res.status(201).json(newEvent);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
@@ -80,6 +84,9 @@ export const joinEvent = async (req: AuthRequest, res: Response) => {
     event.attendeesCount += 1;
     await event.save();
 
+    const updatedEvent = await Event.findById(eventId).populate('organizerId', 'name profile_picture');
+    io.emit('event_updated', { eventId, event: updatedEvent });
+
     res.json({ message: 'Joined event successfully', attendeesCount: event.attendeesCount });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -99,6 +106,10 @@ export const leaveEvent = async (req: any, res: Response) => {
     if (event) {
       event.attendeesCount = Math.max(0, event.attendeesCount - 1);
       await event.save();
+      
+      const updatedEvent = await Event.findById(eventId).populate('organizerId', 'name profile_picture');
+      io.emit('event_updated', { eventId, event: updatedEvent });
+      
       res.json({ message: 'Left event successfully', attendeesCount: event.attendeesCount });
     } else {
       res.json({ message: 'Left event successfully' });

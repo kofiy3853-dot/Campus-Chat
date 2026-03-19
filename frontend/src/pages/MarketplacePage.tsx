@@ -6,6 +6,7 @@ import MarketplaceCard from '../components/MarketplaceCard';
 const MarketplaceCompose = React.lazy(() => import('../components/MarketplaceCompose'));
 import Skeleton from '../components/Skeleton';
 import { clsx } from 'clsx';
+import { useSocket } from '../context/SocketContext';
 
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {
@@ -28,6 +29,7 @@ const CATEGORIES = ['All', 'Electronics', 'Books', 'Furniture', 'Clothing', 'Ser
 
 const MarketplacePage: React.FC = () => {
   const navigate = useNavigate();
+  const { socket } = useSocket();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,6 +58,29 @@ const MarketplacePage: React.FC = () => {
   useEffect(() => {
     fetchItems();
   }, [activeCategory, debouncedSearchQuery]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('new_marketplace_item', (newItem: any) => {
+      // Check if it matches active category
+      if (activeCategory !== 'All' && newItem.category !== activeCategory) return;
+      
+      setItems(prev => {
+        if (prev.find(i => i._id === newItem._id)) return prev;
+        return [newItem, ...prev];
+      });
+    });
+
+    socket.on('marketplace_item_removed', (data: { itemId: string }) => {
+      setItems(prev => prev.filter(i => i._id !== data.itemId));
+    });
+
+    return () => {
+      socket.off('new_marketplace_item');
+      socket.off('marketplace_item_removed');
+    };
+  }, [socket, activeCategory]);
 
   const handleDelete = (itemId: string) => {
     setItems((prev) => prev.filter((item) => item._id !== itemId));

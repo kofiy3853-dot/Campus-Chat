@@ -6,11 +6,13 @@ import { clsx } from 'clsx';
 import EventCard from '../components/EventCard';
 import EventCompose from '../components/EventCompose';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 
 const CATEGORIES = ['All', 'Academic', 'Social', 'Sports', 'Clubs', 'Career'];
 
 const EventsPage: React.FC = () => {
   const { user } = useAuth();
+  const { socket } = useSocket();
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCompose, setShowCompose] = useState(false);
@@ -35,6 +37,31 @@ const EventsPage: React.FC = () => {
   useEffect(() => {
     fetchEvents();
   }, [activeCategory, sort]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('new_event', (newEvent: any) => {
+      // Check if it matches active category
+      if (activeCategory !== 'All' && newEvent.category !== activeCategory) return;
+      
+      setEvents(prev => {
+        if (prev.find(e => e._id === newEvent._id)) return prev;
+        return [newEvent, ...prev];
+      });
+    });
+
+    socket.on('event_updated', (data: { eventId: string, event: any }) => {
+      setEvents(prev => 
+        prev.map(e => e._id === data.eventId ? { ...e, ...data.event } : e)
+      );
+    });
+
+    return () => {
+      socket.off('new_event');
+      socket.off('event_updated');
+    };
+  }, [socket, activeCategory]);
 
   // Check for compose query param
   useEffect(() => {

@@ -5,6 +5,7 @@ import Poll from '../models/Poll';
 import PollVote from '../models/PollVote';
 import PollReport from '../models/PollReport';
 import User from '../models/User';
+import { io } from '../server';
 
 // Create a new poll
 export const createPoll = async (req: AuthRequest, res: Response) => {
@@ -44,6 +45,9 @@ export const createPoll = async (req: AuthRequest, res: Response) => {
     });
 
     const populatedPoll = await Poll.findById(poll._id).populate('creator', 'name profile_picture');
+
+    // Emit real-time event
+    io.emit('new_poll', populatedPoll);
 
     res.status(201).json(populatedPoll);
   } catch (error: any) {
@@ -209,6 +213,9 @@ export const votePoll = async (req: AuthRequest, res: Response) => {
       percentage: poll.total_votes > 0 ? ((opt.votes / poll.total_votes) * 100).toFixed(1) : '0.0',
     }));
 
+    // Emit real-time event for the update
+    io.emit('poll_updated', { pollId, poll: { ...poll.toObject(), results } });
+
     res.json({
       message: 'Vote recorded',
       poll: {
@@ -312,6 +319,9 @@ export const deletePoll = async (req: AuthRequest, res: Response) => {
 
     poll.is_deleted = true;
     await poll.save();
+
+    // Emit removal
+    io.emit('poll_removed', { pollId });
 
     res.json({ message: 'Poll deleted successfully' });
   } catch (error: any) {
