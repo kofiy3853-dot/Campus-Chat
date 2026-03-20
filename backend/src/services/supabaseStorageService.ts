@@ -31,6 +31,10 @@ export const uploadToSupabaseStorage = async (
   else if (ext === '.pdf') contentType = 'application/pdf';
 
   console.log(`[Supabase Storage] Uploading to: ${uniqueFileName}, size: ${fileBuffer.length}, type: ${contentType}`);
+ 
+  if (!supabase) {
+    throw new Error('Supabase Storage not configured. Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
+  }
 
   const { data, error } = await supabase.storage
     .from(BUCKET)
@@ -43,6 +47,10 @@ export const uploadToSupabaseStorage = async (
   if (error) {
     console.error('[Supabase Storage] Upload error:', error);
     throw new Error(`Supabase Storage upload failed: ${error.message}`);
+  }
+
+  if (!supabase) {
+    throw new Error('Supabase Storage not configured.');
   }
 
   const { data: publicUrlData } = supabase.storage
@@ -70,6 +78,11 @@ export const deleteFromSupabaseStorage = async (fileUrl: string): Promise<void> 
     const filePath = segments.slice(bucketIndex + 1).join('/');
 
     console.log(`[Supabase Storage] Deleting file: ${filePath}`);
+    
+    if (!supabase) {
+      throw new Error('Supabase Storage not configured.');
+    }
+
     const { error } = await supabase.storage.from(BUCKET).remove([filePath]);
 
     if (error) throw error;

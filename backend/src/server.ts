@@ -367,6 +367,10 @@ const startServer = async () => {
     });
 
     console.log('[Server] Connecting to MongoDB...');
+    if (!MONGODB_URI || MONGODB_URI.includes('localhost') && process.env.NODE_ENV === 'production') {
+      console.error(' [CRITICAL] MONGODB_URI is not set or using localhost in production!');
+      console.error(' Please add MONGODB_URI to your Render environment variables.');
+    }
     mongoose.connect(MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 10000,
