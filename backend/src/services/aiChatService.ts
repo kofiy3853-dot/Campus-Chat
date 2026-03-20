@@ -4,7 +4,7 @@ import Message from '../models/Message';
 import mongoose from 'mongoose';
 import axios from 'axios';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { io } from '../server';
+// import { io } from '../server'; // Removed to avoid circular dependency
 
 const AI_ASSISTANT_EMAIL = 'ai-assistant@campus-chat.com';
 
@@ -153,6 +153,7 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
  * Handles generating and saving an AI response.
  */
 export async function handleAIResponse(conversationId: string, userMessage: string, userId: string) {
+    console.log(`[AI Chat] Handling AI response for conversation: ${conversationId}`);
     const aiUser = await ensureAIUser();
     
     // Fetch recent history
@@ -160,7 +161,10 @@ export async function handleAIResponse(conversationId: string, userMessage: stri
         .sort({ timestamp: -1 })
         .limit(10);
     
+    console.log(`[AI Chat] Fetched ${history.length} messages for context`);
+    
     const aiText = await fetchAIResponse(userMessage, history.reverse());
+    console.log(`[AI Chat] AI generated response: ${aiText.substring(0, 50)}...`);
 
     const message = await Message.create({
         conversation_id: conversationId,
@@ -181,8 +185,12 @@ export async function handleAIResponse(conversationId: string, userMessage: stri
     await message.populate('sender_id', 'name profile_picture');
 
     // Emit to room
+    const { io } = require('../server'); // Late import to avoid circular dependency
     if (io) {
+        console.log(`[AI Chat] Emitting receive_message to room: ${conversationId}`);
         io.to(conversationId.toString()).emit('receive_message', message);
+    } else {
+        console.warn('[AI Chat] Socket.io (io) not found, could not emit message');
     }
 
     return message;

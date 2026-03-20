@@ -103,7 +103,13 @@ const ChatWindow = () => {
   useEffect(() => {
     if (!socket || !id || id === 'null') return;
 
-    const joinRoom = () => socket.emit('join_room', id);
+    // Use conversation._id if available (essential for 'ai' virtual ID), otherwise fallback to 'id'
+    const roomId = conversation?._id || id;
+    const joinRoom = () => {
+      console.log(`[Socket] Joining room: ${roomId}`);
+      socket.emit('join_room', roomId);
+    };
+    
     joinRoom();
     socket.on('connect', joinRoom);
 
@@ -203,7 +209,7 @@ const ChatWindow = () => {
       socket.off('messages_read', messagesReadHandler);
       socket.off('user_status_change', statusHandler);
     };
-  }, [socket, id, user?._id, markAsRead]);
+  }, [socket, id, user?._id, markAsRead, conversation?._id]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
