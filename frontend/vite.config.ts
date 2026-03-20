@@ -19,7 +19,6 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-utils': ['axios', 'clsx', 'lucide-react'],
-          'vendor-ui': ['framer-motion', 'react-hot-toast'],
         },
       },
     },
