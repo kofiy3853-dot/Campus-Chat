@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware';
-import { getEvents, createEvent, joinEvent, leaveEvent } from '../controllers/eventController';
+import { getEvents, createEvent, joinEvent, leaveEvent, deleteEvent } from '../controllers/eventController';
 import multer from 'multer';
 import { uploadToSupabaseStorage } from '../services/supabaseStorageService';
 
@@ -14,6 +14,7 @@ router.get('/', protect, getEvents);
 router.post('/', protect, createEvent);
 router.post('/:id/join', protect, joinEvent);
 router.post('/:id/leave', protect, leaveEvent);
+router.delete('/:id', protect, deleteEvent);
 
 // Image upload for events
 router.post('/upload', protect, upload.single('image'), (async (req: any, res: any) => {

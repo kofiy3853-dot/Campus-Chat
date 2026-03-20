@@ -22,7 +22,10 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
   const [reportReason, setReportReason] = useState('');
   const [showImage, setShowImage] = useState(false);
 
-  const isCreator = user?._id === post.creator?._id;
+  const isAdmin = user?.role === 'admin';
+  const isKofi = user?.email === 'nharnahyhaw19@gmail.com';
+  const isCreator = user?._id === (post.creator?._id || post.creator);
+  const canDelete = isCreator || isAdmin || isKofi;
   const categoryColors: any = {
     electronics: 'bg-blue-50 text-sky-500',
     stationery: 'bg-purple-50 text-purple-500',
@@ -162,7 +165,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
             </p>
           </div>
 
-          {isCreator && (
+          {canDelete && (
             <button
               onClick={handleDelete}
               disabled={loading}

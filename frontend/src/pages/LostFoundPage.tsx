@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, Search, Filter, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -10,6 +11,8 @@ import Skeleton from '../components/Skeleton';
 const LostFoundPage: React.FC = () => {
   useAuth();
   const { socket } = useSocket();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isComposeOpen, setIsComposeOpen] = useState(false);
@@ -51,6 +54,16 @@ const LostFoundPage: React.FC = () => {
     setPage(1);
     fetchPosts(1, false);
   }, [status, category, search]);
+
+  // Check for compose query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('compose') === 'true') {
+      setIsComposeOpen(true);
+      // Clean up URL
+      navigate('/dashboard/lost-found', { replace: true });
+    }
+  }, [location.search, navigate]);
 
   useEffect(() => {
     if (!socket) return;

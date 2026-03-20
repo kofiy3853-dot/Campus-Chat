@@ -23,7 +23,10 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
   const creatorAvatar = poll.is_anonymous ? null : poll.creator?.profile_picture;
 
   const isExpired = poll.status === 'expired';
-  const isCreator = !poll.is_anonymous && user?._id === poll.creator?._id;
+  const isAdmin = user?.role === 'admin';
+  const isKofi = user?.email === 'nharnahyhaw19@gmail.com';
+  const isCreator = !poll.is_anonymous && user?._id === (poll.creator?._id || poll.creator);
+  const canDelete = isCreator || isAdmin || isKofi;
 
   const handleVote = async (optionIndex: number) => {
     if (poll.has_voted || loading || isExpired) return;
@@ -102,7 +105,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
               Expired
             </span>
           )}
-          {isCreator && (
+          {canDelete && (
             <button
               onClick={handleDelete}
               className="p-2 hover:bg-red-500/20 rounded-lg text-red-400 transition"

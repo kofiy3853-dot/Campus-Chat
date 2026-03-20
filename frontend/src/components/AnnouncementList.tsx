@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Megaphone, Heart, Bookmark, Share2, Calendar, Award, ArrowRight, ChevronLeft, Pin } from 'lucide-react';
+import { Megaphone, Heart, Bookmark, Share2, Calendar, Award, ArrowRight, ChevronLeft, Pin, Trash2 } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
@@ -9,7 +9,7 @@ import Skeleton from './Skeleton';
 import CreateAnnouncementModal from './CreateAnnouncementModal';
 
 const AnnouncementList = () => {
-  useAuth();
+  const { user } = useAuth();
   const { socket } = useSocket();
   const location = useLocation();
   const [announcements, setAnnouncements] = useState<any[]>([]);
@@ -57,6 +57,29 @@ const AnnouncementList = () => {
       socket.off('new_announcement');
     };
   }, [socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+    
+    socket.on('announcement_deleted', ({ id }: { id: string }) => {
+      setAnnouncements(prev => prev.filter(ann => ann._id !== id));
+    });
+
+    return () => {
+      socket.off('announcement_deleted');
+    };
+  }, [socket]);
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this announcement?')) return;
+    try {
+      await api.delete(`/api/announcements/${id}`);
+      setAnnouncements(prev => prev.filter(ann => ann._id !== id));
+    } catch (err) {
+      console.error('Failed to delete announcement:', err);
+      alert('Failed to delete announcement');
+    }
+  };
 
   if (loading) return (
     <div className="flex-1 overflow-y-auto bg-white p-10 space-y-10">
@@ -152,12 +175,23 @@ const AnnouncementList = () => {
                         </div>
                       </div>
                     </div>
-                    {!announcement.pinned && (
-                      <div className="flex items-center gap-1.5 px-2 py-0.5 md:py-1 bg-amber-50 rounded-full border border-amber-100">
-                        <Award className="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-500" />
-                        <span className="text-amber-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest">Verified</span>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {!announcement.pinned && (
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 md:py-1 bg-amber-50 rounded-full border border-amber-100">
+                          <Award className="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-500" />
+                          <span className="text-amber-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest">Verified</span>
+                        </div>
+                      )}
+                      {(user?.role === 'admin' || user?._id === (announcement.posted_by?._id || announcement.posted_by) || user?.email === 'nharnahyhaw19@gmail.com') && (
+                        <button 
+                          onClick={() => handleDelete(announcement._id)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete announcement"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="relative z-10">

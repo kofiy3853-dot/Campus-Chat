@@ -10,6 +10,7 @@ interface AuthRequest extends Request {
   user?: {
     _id: string;
     role: string;
+    email: string;
   };
 }
 
@@ -135,8 +136,12 @@ export const deleteInternship = async (req: AuthRequest, res: Response) => {
     const internship = await Internship.findById(id);
     if (!internship) return res.status(404).json({ message: 'Internship not found' });
 
-    // Only creator or admin can delete
-    if (internship.posted_by.toString() !== req.user?._id && req.user?.role !== 'admin') {
+    // Only creator, admin, or special user can delete
+    const isKofi = req.user?.email === 'nharnahyhaw19@gmail.com';
+    const isAdmin = req.user?.role === 'admin';
+    const isCreator = internship.posted_by.toString() === req.user?._id;
+
+    if (!isCreator && !isAdmin && !isKofi) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 

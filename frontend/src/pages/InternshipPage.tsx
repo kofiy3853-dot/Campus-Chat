@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Briefcase, MapPin, Calendar, Bookmark, BookmarkCheck, ExternalLink, Plus, Filter, Loader2, ChevronRight } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Search, Briefcase, MapPin, Calendar, Bookmark, BookmarkCheck, ExternalLink, Plus, Filter, Loader2, ChevronRight, Trash2 } from 'lucide-react';
 import api from '@/services/api';
 import { clsx } from 'clsx';
 import { useSocket } from '@/context/SocketContext';
@@ -10,7 +11,7 @@ import PostInternshipModal from '@/components/PostInternshipModal';
 
 const InternshipPage: React.FC = () => {
   const { socket } = useSocket();
-  useAuth();
+  const { user } = useAuth();
   const { showToast } = useToast();
   const [internships, setInternships] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,6 +23,18 @@ const InternshipPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [isApplying, setIsApplying] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const routerLocation = useLocation();
+
+  // Check for compose query param
+  useEffect(() => {
+    const params = new URLSearchParams(routerLocation.search);
+    if (params.get('compose') === 'true') {
+      setIsModalOpen(true);
+      // Clean up URL
+      navigate('/dashboard/internships', { replace: true });
+    }
+  }, [routerLocation.search, navigate]);
 
   const categories = ['All', 'Engineering', 'Design', 'Marketing', 'Data Science', 'Business', 'Other'];
   const locations = ['All', 'Remote', 'Accra', 'Kumasi', 'Tema', 'On-site'];
@@ -87,6 +100,18 @@ const InternshipPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to toggle save:', error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this opportunity?')) return;
+    try {
+      await api.delete(`/api/internships/${id}`);
+      setInternships(prev => prev.filter(i => i._id !== id));
+      showToast('success', 'Deleted', 'Internship opportunity removed successfuly');
+    } catch (error) {
+      console.error('Failed to delete internship:', error);
+      showToast('error', 'Error', 'Failed to delete internship');
     }
   };
 
@@ -216,6 +241,16 @@ const InternshipPage: React.FC = () => {
                 >
                   {savedIds.includes(internship._id) || tab === 'saved' ? <BookmarkCheck className="w-6 h-6" /> : <Bookmark className="w-6 h-6" />}
                 </button>
+
+                {(user?.role === 'admin' || user?.email === 'nharnahyhaw19@gmail.com' || user?._id === (internship.posted_by?._id || internship.posted_by)) && (
+                  <button
+                    onClick={() => handleDelete(internship._id)}
+                    className="absolute top-24 right-6 p-3 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-90"
+                    title="Delete opportunity"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                )}
 
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-indigo-600 border border-slate-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">

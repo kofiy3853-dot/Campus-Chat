@@ -11,12 +11,16 @@ interface MarketplaceCardProps {
 
 const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMessageSeller, onDelete }) => {
   const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
+  const isKofi = user?.email === 'nharnahyhaw19@gmail.com';
+  const isSeller = user?._id === (item.sellerId?._id || item.seller_id?._id || item.sellerId || item.seller_id);
+  const canDelete = isSeller || isAdmin || isKofi;
 
   return (
     <div className="market-card bg-white dark:bg-slate-800 rounded-[1.5rem] shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:shadow-[#6A35FF]/10 transition-all duration-300 flex flex-col h-full overflow-hidden">
       <div className="relative h-[200px] w-full bg-slate-100 dark:bg-slate-900 group">
-        {/* Handle multiple images */}
-        {Array.isArray(item.image) ? (
+        {/* Handle multiple images or single image_url */}
+        {Array.isArray(item.image) && item.image.length > 0 ? (
           <div className="grid grid-cols-2 gap-1 h-full">
             {item.image.slice(0, 4).map((img: string, index: number) => (
               <div key={index} className="relative overflow-hidden">
@@ -31,7 +35,7 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
           </div>
         ) : (
           <SafeImage 
-            src={item.image} 
+            src={item.image || item.image_url} 
             alt={item.title} 
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -62,27 +66,29 @@ const MarketplaceCard: React.FC<MarketplaceCardProps> = React.memo(({ item, onMe
         <div className="flex items-center gap-2 mb-4 mt-auto">
           <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-100 shrink-0">
             <SafeImage 
-              src={item.sellerId?.profile_picture} 
-              alt={item.sellerId?.name} 
-              fallback={`https://ui-avatars.com/api/?name=${item.sellerId?.name}`}
+              src={item.sellerId?.profile_picture || item.seller_id?.profile_picture} 
+              alt={item.sellerId?.name || item.seller_id?.name} 
+              fallback={`https://ui-avatars.com/api/?name=${item.sellerId?.name || item.seller_id?.name}`}
               className="w-full h-full object-cover"
             />
           </div>
           <span className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
-            {item.sellerId?.name || 'Unknown'}
+            {item.sellerId?.name || item.seller_id?.name || 'Unknown'}
           </span>
         </div>
         
         {/* Action Buttons */}
         <div className="flex gap-2">
-          {user?._id === item.sellerId?._id ? (
+          {canDelete ? (
             <>
-              <button 
-                onClick={() => { /* Edit functionality to be connected if available */ console.log("Edit clicked"); }}
-                className="flex-[2] py-2.5 bg-white dark:bg-slate-800 text-[#6A35FF] dark:text-purple-400 border border-[#6A35FF] dark:border-purple-400 rounded-[0.8rem] text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#F3E8FF] dark:hover:bg-slate-700 transition-all"
-              >
-                Edit
-              </button>
+              {isSeller && (
+                <button 
+                  onClick={() => { /* Edit functionality to be connected if available */ console.log("Edit clicked"); }}
+                  className="flex-[2] py-2.5 bg-white dark:bg-slate-800 text-[#6A35FF] dark:text-purple-400 border border-[#6A35FF] dark:border-purple-400 rounded-[0.8rem] text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#F3E8FF] dark:hover:bg-slate-700 transition-all"
+                >
+                  Edit
+                </button>
+              )}
               {onDelete && (
                 <button 
                   onClick={() => onDelete?.(item._id)}

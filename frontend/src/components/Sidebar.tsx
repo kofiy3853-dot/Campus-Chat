@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { 
   LogOut, 
   Search
@@ -16,9 +16,10 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [conversations, setConversations] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [conversations, setConversations] = useState<any[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'chats' | 'groups'>('chats');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       {/* Tabs */}
       {isOpen && (
         <div className="px-4 py-3 flex gap-2">
-          <button 
+          <button
             onClick={() => setActiveTab('chats')}
             className={clsx(
               "flex-1 py-1.5 px-3 rounded-lg text-sm font-medium transition-none",
@@ -76,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           >
             Chats
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('groups')}
             className={clsx(
               "flex-1 py-1.5 px-3 rounded-lg text-sm font-medium transition-none",
@@ -93,10 +94,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         <div className="px-4 mb-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search conversations..."
               className="w-full bg-gray-50 border border-gray-100 rounded-lg py-2 pl-9 pr-3 text-sm focus:ring-1 focus:ring-sky-400 outline-none transition-none"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
@@ -106,8 +109,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="px-2 space-y-1">
           {activeTab === 'chats' ? (
-            conversations.map((conv: any) => (
-              <NavLink 
+            conversations
+            .filter(conv => {
+              const otherParticipant = conv.participants.find((p: any) => p._id !== user?._id);
+              return otherParticipant?.name.toLowerCase().includes(searchQuery.toLowerCase());
+            })
+            .map((conv: any) => (
+              <NavLink
                 key={conv._id}
                 to={`/dashboard/chat/${conv._id}`}
                 className={({ isActive }) => clsx(
@@ -162,9 +170,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       {/* Footer / Navigation */}
       <div className="p-4 border-t border-gray-100 space-y-2">
         
-        <div className="pt-2 flex items-center justify-between">
+        <Link
+          to="/dashboard/profile"
+          className="pt-2 flex items-center justify-between group cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors p-2 rounded-xl"
+        >
           {isOpen ? (
-            <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer flex-1 group transition-none">
+            <div className="flex items-center gap-3 flex-1 group transition-none">
               <div className="flex-1 min-w-0 transition-none">
                 <p className="text-sm font-semibold truncate text-gray-800 dark:text-gray-200">{user?.name}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
@@ -172,16 +183,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             </div>
           ) : (
             <div className="flex flex-col items-center gap-4 w-full transition-none">
-              <button 
-                onClick={handleLogout} 
-                aria-label="Logout"
-                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-none"
-              >
-                <LogOut className="w-6 h-6" />
-              </button>
+              <div className="w-10 h-10 rounded-full overflow-hidden border border-slate-200">
+                <img src={getMediaUrl(user?.profile_picture) || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} alt="" className="w-full h-full object-cover" />
+              </div>
             </div>
           )}
-        </div>
+        </Link>
+        {isOpen && (
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-2 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-none"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="text-sm font-medium">Logout</span>
+          </button>
+        )}
       </div>
     </aside>
   );

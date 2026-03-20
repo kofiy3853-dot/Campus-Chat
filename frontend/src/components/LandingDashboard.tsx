@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   Megaphone, 
   Ghost, 
@@ -65,16 +65,18 @@ const LandingDashboard: React.FC = () => {
       {/* HEADER */}
       <header className="sticky top-0 bg-[#fcfbfe]/90 backdrop-blur-md px-5 py-4 flex items-center justify-between z-40">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden shadow-sm bg-white">
+          <Link to="/dashboard/profile" className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden shadow-sm bg-white">
             <SafeImage 
               src={getMediaUrl(user?.profile_picture)} 
               fallback={`https://ui-avatars.com/api/?name=${user?.name}&background=ebd8ff&color=41198f`} 
               className="w-full h-full object-cover" 
             />
-          </div>
-          <h1 className="text-xl font-bold italic text-[#3b1784] font-serif">
-            Campus Curator
-          </h1>
+          </Link>
+          <Link to="/dashboard" className="group/title inline-block">
+            <h1 className="text-xl font-bold italic text-[#3b1784] font-serif">
+              Campus Curator
+            </h1>
+          </Link>
         </div>
         <div className="flex items-center gap-3">
           <button aria-label="Search" onClick={() => navigate('/dashboard/discover')} className="text-[#3b1784] hover:bg-purple-100 p-2 rounded-full transition-colors">

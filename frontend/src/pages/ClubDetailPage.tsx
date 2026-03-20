@@ -218,59 +218,62 @@ const ClubDetailPage = () => {
            <Loader2 className="w-8 h-8 animate-spin text-green-500" />
         </div>
       ) : posts.length > 0 ? (
-        posts.map(post => (
-          <div key={post._id} className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-green-500/5 transition-all">
-            <div className="p-8 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <img src={post.posted_by?.profile_picture || `https://ui-avatars.com/api/?name=${post.posted_by?.name}`} className="w-10 h-10 rounded-xl" alt="" />
-                  <div>
-                    <h4 className="font-black text-slate-800 text-sm">{post.posted_by?.name}</h4>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                      {new Date(post.createdAt).toLocaleDateString([], { month: 'long', day: 'numeric' })}
-                    </p>
+        posts.map(post => {
+          const canDeletePost = post.posted_by?._id === user?._id || club?.admins?.some((a: any) => a._id === user?._id) || user?.email === 'nharnahyhaw19@gmail.com';
+          return (
+            <div key={post._id} className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-green-500/5 transition-all">
+              <div className="p-8 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img src={post.posted_by?.profile_picture || `https://ui-avatars.com/api/?name=${post.posted_by?.name}`} className="w-10 h-10 rounded-xl" alt="" />
+                    <div>
+                      <h4 className="font-black text-slate-800 text-sm">{post.posted_by?.name}</h4>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                        {new Date(post.createdAt).toLocaleDateString([], { month: 'long', day: 'numeric' })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {post.type === 'announcement' && (
+                      <span className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-amber-100">
+                        Announcement
+                      </span>
+                    )}
+                    {canDeletePost && (
+                      <button
+                        onClick={() => handleDeletePost(post._id)}
+                        title="Delete post"
+                        className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {post.type === 'announcement' && (
-                    <span className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-amber-100">
-                      Announcement
-                    </span>
-                  )}
-                  {(post.posted_by?._id === user?._id || club?.admins?.some((a: any) => a._id === user?._id)) && (
-                    <button
-                      onClick={() => handleDeletePost(post._id)}
-                      title="Delete post"
-                      className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
-              
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">{post.title}</h3>
-              <p className="text-slate-600 leading-relaxed font-medium">{post.content}</p>
-              
-              {post.image && (
-                <div className="rounded-3xl overflow-hidden border border-slate-100">
-                  <img src={post.image} alt="" className="w-full h-auto object-cover max-h-[400px]" />
-                </div>
-              )}
+                
+                <h3 className="text-xl font-black text-slate-800 tracking-tight">{post.title}</h3>
+                <p className="text-slate-600 leading-relaxed font-medium">{post.content}</p>
+                
+                {post.image && (
+                  <div className="rounded-3xl overflow-hidden border border-slate-100">
+                    <img src={post.image} alt="" className="w-full h-auto object-cover max-h-[400px]" />
+                  </div>
+                )}
 
-              <div className="flex items-center gap-6 pt-4 border-t border-slate-50">
-                <button className="flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors">
-                  <Heart className="w-5 h-5" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Support</span>
-                </button>
-                <button className="flex items-center gap-2 text-slate-400 hover:text-green-500 transition-colors">
-                  <MessageSquare className="w-5 h-5" />
-                  <span className="text-xs font-bold uppercase tracking-widest">React</span>
-                </button>
+                <div className="flex items-center gap-6 pt-4 border-t border-slate-50">
+                  <button className="flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors">
+                    <Heart className="w-5 h-5" />
+                    <span className="text-xs font-bold uppercase tracking-widest">Support</span>
+                  </button>
+                  <button className="flex items-center gap-2 text-slate-400 hover:text-green-500 transition-colors">
+                    <MessageSquare className="w-5 h-5" />
+                    <span className="text-xs font-bold uppercase tracking-widest">React</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <div className="text-center py-20 bg-white rounded-[3rem] border border-slate-100">
           <Sparkles className="w-12 h-12 text-slate-200 mx-auto mb-4" />

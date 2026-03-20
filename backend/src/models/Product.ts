@@ -11,14 +11,18 @@ export interface IProduct extends Document {
 
 const ProductSchema: Schema = new Schema({
   title: String,
+  description: String,
   price: Number,
   category: String,
-  image: { type: [String], default: [] }, // Array of image URLs
-  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // ObjectId for proper populate()
+  image: { type: [String], default: [] }, // New array field
+  image_url: String, // Old single field
+  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // New camelCase
+  seller_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Old snake_case
+  status: { type: String, default: 'available' },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-export default mongoose.model<IProduct>('Product', ProductSchema);
+export default mongoose.model<IProduct>('Product', ProductSchema, 'marketplaceitems');

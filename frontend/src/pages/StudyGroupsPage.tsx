@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, BookOpen, Users, Plus, ArrowRight, Sparkles, Calendar } from 'lucide-react';
 import api from '../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import StudyGroupCreateModal from '../components/StudyGroupCreateModal';
 
 const StudyGroupsPage = () => {
@@ -10,6 +10,17 @@ const StudyGroupsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for compose query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('compose') === 'true') {
+      setIsModalOpen(true);
+      // Clean up URL
+      navigate('/dashboard/study-groups', { replace: true });
+    }
+  }, [location.search, navigate]);
 
   const fetchGroups = async (query = '') => {
     setLoading(true);

@@ -6,6 +6,7 @@ import {
   getClubs,
   getClubDetails,
   joinClub,
+  getMyClubs,
   createClubPost,
   getClubPosts,
   deleteClubPost,
@@ -21,6 +22,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.get('/', protect as RequestHandler, getClubs as RequestHandler);
+router.get('/my-clubs', protect as RequestHandler, getMyClubs as any);
 router.post('/create', protect as RequestHandler, upload.single('profile_image'), createClub as RequestHandler);
 router.get('/:id', protect as RequestHandler, getClubDetails as RequestHandler);
 router.post('/join/:id', protect as RequestHandler, joinClub as RequestHandler);

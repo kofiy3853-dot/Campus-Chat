@@ -11,7 +11,7 @@ import {
   ChevronRight,
   Plus
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import Skeleton from '../components/Skeleton';
@@ -23,6 +23,7 @@ const ExplorerPage: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [trendingItems, setTrendingItems] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState(''); // Added searchQuery state
 
   const fetchExploreData = async () => {
     try {
@@ -41,6 +42,13 @@ const ExplorerPage: React.FC = () => {
   useEffect(() => {
     fetchExploreData();
   }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/dashboard/discover?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
 
   const EXPLORE_CARDS = [
     { 
@@ -91,13 +99,16 @@ const ExplorerPage: React.FC = () => {
       {/* HEADER */}
       <header className="sticky top-0 bg-[#fffbfe]/90 backdrop-blur-md px-6 py-4 flex items-center justify-between z-40">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden bg-white shadow-sm ring-2 ring-purple-50">
+          <Link 
+            to="/dashboard/profile"
+            className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden bg-white shadow-sm ring-2 ring-purple-50"
+          >
             <SafeImage 
               src={user?.profile_picture} 
               fallback={`https://ui-avatars.com/api/?name=${user?.name}&background=f3e8ff&color=7c3aed`} 
               className="w-full h-full object-cover" 
             />
-          </div>
+          </Link>
           <h1 className="text-xl font-bold text-[#331c61]">Vantage</h1>
         </div>
         <button 
@@ -119,16 +130,19 @@ const ExplorerPage: React.FC = () => {
         </div>
 
         {/* SEARCH BAR */}
-        <div className="mb-8">
-          <div className="relative flex items-center bg-[#f3e8ff] rounded-[2rem] px-6 py-4 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#c084fc]">
-            <Search className="w-5 h-5 text-[#c084fc] mr-4 shrink-0" />
+        {/* Integrated Search Bar */}
+        <form onSubmit={handleSearch} className="relative group mb-8">
+          <div className="relative flex items-center bg-white border-2 border-slate-100 rounded-[2rem] px-6 py-4 shadow-sm group-focus-within:ring-8 ring-indigo-500/5 group-focus-within:border-indigo-500 transition-all duration-300">
+            <Search className="w-5 h-5 mr-3 text-slate-400" />
             <input 
               type="text" 
-              placeholder="Search events, study groups, or"
-              className="flex-1 bg-transparent border-none outline-none text-base font-medium text-[#7c3aed] placeholder:text-[#d8b4fe]"
+              placeholder="search the entire campus..."
+              className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-slate-700 placeholder:text-slate-300"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-        </div>
+        </form>
 
         {/* HERO CARD - AI ASSISTANT */}
         <div className="mb-6 bg-[#f3e8ff] rounded-[2.5rem] p-8 relative overflow-hidden group border border-purple-100/50">
@@ -229,13 +243,15 @@ const ExplorerPage: React.FC = () => {
       </main>
 
       {/* FAB */}
-      <button 
+      {/* Floating Action Hint */}
+      <Link 
+        to="/dashboard/announcements?compose=true"
+        className="fixed bottom-[100px] right-6 w-14 h-14 bg-[#7c3aed] rounded-full shadow-lg shadow-[#7c3aed]/40 flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all z-40"
         aria-label="Create New"
         title="Create New"
-        className="fixed bottom-[100px] right-6 w-14 h-14 bg-[#7c3aed] rounded-full shadow-lg shadow-[#7c3aed]/40 flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all z-40"
       >
         <Plus className="w-7 h-7" />
-      </button>
+      </Link>
 
     </div>
   );

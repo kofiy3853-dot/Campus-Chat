@@ -40,3 +40,31 @@ export const getAnnouncements = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteAnnouncement = async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  try {
+    const announcement = await Announcement.findById(id);
+    if (!announcement) {
+      return res.status(404).json({ message: 'Announcement not found' });
+    }
+
+    // Check if the user is the one who posted it or an admin or special user
+    const isKofi = req.user.email === 'nharnahyhaw19@gmail.com';
+    const isAdmin = req.user.role === 'admin';
+    const isAuthor = announcement.posted_by.toString() === req.user._id.toString();
+
+    if (!isAuthor && !isAdmin && !isKofi) {
+      return res.status(403).json({ message: 'Unauthorized to delete this announcement' });
+    }
+
+    await Announcement.findByIdAndDelete(id);
+    
+    // Broadcast deletion
+    io.emit('announcement_deleted', { id });
+
+    res.json({ message: 'Announcement deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

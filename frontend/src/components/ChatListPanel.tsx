@@ -31,16 +31,18 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      // Fetch both directs and groups to unify them
-      const [directsRes, groupsRes] = await Promise.all([
+      // Fetch directs, groups, and clubs to unify them
+      const [directsRes, groupsRes, clubsRes] = await Promise.all([
         api.get('/api/chat/conversations').catch(() => ({ data: [] })),
-        api.get('/api/groups').catch(() => ({ data: [] }))
+        api.get('/api/groups').catch(() => ({ data: [] })),
+        api.get('/api/clubs/my-clubs').catch(() => ({ data: [] }))
       ]);
       
       const directs = (directsRes.data || []).map((c: any) => ({ ...c, type: 'chat' }));
       const groups = (groupsRes.data || []).map((g: any) => ({ ...g, type: 'group' }));
+      const clubs = (clubsRes.data || []).map((c: any) => ({ ...c, type: 'club' }));
       
-      const unified = [...directs, ...groups].sort((a, b) => {
+      const unified = [...directs, ...groups, ...clubs].sort((a, b) => {
         const timeA = new Date(a.last_message?.timestamp || a.updatedAt).getTime();
         const timeB = new Date(b.last_message?.timestamp || b.updatedAt).getTime();
         return timeB - timeA;
@@ -63,7 +65,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
     const handleNewMessage = (message: any) => {
       setItems(prev => {
-        const conversationId = message.conversation_id || message.group_id;
+        const conversationId = message.conversation_id || message.group_id || message.club_id;
         const index = prev.findIndex(item => item._id === conversationId);
         
         if (index === -1) {
@@ -88,9 +90,11 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
     socket.on('receive_message', handleNewMessage);
     socket.on('receive_group_message', handleNewMessage);
+    socket.on('receive_club_message', handleNewMessage);
     return () => {
       socket.off('receive_message', handleNewMessage);
       socket.off('receive_group_message', handleNewMessage);
+      socket.off('receive_club_message', handleNewMessage);
     };
   }, [socket, user, location.pathname]);
 
@@ -103,6 +107,8 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
     try {
       if (type === 'group') {
         await api.post(`/api/groups/${conversationId}/leave`);
+      } else if (type === 'club') {
+        // Leaving a club is not yet implemented or use join/leave logic
       } else {
         await api.delete(`/api/chat/conversations/${conversationId}`);
       }
@@ -123,9 +129,14 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
 
   const filteredItems = useMemo(() => {
     return items.filter((item: any) => {
-      const name = item.type === 'chat' 
-        ? item.participants?.find((p: any) => p._id !== user?._id)?.name 
-        : item.group_name;
+      let name = '';
+      if (item.type === 'chat') {
+        name = item.participants?.find((p: any) => p._id !== user?._id)?.name;
+      } else if (item.type === 'group') {
+        name = item.group_name;
+      } else {
+        name = item.name; // Club name
+      }
       return name?.toLowerCase().includes(searchQuery.toLowerCase());
     });
   }, [items, searchQuery, user?._id]);
@@ -140,10 +151,10 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
     // De-duplicate by ID
     const uniqueIndividuals = Array.from(new Map(individuals.map(p => [p._id, p])).values());
     
-    // Add groups that are "active" (optional mockup interpretation)
-    const activeGroups = items.filter(item => item.type === 'group').slice(0, 2);
+    // Add groups or clubs that are "active"
+    const activeCommunal = items.filter(item => item.type === 'group' || item.type === 'club').slice(0, 2);
     
-    return [...uniqueIndividuals, ...activeGroups];
+    return [...uniqueIndividuals, ...activeCommunal];
   }, [items, user?._id]);
 
   if (loading) {
@@ -176,14 +187,24 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
               </div>
               <h2 className="text-2xl font-black text-[#331c61] tracking-tight">Messages</h2>
           </div>
-          <button 
-            onClick={() => setIsSearchOpen(true)}
-            aria-label="New Message"
-            title="New Message"
-            className="p-2.5 bg-white border border-purple-50 rounded-xl text-[#7c3aed] hover:bg-purple-50 shadow-sm transition-all"
-          >
-            <Edit3 className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setIsCreateGroupOpen(true)}
+              aria-label="New Group"
+              title="New Group"
+              className="p-2.5 bg-white border border-purple-50 rounded-xl text-[#7c3aed] hover:bg-purple-50 shadow-sm transition-all"
+            >
+              <Users className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              aria-label="New Message"
+              title="New Message"
+              className="p-2.5 bg-white border border-purple-50 rounded-xl text-[#7c3aed] hover:bg-purple-50 shadow-sm transition-all"
+            >
+              <Edit3 className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Search */}
@@ -211,7 +232,12 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                 return (
                   <div 
                     key={item._id} 
-                    onClick={() => navigate(isGroup ? `/dashboard/groups/${item._id}` : `/dashboard/chat/${item._id}`)}
+                    onClick={() => {
+                        const path = item.type === 'group' ? `/dashboard/study-groups/${item._id}` 
+                                    : item.type === 'club' ? `/dashboard/clubs/${item._id}`
+                                    : `/dashboard/chat/${item._id}`;
+                        navigate(path);
+                    }}
                     className="flex flex-col items-center gap-2 cursor-pointer group"
                   >
                     <div className={clsx(
@@ -233,7 +259,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                         <div className="absolute bottom-0 right-1 w-4 h-4 bg-green-500 rounded-full border-[3px] border-white shadow-sm"></div>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-500 group-hover:text-[#7c3aed] transition-colors">{name.split(' ')[0]}</span>
+                    <span className="text-[10px] font-bold text-slate-500 group-hover:text-[#7c3aed] transition-colors">{name?.split(' ')[0] || 'Unknown'}</span>
                   </div>
                 );
               })
@@ -248,14 +274,18 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
       <div className="flex-1 overflow-y-auto px-6 pb-28 md:pb-6 space-y-4 no-scrollbar">
         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#a78bfa] mb-2">Recent Conversations</h3>
         {filteredItems.map((item: any) => {
-          const isGroup = item.type === 'group';
-          const otherParticipant = isGroup ? null : item.participants?.find((p: any) => p?._id !== user?._id);
-          const name = isGroup ? item.group_name : (otherParticipant?.name || 'Unknown User');
+          const isGroupOrClub = item.type === 'group' || item.type === 'club';
+          const otherParticipant = (item.type === 'chat') ? item.participants?.find((p: any) => p?._id !== user?._id) : null;
+          const name = item.type === 'group' ? item.group_name : (item.type === 'club' ? item.name : (otherParticipant?.name || 'Unknown User'));
+          
+          let navPath = `/dashboard/chat/${item._id}`;
+          if (item.type === 'group') navPath = `/dashboard/study-groups/${item._id}`;
+          if (item.type === 'club') navPath = `/dashboard/clubs/${item._id}`;
           
           return (
             <NavLink
               key={item._id}
-              to={isGroup ? `/dashboard/groups/${item._id}` : `/dashboard/chat/${item._id}`}
+              to={navPath}
               className={({ isActive }) => clsx(
                 "flex items-center gap-4 p-5 rounded-[2rem] group relative transition-all duration-300 border border-transparent shadow-[0_4px_20px_rgba(0,0,0,0.02)]",
                 isActive 
@@ -266,9 +296,16 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
               {/* Avatar */}
               <div className="relative shrink-0">
                 <div className="w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 border-white bg-slate-50 shadow-sm transition-transform group-hover:scale-105">
-                  {isGroup ? (
-                    <div className="w-full h-full bg-purple-50 flex items-center justify-center">
-                       <MessageSquare className="w-8 h-8 text-purple-200" />
+                  {isGroupOrClub ? (
+                    <div className={clsx(
+                        "w-full h-full flex items-center justify-center",
+                        item.type === 'club' ? "bg-green-50" : "bg-purple-50"
+                    )}>
+                       {item.type === 'club' ? (
+                           item.profile_image ? <img src={item.profile_image} className="w-full h-full object-cover" alt={item.name} /> : <Users className="w-8 h-8 text-green-200" />
+                       ) : (
+                           <MessageSquare className="w-8 h-8 text-purple-200" />
+                       )}
                     </div>
                   ) : (
                     <SafeImage 
@@ -289,7 +326,7 @@ const ChatListPanel: React.FC<ChatListPanelProps> = ({ className }) => {
                   "text-[11px] truncate leading-snug font-medium",
                   item.unread_count > 0 ? "text-slate-800 font-bold" : "text-slate-400"
                 )}>
-                  {item.last_message?.message_text || (isGroup ? `${item.members?.length || 0} members` : 'Start a conversation')}
+                  {item.last_message?.message_text || (item.type === 'group' ? `${item.members?.length || 0} members` : item.type === 'club' ? `${item.members?.length || 0} members` : 'Start a conversation')}
                 </p>
               </div>
 

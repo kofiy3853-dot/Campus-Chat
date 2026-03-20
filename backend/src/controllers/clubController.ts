@@ -64,6 +64,19 @@ export const getClubs = async (req: Request, res: Response) => {
   }
 };
 
+export const getMyClubs = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?._id;
+
+  try {
+    const clubs = await Club.find({ members: userId })
+      .populate('created_by', 'name profile_picture')
+      .sort({ updatedAt: -1 });
+    res.json(clubs);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getClubDetails = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 

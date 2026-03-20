@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Plus, TrendingUp, Clock, ChevronLeft } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -17,6 +18,18 @@ const PollsPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for compose query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('compose') === 'true') {
+      setIsComposeOpen(true);
+      // Clean up URL
+      navigate('/dashboard/polls', { replace: true });
+    }
+  }, [location.search, navigate]);
 
   const fetchPolls = async (pageNum: number = 1, append: boolean = false) => {
     try {

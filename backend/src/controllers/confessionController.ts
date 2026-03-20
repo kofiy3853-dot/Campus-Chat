@@ -32,6 +32,7 @@ export const getConfessions = async (req: AuthRequest, res: Response) => {
       ...c,
       userId: undefined, // ensure stripped even from lean()
       isLiked: likedSet.has(String(c._id)),
+      isMine: userId ? String(c.userId) === String(userId) : false
     }));
 
     const total = await Confession.countDocuments({ isDeleted: false, isHidden: false });
@@ -60,7 +61,7 @@ export const postConfession = async (req: AuthRequest, res: Response) => {
     // Emit real-time event
     io.emit('new_confession', safe);
 
-    res.status(201).json(safe);
+    res.status(201).json({ ...safe, isMine: true });
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { 
   MessageSquare, 
   Settings, 
@@ -14,7 +14,7 @@ import { useAuth } from '../context/AuthContext';
 import { useUnread } from '../context/UnreadContext';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
-import ExploreMenu from './ExploreMenu';
+
 
 interface NavSidebarProps {
   className?: string;
@@ -39,9 +39,14 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
       "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start",
       className
     )}>
-      {/* Logo */}
-      <div className="hidden md:flex w-12 h-12 bg-sky-400 rounded-2xl items-center justify-center font-bold text-white text-xl mb-10 shrink-0">
-        C
+      {/* Logo Section */}
+      <div className="flex flex-col items-center py-8 gap-8">
+        <Link 
+          to="/dashboard"
+          className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+        >
+          <span className="text-2xl font-black text-indigo-600">C</span>
+        </Link>
       </div>
 
       {/* Nav Items */}

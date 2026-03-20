@@ -119,5 +119,35 @@ export const leaveEvent = async (req: any, res: Response) => {
   }
 };
 
+// DELETE /api/events/:id
+export const deleteEvent = async (req: AuthRequest, res: Response) => {
+  try {
+    const eventId = req.params.id;
+    const userId = req.user._id;
+    const userEmail = req.user.email;
+
+    const event = await Event.findById(eventId);
+    if (!event) return res.status(404).json({ message: 'Event not found' });
+
+    // Authorization: Creator, Admin, or Kofi
+    const isKofi = userEmail === 'nharnahyhaw19@gmail.com';
+    const isAdmin = req.user.role === 'admin';
+    const isCreator = event.organizerId.toString() === userId.toString();
+
+    if (!isCreator && !isAdmin && !isKofi) {
+      return res.status(403).json({ message: 'Not authorized to delete this event' });
+    }
+
+    await Event.findByIdAndDelete(eventId);
+    await EventAttendee.deleteMany({ eventId });
+
+    io.emit('event_deleted', { eventId });
+
+    res.json({ message: 'Event deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 

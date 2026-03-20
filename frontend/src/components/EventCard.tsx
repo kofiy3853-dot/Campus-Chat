@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { MapPin, Calendar, Users, CheckCircle2, ChevronRight } from 'lucide-react';
+import { MapPin, Calendar, Users, CheckCircle2, ChevronRight, Trash2 } from 'lucide-react';
 import api from '../services/api';
 import { clsx } from 'clsx';
 import { getMediaUrl } from '../utils/imageUrl';
 import SafeImage from './SafeImage';
+import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 
 interface EventCardProps {
   event: any;
@@ -22,8 +24,15 @@ const formatEventDate = (dateStr: string) => {
 };
 
 const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
+  const { user } = useAuth();
+  const { socket } = useSocket();
   const [loading, setLoading] = useState(false);
   const isJoined = event.isJoined;
+
+  const isKofi = user?.email === 'nharnahyhaw19@gmail.com';
+  const isAdmin = user?.role === 'admin';
+  const isOrganizer = event.organizerId?._id === user?._id || event.organizerId === user?._id;
+  const canDelete = isOrganizer || isAdmin || isKofi;
 
   const handleJoinToggle = async () => {
     setLoading(true);
@@ -33,6 +42,21 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
       onUpdate({ ...event, isJoined: !isJoined, attendeesCount: data.attendeesCount });
     } catch (error) {
       console.error('Error toggling join status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    setLoading(true);
+    try {
+      await api.delete(`/api/events/${event._id}`);
+      // The event list will be updated via socket 'event_deleted' or manual filter
+      onUpdate(null); // Signal deletion
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      alert('Failed to delete event');
     } finally {
       setLoading(false);
     }
@@ -65,6 +89,18 @@ const EventCard: React.FC<EventCardProps> = ({ event, onUpdate }) => {
             <Users className="w-3.5 h-3.5 text-gray-400" />
             <span className="text-xs font-bold text-sky-500">{event.attendeesCount}</span>
           </div>
+          {canDelete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete();
+              }}
+              className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              title="Delete event"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         <p className="text-sm text-gray-400 line-clamp-2 mb-5 transition-none">
