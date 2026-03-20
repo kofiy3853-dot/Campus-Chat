@@ -58,7 +58,11 @@ const ProfileSettings = () => {
   }, [user]);
 
   const scrollToSettings = () => {
-    settingsRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (settingsRef.current) {
+      settingsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      console.warn('Settings ref not found for scrolling');
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,12 +103,15 @@ const ProfileSettings = () => {
         </button>
         <h1 className="text-xl font-bold text-[#44337a]">Profile</h1>
         <button 
-          onClick={scrollToSettings}
-          className="p-2 text-slate-800 hover:bg-purple-50 rounded-xl transition-colors"
+          onClick={() => {
+            console.log('Settings clicked');
+            scrollToSettings();
+          }}
+          className="relative z-20 p-2 text-slate-800 hover:bg-purple-50 active:bg-purple-100 rounded-xl transition-all active:scale-90 cursor-pointer flex items-center justify-center shadow-sm border border-purple-50 bg-white/50"
           title="Settings"
           aria-label="Settings"
         >
-          <Settings className="w-6 h-6" />
+          <Settings className="w-6 h-6 pointer-events-none text-[#8444e2]" />
         </button>
       </div>
 
