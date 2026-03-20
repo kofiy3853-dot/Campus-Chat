@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAnnouncement, getAnnouncements, deleteAnnouncement } from '../controllers/announcementController';
+import { createAnnouncement, getAnnouncements, deleteAnnouncement, getLatestHero } from '../controllers/announcementController';
 import { protect } from '../middleware/authMiddleware';
 
 import multer from 'multer';
@@ -13,6 +13,7 @@ const upload = multer({ storage });
 
 router.post('/create', protect, createAnnouncement);
 router.get('/', getAnnouncements);
+router.get('/hero', getLatestHero);
 router.delete('/:id', protect, deleteAnnouncement);
 
 router.post('/upload', protect, upload.single('image'), (async (req: any, res: any) => {

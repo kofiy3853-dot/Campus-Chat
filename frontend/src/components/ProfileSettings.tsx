@@ -90,9 +90,9 @@ const ProfileSettings = () => {
   };
 
   return (
-    <div className="flex-1 h-full overflow-y-auto bg-[#fffbfe] pb-24">
+    <div className="flex-1 h-full overflow-y-auto bg-white pb-24 font-sans">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-[#fffbfe]/80 backdrop-blur-md px-4 py-4 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-purple-50/50">
         <button 
           onClick={() => window.history.back()}
           className="p-2 text-slate-800 hover:bg-purple-50 rounded-xl transition-colors"
@@ -101,7 +101,7 @@ const ProfileSettings = () => {
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-xl font-bold text-[#44337a]">Profile</h1>
+        <h1 className="text-xl font-black text-[#4c1d95] tracking-tight">Profile</h1>
         <button 
           onClick={() => {
             console.log('Settings clicked');
@@ -111,7 +111,7 @@ const ProfileSettings = () => {
           title="Settings"
           aria-label="Settings"
         >
-          <Settings className="w-6 h-6 pointer-events-none text-[#8444e2]" />
+          <Settings className="w-6 h-6 pointer-events-none text-[#6d28d9]" />
         </button>
       </div>
 
@@ -119,7 +119,7 @@ const ProfileSettings = () => {
         {/* User Hero Section */}
         <div className="relative pt-8 pb-6 flex flex-col items-center text-center bg-white rounded-[2.5rem] shadow-sm border border-purple-50/50">
           <div className="relative mb-6">
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl shadow-purple-200/50 relative group">
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl shadow-purple-200/30 relative group">
               <img 
                 src={getMediaUrl(user?.profile_picture) || `https://ui-avatars.com/api/?name=${user?.name}&background=8444e2&color=fff`} 
                 className="w-full h-full object-cover" 
@@ -146,25 +146,25 @@ const ProfileSettings = () => {
             </div>
             {loading && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/50 rounded-full">
-                <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-[#6d28d9] border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
 
-          <h2 className="text-3xl font-black text-[#2d1a47] tracking-tight">{user?.name || 'Sophie Laurent'}</h2>
+          <h2 className="text-3xl font-black text-[#1e1b4b] tracking-tight">{user?.name || 'Sophie Laurent'}</h2>
           
-          <div className="mt-2 inline-flex items-center px-4 py-1.5 bg-[#f3e8ff] text-[#8444e2] rounded-full text-sm font-bold">
+          <div className="mt-2 inline-flex items-center px-4 py-1.5 bg-purple-50 text-[#6d28d9] rounded-full text-xs font-black uppercase tracking-wider">
             {user?.department || 'Computer Science & Design'}
           </div>
 
           <div className="mt-4 flex items-center gap-4 text-slate-400 text-sm font-semibold">
             <span className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#8444e2]" />
+              <MapPin className="w-4 h-4 text-[#6d28d9]" />
               Campus Network
             </span>
             <span className="text-slate-200">•</span>
             <span className="flex items-center gap-1.5">
-              <GraduationCap className="w-4 h-4 text-[#8444e2]" />
+              <GraduationCap className="w-4 h-4 text-[#6d28d9]" />
               Level {user?.level || '100'}
             </span>
           </div>
@@ -172,15 +172,15 @@ const ProfileSettings = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default">
-            <span className="text-2xl font-black text-[#8444e2] mb-1">{stats.credits}</span>
+            <span className="text-2xl font-black text-[#6d28d9] mb-1">{stats.credits}</span>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-wrap">POINTS & CREDITS</span>
           </div>
           <div className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default">
-            <span className="text-2xl font-black text-[#8444e2] mb-1">{stats.clubs}</span>
+            <span className="text-2xl font-black text-[#6d28d9] mb-1">{stats.clubs}</span>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-wrap">CLUBS JOINED</span>
           </div>
           <div className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default col-span-2">
-            <span className="text-2xl font-black text-[#8444e2] mb-1">{stats.rank}</span>
+            <span className="text-2xl font-black text-[#6d28d9] mb-1">{stats.rank}</span>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-wrap">CAMPUS RANKING</span>
           </div>
         </div>
@@ -192,13 +192,16 @@ const ProfileSettings = () => {
             <span className="w-2 h-2 rounded-full bg-[#8444e2]" />
           </h3>
           
-          <div className="bg-[#fcf8ff] rounded-[2.5rem] p-6 border border-purple-50">
+          <div className="bg-purple-50/30 rounded-[2.5rem] p-6 border border-purple-50">
             <div className="flex justify-between items-end mb-3">
               <span className="text-sm font-bold text-[#2d1a47]">Degree Completion</span>
-              <span className="text-base font-black text-[#8444e2]">76%</span>
+              <span className="text-base font-black text-[#6d28d9]">76%</span>
             </div>
-            <div className="h-3 w-full bg-[#f3e8ff] rounded-full overflow-hidden">
-              <div className="h-full bg-[#8444e2] rounded-full" style={{ width: '76%' }} />
+            <div className="h-3 w-full bg-purple-100/50 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-[#6d28d9] rounded-full transition-all duration-1000" 
+                style={{ width: '76%' }} 
+              />
             </div>
 
             <div className="mt-8 space-y-3">
@@ -214,7 +217,7 @@ const ProfileSettings = () => {
         <div className="space-y-4">
           <h3 className="text-lg font-black text-[#2d1a47] flex items-center gap-2">
             Student ID
-            <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
           </h3>
           
           <div className="relative overflow-hidden bg-gradient-to-br from-[#8444e2] via-[#7c3aed] to-[#6d28d9] rounded-[2.5rem] p-8 text-white shadow-xl shadow-purple-500/20">
@@ -254,7 +257,7 @@ const ProfileSettings = () => {
           
           <div className="bg-white rounded-[2.5rem] overflow-hidden border border-purple-50/50 shadow-sm">
             <button className="w-full flex items-center gap-4 p-5 hover:bg-purple-50 transition-colors group">
-              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#8444e2] group-hover:bg-[#8444e2] group-hover:text-white transition-colors">
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#6d28d9] group-hover:bg-[#6d28d9] group-hover:text-white transition-colors">
                 <Bell className="w-5 h-5" />
               </div>
               <span className="flex-1 text-left font-bold text-[#44337a]">Notifications</span>
@@ -264,7 +267,7 @@ const ProfileSettings = () => {
             <div className="h-px bg-purple-50 mx-5" />
             
             <button className="w-full flex items-center gap-4 p-5 hover:bg-purple-50 transition-colors group">
-              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#8444e2] group-hover:bg-[#8444e2] group-hover:text-white transition-colors">
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#6d28d9] group-hover:bg-[#6d28d9] group-hover:text-white transition-colors">
                 <Shield className="w-5 h-5" />
               </div>
               <span className="flex-1 text-left font-bold text-[#44337a]">Privacy & Security</span>
@@ -282,6 +285,19 @@ const ProfileSettings = () => {
               </div>
               <span className="flex-1 text-left font-bold text-red-500">Logout</span>
               <ChevronRight className="w-5 h-5 text-red-200" />
+            </button>
+            
+            <div className="h-px bg-purple-50 mx-5" />
+
+            <button 
+              onClick={() => { throw new Error("Sentry Frontend Test Error"); }}
+              className="w-full flex items-center gap-4 p-5 hover:bg-purple-50 transition-colors group"
+            >
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-slate-400 group-hover:text-white transition-colors">
+                <Settings className="w-5 h-5" />
+              </div>
+              <span className="flex-1 text-left font-bold text-slate-400 italic">Debug: Trigger Sentry Error</span>
+              <ChevronRight className="w-5 h-5 text-slate-200" />
             </button>
           </div>
         </div>

@@ -25,9 +25,9 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({ user, points, rank })
 
   const getRankStyles = () => {
     if (rank === 1) return "bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 scale-[1.02] shadow-yellow-100";
-    if (rank === 2) return "bg-gradient-to-br from-slate-50 to-blue-50 border-slate-200";
+    if (rank === 2) return "bg-gradient-to-br from-slate-50 to-purple-50 border-slate-200";
     if (rank === 3) return "bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200";
-    return "bg-white border-slate-100 hover:border-sky-100 hover:shadow-sky-50";
+    return "bg-white border-slate-100 hover:border-purple-200 shadow-[0_2px_10px_rgba(109,40,217,0.02)] hover:shadow-purple-50/50";
   };
 
   return (
@@ -56,13 +56,13 @@ const LeaderboardCard: React.FC<LeaderboardCardProps> = ({ user, points, rank })
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="font-bold text-slate-800 truncate">{user.name}</h3>
-        <p className="text-xs text-slate-500 font-medium truncate uppercase tracking-wider">{user.department || 'Campus Student'}</p>
+        <h3 className="font-black text-slate-800 truncate">{user.name}</h3>
+        <p className="text-[10px] text-slate-400 font-black truncate uppercase tracking-widest">{user.department || 'Campus Student'}</p>
       </div>
 
       <div className="text-right">
-        <div className="text-lg font-black text-sky-600 leading-none">{points.toLocaleString()}</div>
-        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Points</div>
+        <div className="text-lg font-black text-[#6d28d9] leading-none">{points.toLocaleString()}</div>
+        <div className="text-[9px] font-black text-slate-300 uppercase tracking-widest mt-1.5">Points</div>
       </div>
     </div>
   );

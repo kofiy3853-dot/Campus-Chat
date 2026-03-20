@@ -74,7 +74,7 @@ const ClubsPage = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-[#f5eeff] flex items-center justify-center text-[#6d28d9] border border-purple-100">
               <Globe className="w-5 h-5" />
             </div>
             <h2 className="text-3xl font-black text-slate-800 tracking-tight">Clubs & Communities</h2>
@@ -85,7 +85,7 @@ const ClubsPage = () => {
         <button 
           onClick={() => setIsModalOpen(true)}
           aria-label="Create new club"
-          className="bg-green-600 hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center gap-3 shadow-xl shadow-green-200"
+          className="bg-[#6d28d9] hover:bg-[#5b21b6] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center gap-3 shadow-xl shadow-purple-200/50 active:scale-95"
         >
           <Plus className="w-5 h-5" />
           Launch a Club
@@ -99,14 +99,14 @@ const ClubsPage = () => {
             <input 
               type="text" 
               placeholder="Search by club name or mission..."
-              className="w-full bg-white border-2 border-slate-100 rounded-[2rem] py-5 px-8 pr-16 text-slate-700 font-medium shadow-sm outline-none focus:border-green-500 focus:ring-8 focus:ring-green-500/5 transition-all"
+              className="w-full bg-white border border-slate-100 rounded-[2rem] py-5 px-8 pr-16 text-slate-700 font-bold shadow-sm outline-none focus:border-[#6d28d9]/50 focus:ring-8 focus:ring-[#6d28d9]/5 transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button 
               type="submit"
               aria-label="Search clubs"
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-3 bg-green-500 text-white rounded-full hover:bg-black transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-3 bg-[#6d28d9] text-white rounded-full hover:bg-[#5b21b6] transition-colors shadow-lg shadow-purple-200/50"
             >
               <Search className="w-5 h-5" />
             </button>
@@ -114,7 +114,7 @@ const ClubsPage = () => {
         </div>
 
         <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-          <div className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-full whitespace-nowrap">
+          <div className="flex items-center gap-2 px-4 py-2 bg-[#f5eeff] text-[#6d28d9] rounded-full border border-purple-100 whitespace-nowrap">
             <Filter className="w-4 h-4" />
             <span className="text-xs font-black uppercase tracking-widest">Filter</span>
           </div>
@@ -125,8 +125,8 @@ const ClubsPage = () => {
               className={clsx(
                 "px-6 py-2.5 rounded-full text-sm font-black transition-all whitespace-nowrap border",
                 category === cat 
-                  ? "bg-slate-900 border-slate-900 text-white shadow-lg" 
-                  : "bg-white border-slate-100 text-slate-500 hover:border-green-200 hover:text-green-600"
+                  ? "bg-[#6d28d9] border-[#6d28d9] text-white shadow-lg shadow-purple-200/50" 
+                  : "bg-white border-slate-100 text-slate-500 hover:border-purple-200 hover:text-[#6d28d9]"
               )}
             >
               {cat}
@@ -136,7 +136,7 @@ const ClubsPage = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             title="More categories"
-            className="bg-white border border-slate-100 rounded-full px-6 py-2.5 text-sm font-black text-slate-500 outline-none focus:ring-4 focus:ring-green-500/5 cursor-pointer shadow-sm"
+            className="bg-white border border-slate-100 rounded-full px-6 py-2.5 text-sm font-black text-slate-500 outline-none focus:ring-4 focus:ring-[#6d28d9]/5 cursor-pointer shadow-sm"
           >
             <option value="All">More...</option>
             {categories.slice(5).map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -161,10 +161,10 @@ const ClubsPage = () => {
           clubs.map((club) => (
             <div 
               key={club._id} 
-              className="group bg-white rounded-[2.5rem] p-8 space-y-6 border border-slate-100 hover:border-green-500/30 hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-300 relative overflow-hidden text-center"
+              className="group bg-white rounded-[2.5rem] p-8 space-y-6 border border-slate-100 hover:border-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 relative overflow-hidden text-center"
             >
               <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Sparkles className="w-5 h-5 text-green-400" />
+                <Sparkles className="w-5 h-5 text-[#a78bfa]" />
               </div>
 
               <div className="relative inline-block">
@@ -185,8 +185,8 @@ const ClubsPage = () => {
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-black text-slate-800 text-xl group-hover:text-green-600 transition-colors line-clamp-1">{club.name}</h3>
-                <span className="inline-block px-3 py-1 bg-green-50 text-green-600 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                <h3 className="font-black text-slate-800 text-xl group-hover:text-[#6d28d9] transition-colors line-clamp-1">{club.name}</h3>
+                <span className="inline-block px-3 py-1 bg-[#f5eeff] text-[#6d28d9] rounded-lg text-[10px] font-black uppercase tracking-widest border border-purple-50">
                   {club.category}
                 </span>
                 <p className="text-sm text-slate-500 font-medium line-clamp-2 min-h-[40px]">
@@ -208,7 +208,7 @@ const ClubsPage = () => {
 
               <button 
                 onClick={() => joinClub(club._id)}
-                className="w-full bg-slate-900 text-white hover:bg-black hover:shadow-lg hover:shadow-green-200 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-3 group/btn"
+                className="w-full bg-[#6d28d9] text-white hover:bg-[#5b21b6] hover:shadow-lg hover:shadow-purple-200 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-3 group/btn active:scale-95"
               >
                 Join Community
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -226,7 +226,7 @@ const ClubsPage = () => {
             </div>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-green-600 text-white px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all shadow-lg"
+              className="bg-[#6d28d9] text-white px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-[#5b21b6] transition-all shadow-lg shadow-purple-200/50 active:scale-95"
             >
               Start a Movement
             </button>

@@ -61,9 +61,9 @@ const LandingDashboard: React.FC = () => {
   const heroAnnouncement = announcements.length > 0 ? announcements[0] : null;
 
   return (
-    <div className="flex flex-col h-full bg-[#fcfbfe] text-slate-800 overflow-y-auto w-full">
+    <div className="flex flex-col h-full bg-white text-slate-900 overflow-y-auto w-full font-sans">
       {/* HEADER */}
-      <header className="sticky top-0 bg-[#fcfbfe]/90 backdrop-blur-md px-5 py-4 flex items-center justify-between z-40">
+      <header className="sticky top-0 bg-white/90 backdrop-blur-lg px-5 py-4 flex items-center justify-between z-40 border-b border-purple-50/50">
         <div className="flex items-center gap-2">
           <Link to="/dashboard/profile" className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden shadow-sm bg-white">
             <SafeImage 
@@ -73,19 +73,19 @@ const LandingDashboard: React.FC = () => {
             />
           </Link>
           <Link to="/dashboard" className="group/title inline-block">
-            <h1 className="text-xl font-bold italic text-[#3b1784] font-serif">
+            <h1 className="text-xl font-black italic text-[#4c1d95] tracking-tight">
               Campus Curator
             </h1>
           </Link>
         </div>
         <div className="flex items-center gap-3">
-          <button aria-label="Search" onClick={() => navigate('/dashboard/discover')} className="text-[#3b1784] hover:bg-purple-100 p-2 rounded-full transition-colors">
+          <button aria-label="Search" onClick={() => navigate('/dashboard/discover')} className="text-[#6d28d9] hover:bg-purple-50 p-2 rounded-full transition-colors">
             <Search className="w-5 h-5" />
           </button>
-          <button aria-label="Notifications" onClick={() => navigate('/dashboard/notifications')} className="relative text-[#3b1784] hover:bg-purple-100 p-2 rounded-full transition-colors">
+          <button aria-label="Notifications" onClick={() => navigate('/dashboard/notifications')} className="relative text-[#6d28d9] hover:bg-purple-50 p-2 rounded-full transition-colors">
             <Bell className="w-5 h-5" />
             {unread > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
             )}
           </button>
         </div>
@@ -98,7 +98,7 @@ const LandingDashboard: React.FC = () => {
           <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-10 -mt-20"></div>
           <div className="relative z-10 flex flex-col min-h-[140px] justify-between">
             <div className="self-start">
-              <span className="bg-[#cdfa87] text-[#3b1784] text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl shadow-sm">
+              <span className="bg-[#cdfa87] text-[#4c1d95] text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl shadow-sm">
                 Announcement
               </span>
             </div>
@@ -110,40 +110,40 @@ const LandingDashboard: React.FC = () => {
 
         {/* QUICK ACTION GRID */}
         <section className="grid grid-cols-2 gap-4">
-          <button aria-label="Confessions" onClick={() => navigate('/dashboard/confessions')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-purple-50 hover:border-purple-200 transition-colors">
-            <div className="bg-[#debfff] text-[#5527a2] p-4 rounded-3xl">
+          <button aria-label="Confessions" onClick={() => navigate('/dashboard/confessions')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_4px_20px_rgba(109,40,217,0.05)] border border-purple-50 hover:border-purple-200 transition-all active:scale-95 group">
+            <div className="bg-[#f5eeff] text-[#6d28d9] p-4 rounded-3xl group-hover:bg-[#6d28d9] group-hover:text-white transition-colors">
               <Ghost className="w-6 h-6" />
             </div>
-            <span className="font-bold text-[#3b1784] text-sm">Confession</span>
+            <span className="font-bold text-[#4c1d95] text-sm">Confession</span>
           </button>
           
-          <button aria-label="Events" onClick={() => navigate('/dashboard/events')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-purple-50 hover:border-purple-200 transition-colors">
-            <div className="bg-[#b7ffc6] text-[#0f5b24] p-4 rounded-3xl">
+          <button aria-label="Events" onClick={() => navigate('/dashboard/events')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_4px_20px_rgba(109,40,217,0.05)] border border-purple-50 hover:border-purple-200 transition-all active:scale-95 group">
+            <div className="bg-[#f0fff4] text-[#166534] p-4 rounded-3xl group-hover:bg-[#166534] group-hover:text-white transition-colors">
               <Calendar className="w-6 h-6" />
             </div>
-            <span className="font-bold text-[#3b1784] text-sm">Event</span>
+            <span className="font-bold text-[#4c1d95] text-sm">Event</span>
           </button>
 
-          <button aria-label="Notices" onClick={() => navigate('/dashboard/announcements')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-purple-50 hover:border-purple-200 transition-colors">
-            <div className="bg-[#99fc6d] text-[#2d6e15] p-4 rounded-3xl">
+          <button aria-label="Notices" onClick={() => navigate('/dashboard/announcements')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_4px_20px_rgba(109,40,217,0.05)] border border-purple-50 hover:border-purple-200 transition-all active:scale-95 group">
+            <div className="bg-[#f7fee7] text-[#3f6212] p-4 rounded-3xl group-hover:bg-[#3f6212] group-hover:text-white transition-colors">
               <Megaphone className="w-6 h-6" />
             </div>
-            <span className="font-bold text-[#3b1784] text-sm">Notice</span>
+            <span className="font-bold text-[#4c1d95] text-sm">Notice</span>
           </button>
 
-          <button aria-label="Lost & Found" onClick={() => navigate('/dashboard/lost-found')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-purple-50 hover:border-purple-200 transition-colors">
-            <div className="bg-[#ffcdd7] text-[#a41a33] p-4 rounded-3xl">
+          <button aria-label="Lost & Found" onClick={() => navigate('/dashboard/lost-found')} className="bg-white rounded-[2rem] p-4 flex flex-col items-center justify-center gap-3 shadow-[0_4px_20px_rgba(109,40,217,0.05)] border border-purple-50 hover:border-purple-200 transition-all active:scale-95 group">
+            <div className="bg-[#fff1f2] text-[#9f1239] p-4 rounded-3xl group-hover:bg-[#9f1239] group-hover:text-white transition-colors">
               <Package className="w-6 h-6 flex-shrink-0" />
             </div>
-            <span className="font-bold text-[#3b1784] text-sm text-center">Lost & Found</span>
+            <span className="font-bold text-[#4c1d95] text-sm text-center">Lost & Found</span>
           </button>
         </section>
 
         {/* MARKETPLACE DEALS */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-[#3d1583] tracking-tight">Marketplace Deals</h3>
-            <button onClick={() => navigate('/dashboard/marketplace')} className="text-[#8444e2] text-xs font-bold hover:underline">
+            <h3 className="text-xl font-black text-[#4c1d95] tracking-tight">Marketplace Deals</h3>
+            <button onClick={() => navigate('/dashboard/marketplace')} className="text-[#6d28d9] text-xs font-bold hover:underline">
               See All
             </button>
           </div>

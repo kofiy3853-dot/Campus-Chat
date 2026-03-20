@@ -20,6 +20,7 @@ import { clsx } from 'clsx';
 import Skeleton from '../components/Skeleton';
 import SafeImage from '../components/SafeImage';
 import { useAuth } from '../context/AuthContext';
+import AnnouncementHero from '../components/AnnouncementHero';
 
 const ExplorerPage: React.FC = () => {
   const navigate = useNavigate();
@@ -128,27 +129,27 @@ const ExplorerPage: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-[#fffbfe] text-slate-800 overflow-y-auto w-full relative">
+    <div className="flex flex-col h-full bg-slate-50 text-slate-800 overflow-y-auto w-full relative">
       {/* HEADER */}
-      <header className="sticky top-0 bg-[#fffbfe]/90 backdrop-blur-md px-6 py-4 flex items-center justify-between z-40">
+      <header className="sticky top-0 bg-white/95 backdrop-blur-md px-6 py-4 flex items-center justify-between z-40 border-b border-purple-50">
         <div className="flex items-center gap-3">
           <Link 
             to="/dashboard/profile"
-            className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden bg-white shadow-sm ring-2 ring-purple-50"
+            className="w-10 h-10 rounded-full border border-purple-100 overflow-hidden bg-white shadow-sm ring-2 ring-purple-50 transition-transform active:scale-95"
           >
             <SafeImage 
               src={user?.profile_picture} 
-              fallback={`https://ui-avatars.com/api/?name=${user?.name}&background=f3e8ff&color=7c3aed`} 
+              fallback={`https://ui-avatars.com/api/?name=${user?.name}&background=f5eeff&color=6d28d9`} 
               className="w-full h-full object-cover" 
             />
           </Link>
-          <h1 className="text-xl font-bold text-[#331c61]">Vantage</h1>
+          <h1 className="text-xl font-black text-[#4c1d95] tracking-tight">Vantage</h1>
         </div>
         <button 
           onClick={() => navigate('/dashboard/notifications')} 
           aria-label="Notifications"
           title="Notifications"
-          className="text-[#331c61] p-2 hover:bg-purple-50 rounded-full transition-colors relative"
+          className="text-[#6d28d9] p-2 hover:bg-purple-50 rounded-full transition-colors relative"
         >
            <Bell className="w-6 h-6" />
         </button>
@@ -158,36 +159,39 @@ const ExplorerPage: React.FC = () => {
         
         {/* TITLE SECTION */}
         <div className="mb-8 mt-4">
-          <h2 className="text-3xl font-black text-[#331c61] leading-tight">Explore Campus</h2>
-          <p className="text-sm text-slate-400 font-medium mt-1">Everything you need in one place</p>
+          <h2 className="text-3xl font-black text-[#4c1d95] leading-tight tracking-tight">Explore Campus</h2>
+          <p className="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Everything you need</p>
         </div>
 
         {/* SEARCH BAR */}
         {/* Integrated Search Bar */}
         <form onSubmit={handleSearch} className="relative group mb-8">
-          <div className="relative flex items-center bg-white border-2 border-slate-100 rounded-[2rem] px-6 py-4 shadow-sm group-focus-within:ring-8 ring-indigo-500/5 group-focus-within:border-indigo-500 transition-all duration-300">
-            <Search className="w-5 h-5 mr-3 text-slate-400" />
+          <div className="relative flex items-center bg-white border border-[#f5eeff] rounded-[2rem] px-6 py-4 shadow-sm group-focus-within:ring-8 ring-purple-500/5 group-focus-within:border-purple-200 transition-all duration-300">
+            <Search className="w-5 h-5 mr-3 text-[#a78bfa]" />
             <input 
               type="text" 
               placeholder="search the entire campus..."
-              className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-slate-700 placeholder:text-slate-300"
+              className="flex-1 bg-transparent border-none outline-none text-sm font-black text-[#6d28d9] placeholder:text-slate-300"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </form>
 
+        {/* AUTOMATED ANNOUNCEMENT HERO */}
+        <AnnouncementHero />
+
         {/* HERO CARD - AI ASSISTANT */}
-        <div className="mb-6 bg-[#f3e8ff] rounded-[2.5rem] p-8 relative overflow-hidden group border border-purple-100/50">
+        <div className="mb-6 bg-[#f5eeff] rounded-[2.5rem] p-8 relative overflow-hidden group border border-purple-100/50">
           <div className="relative z-10 max-w-[65%]">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-              <Bot className="w-7 h-7 text-[#7c3aed]" />
+            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-purple-50">
+              <Bot className="w-7 h-7 text-[#6d28d9]" />
             </div>
-            <h3 className="text-xl font-black text-[#331c61] mb-1">AI Study Assistant</h3>
-            <p className="text-sm text-[#7c3aed] font-medium mb-8">Your academic helper</p>
+            <h3 className="text-xl font-black text-[#4c1d95] mb-1">AI Study Assistant</h3>
+            <p className="text-sm text-[#6d28d9] font-black uppercase tracking-widest text-[10px] mb-8">Your academic helper</p>
             <button 
               onClick={() => navigate('/dashboard/chat/ai')}
-              className="bg-[#7c3aed] text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/20"
+              className="bg-[#6d28d9] text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#5b21b6] transition-all shadow-xl shadow-purple-500/20 active:scale-95"
             >
               Start Learning
             </button>
@@ -210,10 +214,10 @@ const ExplorerPage: React.FC = () => {
               )}
             >
               <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-sm", card.iconBg)}>
-                <card.icon className={clsx("w-6 h-6", card.color)} />
+                <card.icon className={clsx("w-6 h-6", card.id === 'confessions' ? 'text-[#6d28d9]' : card.color)} />
               </div>
-              <h4 className="font-bold text-[#331c61] mb-1 text-sm">{card.title}</h4>
-              <p className="text-[10px] text-slate-400 font-medium leading-tight">{card.desc}</p>
+              <h4 className="font-black text-[#4c1d95] mb-1 text-sm">{card.title}</h4>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-tight">{card.desc}</p>
             </div>
           ))}
         </div>
@@ -228,8 +232,8 @@ const ExplorerPage: React.FC = () => {
               <Megaphone className="w-7 h-7 text-rose-500" />
             </div>
             <div>
-              <h4 className="font-bold text-[#331c61] text-base">Announcements</h4>
-              <p className="text-[10px] text-slate-400 font-medium">Official campus updates and news</p>
+              <h4 className="font-black text-[#4c1d95] text-base">Announcements</h4>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Campus updates and news</p>
             </div>
           </div>
           <ChevronRight className="w-5 h-5 text-slate-300" />
@@ -238,8 +242,8 @@ const ExplorerPage: React.FC = () => {
         {/* TRENDING NOW */}
         <section className="mb-4">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-black text-[#331c61]">Trending Now</h3>
-            <button onClick={() => navigate('/dashboard/discover')} className="text-[10px] font-black uppercase tracking-widest text-[#7c3aed] hover:underline">See All</button>
+            <h3 className="text-xl font-black text-[#4c1d95]">Trending Now</h3>
+            <button onClick={() => navigate('/dashboard/discover')} className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6d28d9] hover:underline">See All</button>
           </div>
 
           <div className="space-y-4">
@@ -251,9 +255,9 @@ const ExplorerPage: React.FC = () => {
                   key={item._id} 
                   className="bg-white rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:border-purple-100 border border-transparent transition-all relative overflow-hidden group"
                 >
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-[#3f6212] rounded-r-full group-hover:h-20 transition-all"></div>
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-[#6d28d9] rounded-r-full group-hover:h-20 transition-all"></div>
                   <div className="relative z-10">
-                    <h4 className="text-lg font-bold text-[#331c61] mb-4">{item.title}</h4>
+                    <h4 className="text-lg font-black text-[#4c1d95] mb-4">{item.title}</h4>
                     <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed mb-6">
                       {item.description || "Join us this Friday for the latest campus showcase. Limited seats available!"}
                     </p>
@@ -279,7 +283,7 @@ const ExplorerPage: React.FC = () => {
       {/* Floating Action Hint */}
       <Link 
         to="/dashboard/announcements?compose=true"
-        className="fixed bottom-[100px] right-6 w-14 h-14 bg-[#7c3aed] rounded-full shadow-lg shadow-[#7c3aed]/40 flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all z-40"
+        className="fixed bottom-[100px] right-6 w-14 h-14 bg-[#6d28d9] rounded-full shadow-lg shadow-purple-500/40 flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all z-40"
         aria-label="Create New"
         title="Create New"
       >

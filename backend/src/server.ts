@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import dotenv from 'dotenv';
 import dns from 'dns';
 // dns.setServers(['8.8.8.8', '1.1.1.1']);
@@ -21,6 +22,12 @@ Stack: ${error.stack}
 };
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Initialize Sentry before other imports to catch all startup errors
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 1.0,
+});
 
 console.log('--- Environment Check ---');
 console.log('CWD:', process.cwd());
@@ -97,6 +104,7 @@ import clubRoutes from './routes/clubRoutes';
 import leaderboardRoutes from './routes/leaderboardRoutes';
 import adminRoutes from './routes/adminRoutes';
 import { generalRateLimiter } from './middleware/rateLimitMiddleware';
+import { initAnnouncementEngine } from './services/announcementEngine';
 
 // Presence tracking (in-memory — Upstash HTTP doesn't support TCP pub/sub)
 const onlineUsers = new Map<string, Set<string>>();
@@ -271,6 +279,10 @@ app.get('/api/diag/uploads', (req, res) => {
   }
 });
 
+app.get('/api/debug-sentry', (req, res) => {
+  throw new Error('Sentry Backend Test Error');
+});
+
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '../public/uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -318,6 +330,9 @@ app.use((req: express.Request, res: express.Response) => {
   });
 });
 
+// Sentry Error Handler - Must come before other error handlers
+Sentry.setupExpressErrorHandler(app);
+
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('--- GLOBAL ERROR HANDLER ---');
@@ -361,6 +376,9 @@ const startServer = async () => {
         console.error('[Server] MongoDB connection failed:', err.message);
         logErrorToFile('MONGODB_STARTUP', err);
     });
+
+    // Initialize Automated Announcement Engine
+    initAnnouncementEngine();
   } catch (err: any) {
     console.error('[Server] Fatal Startup Error:', err.message);
   }

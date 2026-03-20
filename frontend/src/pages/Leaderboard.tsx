@@ -52,7 +52,7 @@ const Leaderboard: React.FC = () => {
 
   const tabs = [
     { id: 'campus', label: 'Campus Leaders', icon: Trophy, color: 'text-yellow-500' },
-    { id: 'weekly', label: 'Weekly Stars', icon: TrendingUp, color: 'text-sky-500' },
+    { id: 'weekly', label: 'Weekly Stars', icon: TrendingUp, color: 'text-[#6d28d9]' },
     { id: 'helpers', label: 'Study Helpers', icon: Heart, color: 'text-rose-500' },
   ];
 
@@ -83,10 +83,10 @@ const Leaderboard: React.FC = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as LeaderboardTab)}
               className={clsx(
-                "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300",
+                "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all duration-300 active:scale-95",
                 activeTab === tab.id 
-                  ? "bg-white text-slate-800 shadow-sm shadow-slate-200 ring-1 ring-slate-100" 
-                  : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                  ? "bg-white text-[#6d28d9] shadow-sm shadow-purple-100 ring-1 ring-purple-50" 
+                  : "text-slate-500 hover:text-[#6d28d9] hover:bg-white/50"
               )}
             >
               <tab.icon className={clsx("w-4 h-4", activeTab === tab.id ? tab.color : "text-slate-400")} />
@@ -119,7 +119,7 @@ const Leaderboard: React.FC = () => {
             <p className="text-slate-500 max-w-xs mx-auto mb-6">{error}</p>
             <button 
               onClick={fetchLeaderboards}
-              className="bg-sky-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-sky-200 active:scale-95 transition-all"
+              className="bg-[#6d28d9] text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-purple-200/50 active:scale-95 transition-all"
             >
               Try Again
             </button>

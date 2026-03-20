@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -86,4 +87,17 @@ function App() {
   );
 }
 
-export default App;
+export default Sentry.withErrorBoundary(App, { 
+  fallback: ({ error }: { error: any }) => (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6 text-center">
+      <h1 className="text-2xl font-black text-[#6d28d9] mb-4">Something went wrong</h1>
+      <p className="text-slate-500 mb-8 max-w-sm">Our team has been notified. Please try refreshing the page.</p>
+      <button 
+        onClick={() => window.location.reload()}
+        className="px-8 py-3 bg-[#6d28d9] text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-purple-200"
+      >
+        Refresh Page
+      </button>
+    </div>
+  )
+});

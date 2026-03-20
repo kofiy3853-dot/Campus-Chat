@@ -7,6 +7,10 @@ export interface IAnnouncement extends Document {
   image?: string;
   pinned: boolean;
   reactions: { user_id: mongoose.Types.ObjectId, emoji: string }[];
+  cta?: string;
+  type?: 'engagement' | 'marketplace' | 'social';
+  priority?: 'low' | 'medium' | 'high';
+  is_auto_generated: boolean;
 }
 
 const AnnouncementSchema: Schema = new Schema({
@@ -21,6 +25,10 @@ const AnnouncementSchema: Schema = new Schema({
       emoji: { type: String }
     }
   ],
+  cta: { type: String },
+  type: { type: String, enum: ['engagement', 'marketplace', 'social'], default: 'engagement' },
+  priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' },
+  is_auto_generated: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export default mongoose.model<IAnnouncement>('Announcement', AnnouncementSchema);

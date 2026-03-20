@@ -78,20 +78,20 @@ const CreateAnnouncementModal: React.FC<CreateAnnouncementModalProps> = ({ isOpe
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose}></div>
       
-      <div className="relative bg-white w-full max-w-xl rounded-t-[2.5rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col pt-[var(--safe-area-inset-top)] pb-[var(--safe-area-inset-bottom)]">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+      <div className="relative bg-white w-full max-w-xl rounded-t-[2.5rem] md:rounded-[3rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 max-h-[90vh] flex flex-col pt-[var(--safe-area-inset-top)] pb-[var(--safe-area-inset-bottom)]">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
         
         <div className="p-8 overflow-y-auto">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100">
-                <Megaphone className="w-6 h-6 text-amber-500" />
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center border border-purple-100">
+                <Megaphone className="w-6 h-6 text-[#6d28d9]" />
               </div>
               <div>
                 <h2 className="text-2xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                  New Announcement <Sparkles className="w-4 h-4 text-sky-500 fill-sky-500" />
+                  Broadcast Update <Sparkles className="w-4 h-4 text-[#6d28d9] fill-[#6d28d9]" />
                 </h2>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Share updates with the campus</p>
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Official Campus Alert</p>
               </div>
             </div>
             <button 
@@ -109,7 +109,7 @@ const CreateAnnouncementModal: React.FC<CreateAnnouncementModalProps> = ({ isOpe
               <input 
                 type="text"
                 placeholder="e.g. Exam Timetable Released"
-                className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-sky-500 transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-[#6d28d9] focus:ring-4 focus:ring-purple-500/5 transition-all font-bold text-slate-800 placeholder:text-slate-300"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
@@ -120,7 +120,7 @@ const CreateAnnouncementModal: React.FC<CreateAnnouncementModalProps> = ({ isOpe
               <textarea 
                 rows={4}
                 placeholder="What's happening? Provide more details here..."
-                className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-sky-500 transition-all font-medium text-slate-600 placeholder:text-slate-300 resize-none"
+                className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-[#6d28d9] focus:ring-4 focus:ring-purple-500/5 transition-all font-medium text-slate-600 placeholder:text-slate-300 resize-none"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
@@ -133,15 +133,15 @@ const CreateAnnouncementModal: React.FC<CreateAnnouncementModalProps> = ({ isOpe
                   className="relative group cursor-pointer"
                   onClick={() => document.getElementById('announcement-image')?.click()}
                 >
-                  <div className="absolute inset-0 bg-sky-500/5 blur-lg opacity-0 group-hover:opacity-100 transition-all"></div>
-                  <div className="relative flex items-center gap-3 px-6 py-4 bg-white border border-slate-100 rounded-2xl group-hover:border-sky-200 transition-all">
+                  <div className="absolute inset-0 bg-purple-500/5 blur-lg opacity-0 group-hover:opacity-100 transition-all"></div>
+                  <div className="relative flex items-center gap-3 px-6 py-4 bg-white border border-slate-100 rounded-2xl group-hover:border-purple-200 transition-all">
                     {imagePreview ? (
                       <img src={imagePreview} alt="Preview" className="w-8 h-8 rounded-lg object-cover" />
                     ) : (
-                      <ImageIcon className="w-5 h-5 text-slate-400 group-hover:text-sky-500" />
+                      <ImageIcon className="w-5 h-5 text-slate-400 group-hover:text-[#6d28d9]" />
                     )}
                     <span className="text-sm font-bold text-slate-500 group-hover:text-slate-800">
-                      {image ? image.name : 'Add image (optional)'}
+                      {image ? image.name : 'Append Visual'}
                     </span>
                   </div>
                   <input 
@@ -160,14 +160,14 @@ const CreateAnnouncementModal: React.FC<CreateAnnouncementModalProps> = ({ isOpe
                 <button
                   type="button"
                   onClick={() => setIsPinned(!isPinned)}
-                  className={`flex items-center gap-3 px-6 py-4 rounded-2xl border transition-all font-bold text-sm ${
+                  className={`flex items-center gap-3 px-6 py-4 rounded-2xl border transition-all font-black uppercase tracking-widest text-[10px] ${
                     isPinned 
-                    ? 'bg-amber-50 border-amber-200 text-amber-600' 
-                    : 'bg-white border-slate-100 text-slate-400 hover:border-amber-100 hover:text-amber-500'
+                    ? 'bg-purple-100 border-[#6d28d9] text-[#6d28d9]' 
+                    : 'bg-white border-slate-100 text-slate-400 hover:border-purple-100 hover:text-[#6d28d9]'
                   }`}
                 >
-                  <Pin className={`w-4 h-4 ${isPinned ? 'fill-amber-600' : ''}`} />
-                  {isPinned ? 'Pinned' : 'Pin Post'}
+                  <Pin className={`w-3.5 h-3.5 ${isPinned ? 'fill-[#6d28d9]' : ''}`} />
+                  {isPinned ? 'Pinned' : 'Highlight'}
                 </button>
               </div>
             </div>
@@ -176,17 +176,17 @@ const CreateAnnouncementModal: React.FC<CreateAnnouncementModalProps> = ({ isOpe
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-5 bg-slate-800 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-slate-200 hover:bg-sky-500 hover:shadow-sky-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                className="w-full py-5 bg-[#6d28d9] hover:bg-[#5b21b6] text-white rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-purple-200 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Posting...
+                    Transmitting...
                   </>
                 ) : (
                   <>
-                    <Megaphone className="w-4 h-4" />
-                    Post Announcement
+                    <Megaphone className="w-4 h-4 fill-current" />
+                    Broadcast Now
                   </>
                 )}
               </button>

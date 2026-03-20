@@ -107,17 +107,17 @@ const EventsPage: React.FC = () => {
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100 shrink-0">
-                <Calendar className="w-4 h-4 md:w-5 md:h-5 text-sky-500" />
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-[#f5eeff] flex items-center justify-center border border-purple-100 shrink-0">
+                <Calendar className="w-4 h-4 md:w-5 md:h-5 text-[#6d28d9]" />
               </div>
-              <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">Campus Events</h1>
+              <h1 className="text-xl md:text-3xl font-black text-[#4c1d95] tracking-tight">Campus Events</h1>
             </div>
             <p className="text-gray-400 text-xs md:text-base max-w-md leading-relaxed">Discover what's happening around campus. Meet, learn, and have fun.</p>
           </div>
 
           <button
             onClick={() => setShowCompose(true)}
-            className="flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-4 bg-sky-400 hover:bg-sky-500 text-white text-xs md:text-base font-bold rounded-xl md:rounded-2xl shadow-sm transition-none whitespace-nowrap"
+            className="flex items-center justify-center gap-2 px-4 py-3 md:px-6 md:py-4 bg-[#6d28d9] hover:bg-[#5b21b6] text-white text-xs md:text-base font-black uppercase tracking-widest rounded-xl md:rounded-2xl shadow-md shadow-purple-200/50 transition-all active:scale-95 whitespace-nowrap"
           >
             <Plus className="w-4 h-4 md:w-5 md:h-5" />
             <span className="hidden xs:inline">Post New Event</span>
@@ -130,13 +130,13 @@ const EventsPage: React.FC = () => {
           
           {/* Search */}
           <div className="relative w-full sm:w-80 group transition-none">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-sky-400 transition-none" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-[#6d28d9] transition-none" />
             <input 
               type="text" 
               placeholder="Search events..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-gray-50 border border-gray-100 rounded-xl md:rounded-2xl pl-11 pr-4 py-2.5 md:py-3 text-xs md:text-sm text-gray-700 outline-none focus:border-sky-400/50 focus:ring-4 focus:ring-sky-500/5 transition-none"
+              className="w-full bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl pl-11 pr-4 py-2.5 md:py-3 text-xs md:text-sm text-slate-700 outline-none focus:border-[#6d28d9]/50 focus:ring-4 focus:ring-[#6d28d9]/5 transition-none"
             />
           </div>
 
@@ -148,10 +148,10 @@ const EventsPage: React.FC = () => {
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={clsx(
-                    "px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold whitespace-nowrap transition-none",
+                    "px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold whitespace-nowrap transition-all",
                     activeCategory === cat 
-                      ? "bg-sky-400 text-white shadow-sm" 
-                      : "bg-gray-50 text-gray-400 border border-gray-100 hover:text-sky-500 hover:border-sky-200"
+                      ? "bg-[#6d28d9] text-white shadow-sm" 
+                      : "bg-slate-50 text-slate-400 border border-slate-100 hover:text-[#6d28d9] hover:border-purple-200"
                   )}
                 >
                   {cat}
@@ -162,17 +162,17 @@ const EventsPage: React.FC = () => {
             <div className="h-6 w-px bg-gray-100 hidden sm:block"></div>
 
             {/* Sort Toggle */}
-            <div className="flex bg-gray-50 border border-gray-100 rounded-xl p-1 shrink-0 transition-none">
+            <div className="flex bg-slate-50 border border-slate-100 rounded-xl p-1 shrink-0 transition-none">
                <button 
                  onClick={() => setSort('upcoming')}
-                 className={clsx("p-1.5 md:p-2 rounded-lg transition-none", sort === 'upcoming' ? "bg-white text-sky-500 shadow-sm" : "text-gray-400 hover:text-sky-500")}
+                 className={clsx("p-1.5 md:p-2 rounded-lg transition-all", sort === 'upcoming' ? "bg-white text-[#6d28d9] shadow-sm" : "text-slate-400 hover:text-[#6d28d9]")}
                  title="Upcoming"
                >
                  <Clock className="w-3.5 h-3.5 md:w-4 md:h-4" />
                </button>
                <button 
                  onClick={() => setSort('popular')}
-                 className={clsx("p-1.5 md:p-2 rounded-lg transition-none", sort === 'popular' ? "bg-white text-sky-500 shadow-sm" : "text-gray-400 hover:text-sky-500")}
+                 className={clsx("p-1.5 md:p-2 rounded-lg transition-all", sort === 'popular' ? "bg-white text-[#6d28d9] shadow-sm" : "text-slate-400 hover:text-[#6d28d9]")}
                  title="Popular"
                >
                  <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4" />

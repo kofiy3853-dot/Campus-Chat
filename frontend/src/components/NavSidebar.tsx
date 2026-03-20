@@ -54,7 +54,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
               <>
                 <div className={clsx(
                   "flex items-center justify-center w-12 h-12 rounded-[1.2rem] transition-all",
-                  isActive ? "bg-[#8444e2] text-white shadow-md shadow-[#8444e2]/30" : "text-slate-400 hover:bg-purple-50 group-hover:text-[#8444e2]"
+                  isActive ? "bg-[#6d28d9] text-white shadow-md shadow-purple-200" : "text-slate-400 hover:bg-purple-50 group-hover:text-[#6d28d9]"
                 )}>
                   <item.icon className="w-6 h-6" />
                   {item.label === 'Chats' && unread > 0 && (
@@ -63,7 +63,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
                     </span>
                   )}
                 </div>
-                <span className={clsx("text-[0.6rem] font-bold uppercase tracking-widest transition-colors", isActive ? "text-[#8444e2]" : "text-slate-400 group-hover:text-[#8444e2]")}>
+                <span className={clsx("text-[0.6rem] font-bold uppercase tracking-widest transition-colors", isActive ? "text-[#6d28d9]" : "text-slate-400 group-hover:text-[#6d28d9]")}>
                   {item.label}
                 </span>
                 <div className="hidden md:block absolute left-full ml-4 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">

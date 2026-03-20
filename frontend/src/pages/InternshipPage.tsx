@@ -135,7 +135,7 @@ const InternshipPage: React.FC = () => {
           <button 
             onClick={() => setIsModalOpen(true)}
             aria-label="Post new internship opportunity"
-            className="bg-indigo-600 hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-3 shadow-xl shadow-indigo-200"
+            className="bg-[#6d28d9] hover:bg-[#5b21b6] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-3 shadow-xl shadow-purple-200/50 active:scale-95"
           >
             <Plus className="w-5 h-5" />
             Post Opportunity
@@ -149,7 +149,7 @@ const InternshipPage: React.FC = () => {
               onClick={() => setTab('all')}
               className={clsx(
                 "flex-1 py-3 px-6 rounded-xl font-bold transition-all",
-                tab === 'all' ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+                tab === 'all' ? "bg-[#6d28d9] text-white shadow-lg shadow-purple-200/50" : "text-slate-500 hover:bg-slate-50"
               )}
             >
               All Openings
@@ -158,7 +158,7 @@ const InternshipPage: React.FC = () => {
               onClick={() => setTab('saved')}
               className={clsx(
                 "flex-1 py-3 px-6 rounded-xl font-bold transition-all",
-                tab === 'saved' ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:bg-slate-50"
+                tab === 'saved' ? "bg-[#6d28d9] text-white shadow-lg shadow-purple-200/50" : "text-slate-500 hover:bg-slate-50"
               )}
             >
               Saved For Later
@@ -166,21 +166,21 @@ const InternshipPage: React.FC = () => {
           </div>
           
           <form onSubmit={handleSearch} className="relative group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#6d28d9] transition-colors" />
             <input 
               type="text" 
               placeholder="Search roles, companies..."
               aria-label="Search internships"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-slate-100 rounded-2xl py-4 pl-14 pr-6 font-bold text-slate-700 outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500/20 transition-all shadow-sm"
+              className="w-full bg-white border border-slate-100 rounded-2xl py-4 pl-14 pr-6 font-bold text-slate-700 outline-none focus:ring-4 focus:ring-[#6d28d9]/5 focus:border-[#6d28d9]/20 transition-all shadow-sm"
             />
           </form>
         </div>
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-4 mb-10">
-          <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full">
+          <div className="flex items-center gap-2 px-4 py-2 bg-[#f5eeff] text-[#6d28d9] rounded-full border border-purple-100">
             <Filter className="w-4 h-4" />
             <span className="text-xs font-black uppercase tracking-widest">Filters</span>
           </div>
@@ -217,7 +217,7 @@ const InternshipPage: React.FC = () => {
         {/* Listings */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 grayscale opacity-50">
-            <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
+            <Loader2 className="w-12 h-12 text-[#6d28d9] animate-spin mb-4" />
             <p className="font-bold text-slate-400">Loading opportunities...</p>
           </div>
         ) : internships.length > 0 ? (
@@ -235,8 +235,8 @@ const InternshipPage: React.FC = () => {
                   className={clsx(
                     "absolute top-6 right-6 p-3 rounded-2xl transition-all active:scale-90",
                     savedIds.includes(internship._id) || tab === 'saved'
-                      ? "bg-indigo-50 text-indigo-600" 
-                      : "bg-slate-50 text-slate-300 hover:text-indigo-400"
+                      ? "bg-[#f5eeff] text-[#6d28d9]" 
+                      : "bg-slate-50 text-slate-300 hover:text-[#a78bfa]"
                   )}
                 >
                   {savedIds.includes(internship._id) || tab === 'saved' ? <BookmarkCheck className="w-6 h-6" /> : <Bookmark className="w-6 h-6" />}
@@ -253,7 +253,7 @@ const InternshipPage: React.FC = () => {
                 )}
 
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-indigo-600 border border-slate-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                  <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-[#6d28d9] border border-slate-100 group-hover:bg-[#6d28d9] group-hover:text-white transition-colors">
                     <Briefcase className="w-7 h-7" />
                   </div>
                   <div>
@@ -264,11 +264,11 @@ const InternshipPage: React.FC = () => {
 
                 <div className="space-y-4 mb-8 flex-1">
                   <div className="flex items-center gap-2 text-slate-500">
-                    <MapPin className="w-4 h-4" />
+                    <MapPin className="w-4 h-4 text-[#6d28d9]" />
                     <span className="text-sm font-bold">{internship.location}</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-500">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 text-[#6d28d9]" />
                     <span className="text-sm font-bold">Deadline: {formatDate(internship.deadline)}</span>
                   </div>
                   <p className="text-sm text-slate-600 font-medium leading-relaxed line-clamp-3">
@@ -301,7 +301,7 @@ const InternshipPage: React.FC = () => {
                   ) : (
                     <button 
                       onClick={() => setIsApplying(internship._id)}
-                      className="flex-1 bg-indigo-600 hover:bg-black text-white py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95"
+                      className="flex-1 bg-[#6d28d9] hover:bg-[#5b21b6] text-white py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-200/50 active:scale-95"
                     >
                       Apply with Resume
                     </button>
@@ -309,13 +309,13 @@ const InternshipPage: React.FC = () => {
                   <button 
                     aria-label="View internship details"
                     title="View Details"
-                    className="p-4 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-indigo-500 transition-all shadow-sm"
+                    className="p-4 bg-slate-50 hover:bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-[#6d28d9] transition-all shadow-sm"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
                 </div>
 
-                <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-indigo-50/30 rounded-full blur-2xl group-hover:bg-indigo-100/40 transition-colors" />
+                <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-50/30 rounded-full blur-2xl group-hover:bg-purple-100/40 transition-colors" />
               </div>
             ))}
           </div>

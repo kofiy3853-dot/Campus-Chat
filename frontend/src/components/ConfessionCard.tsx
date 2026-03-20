@@ -66,16 +66,16 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col gap-4">
+    <div className="bg-white border border-purple-100/60 rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(109,40,217,0.03)] hover:shadow-[0_8px_30px_rgba(109,40,217,0.06)] hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col gap-5">
       {/* Top Section */}
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-sm font-bold text-white shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6d28d9] to-[#4c1d95] flex items-center justify-center text-sm font-bold text-white shrink-0 shadow-sm">
             👤
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-800">Anonymous</p>
-            <p className="text-[11px] text-gray-400">{timeAgo(confession.createdAt)}</p>
+            <p className="text-sm font-black text-[#4c1d95] tracking-tight">Anonymous</p>
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">{timeAgo(confession.createdAt)}</p>
           </div>
         </div>
         {isAdmin && (
@@ -86,7 +86,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
       </div>
 
       {/* Text */}
-      <p className="text-gray-700 text-[15px] leading-relaxed whitespace-pre-wrap mb-5">
+      <p className="text-[#1e1b4b]/80 text-[15px] leading-relaxed font-medium whitespace-pre-wrap mb-2">
         {confession.text}
       </p>
 
@@ -107,7 +107,7 @@ const ConfessionCard: React.FC<ConfessionCardProps> = ({ confession, currentUser
         {/* Comment */}
         <button
           onClick={() => setShowComments(v => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-gray-400 hover:text-sky-500 hover:bg-gray-50 transition-none"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold text-slate-400 hover:text-[#6d28d9] hover:bg-purple-50 transition-all"
         >
           <MessageCircle className="w-4 h-4" />
           <span>{confession.commentsCount}</span>

@@ -111,7 +111,7 @@ const PollsPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-slate-950 p-3 md:p-6 scrollbar-hide">
+    <div className="h-full overflow-y-auto bg-slate-50 p-3 md:p-6 scrollbar-hide">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-5 md:mb-8">
@@ -119,18 +119,18 @@ const PollsPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => window.history.back()}
-                className="md:hidden p-1.5 -ml-1 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-colors"
+                className="md:hidden p-1.5 -ml-1 text-slate-400 hover:text-[#6d28d9] hover:bg-slate-100 rounded-xl transition-colors"
                 aria-label="Back"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-xl md:text-4xl font-bold text-white tracking-tight">Polls</h1>
+              <h1 className="text-xl md:text-4xl font-black text-[#4c1d95] tracking-tight">Polls</h1>
             </div>
             <button
               onClick={() => setIsComposeOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2 bg-primary-600 hover:bg-primary-700 text-white text-xs md:text-base font-bold rounded-xl md:rounded-lg shadow-lg shadow-primary-900/20 transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-1.5 px-4 py-2.5 md:px-6 md:py-3.5 bg-[#6d28d9] hover:bg-[#5b21b6] text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl md:rounded-2xl shadow-lg shadow-purple-200 active:scale-95 transition-all"
             >
-              <Plus className="w-4 h-4 md:w-5 md:h-5" />
+              <Plus className="w-4 h-4 md:w-5 md:h-5 text-white" />
               <span className="hidden xs:inline">Create Poll</span>
               <span className="xs:hidden">New Poll</span>
             </button>
@@ -140,23 +140,23 @@ const PollsPage: React.FC = () => {
           <div className="flex gap-1.5 md:gap-2">
             <button
               onClick={() => setSortBy('newest')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all ${
                 sortBy === 'newest'
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/10'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                  ? 'bg-white text-[#6d28d9] shadow-md shadow-purple-100 ring-1 ring-purple-100'
+                  : 'bg-slate-200 text-slate-400 hover:bg-slate-300 hover:text-slate-600'
               }`}
             >
-              <Clock className="w-3 h-3 md:w-4 md:h-4" /> Newest
+              <Clock className="w-3.5 h-3.5" /> Newest
             </button>
             <button
               onClick={() => setSortBy('trending')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all ${
                 sortBy === 'trending'
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-900/10'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200'
+                  ? 'bg-white text-[#6d28d9] shadow-md shadow-purple-100 ring-1 ring-purple-100'
+                  : 'bg-slate-200 text-slate-400 hover:bg-slate-300 hover:text-slate-600'
               }`}
             >
-              <TrendingUp className="w-3 h-3 md:w-4 md:h-4" /> Trending
+              <TrendingUp className="w-3.5 h-3.5" /> Trending
             </button>
           </div>
         </div>
@@ -169,11 +169,11 @@ const PollsPage: React.FC = () => {
             ))}
           </div>
         ) : polls.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-slate-400 text-lg mb-4">No polls yet</p>
+          <div className="text-center py-20 bg-white rounded-[2.5rem] border border-dashed border-slate-200">
+            <p className="text-slate-400 text-lg font-black uppercase tracking-widest mb-6">No active polls</p>
             <button
               onClick={() => setIsComposeOpen(true)}
-              className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition"
+              className="px-8 py-3 bg-[#6d28d9] hover:bg-[#5b21b6] text-white font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-purple-200 active:scale-95 transition-all"
             >
               Create the first poll
             </button>
@@ -195,9 +195,9 @@ const PollsPage: React.FC = () => {
                 <button
                   onClick={handleLoadMore}
                   disabled={loadingMore}
-                  className="px-6 py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-white font-medium rounded-lg transition"
+                  className="px-8 py-3 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-500 font-black uppercase tracking-widest text-[10px] rounded-2xl border border-slate-100 transition-all active:scale-95 shadow-sm"
                 >
-                  {loadingMore ? 'Loading...' : 'Load More'}
+                  {loadingMore ? 'Crunching Data...' : 'Load More Polls'}
                 </button>
               </div>
             )}

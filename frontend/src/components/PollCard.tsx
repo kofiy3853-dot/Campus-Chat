@@ -79,7 +79,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col gap-4">
+    <div className="w-full bg-white border border-purple-50 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:shadow-purple-500/5 hover:border-purple-100 transition-all duration-300 p-8 flex flex-col gap-6 mb-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3 flex-1">
@@ -91,8 +91,8 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
             />
           )}
           <div>
-            <p className="text-sm font-medium text-white">{creatorName}</p>
-            <p className="text-xs text-slate-400">
+            <p className="text-sm font-black text-slate-800">{creatorName}</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
               {new Date(poll.created_at).toLocaleDateString()}
             </p>
           </div>
@@ -108,7 +108,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
           {canDelete && (
             <button
               onClick={handleDelete}
-              className="p-2 hover:bg-red-500/20 rounded-lg text-red-400 transition"
+              className="p-2 hover:bg-rose-50 rounded-xl text-rose-400 transition-colors"
               title="Delete poll"
             >
               <Trash2 className="w-4 h-4" />
@@ -118,7 +118,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
       </div>
 
       {/* Question */}
-      <h3 className="text-lg font-semibold text-white mb-4">{poll.question}</h3>
+      <h3 className="text-xl font-black text-[#4c1d95] leading-tight tracking-tight mb-2">{poll.question}</h3>
 
       {/* Options - Voting Phase */}
       {!poll.has_voted && !isExpired && (
@@ -129,9 +129,9 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
               onClick={() => handleVote(idx)}
               disabled={loading}
               className={clsx(
-                'w-full p-3 rounded-lg text-left font-medium transition',
-                'border border-slate-600 hover:border-primary-500 hover:bg-slate-700/50',
-                'text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed'
+                'w-full p-4 rounded-2xl text-left font-bold transition-all border text-sm',
+                'border-slate-100 bg-slate-50 hover:border-purple-200 hover:bg-[#f5eeff] hover:text-[#6d28d9]',
+                'text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]'
               )}
             >
               {option.text}
@@ -158,16 +158,16 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
                       {isSelected && <ThumbsUp className="w-4 h-4 text-primary-400" />}
                     </div>
                   </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-50">
                     <div
                       className={clsx(
-                        'h-full transition-all duration-300',
-                        isSelected ? 'bg-primary-500' : 'bg-primary-600/60'
+                        'h-full transition-all duration-700 ease-out rounded-full',
+                        isSelected ? 'bg-[#6d28d9]' : 'bg-purple-200'
                       )}
                       style={{ width: `${percentage}%` } as React.CSSProperties}
                     />
                   </div>
-                  <p className="text-xs text-slate-400">{result.votes} vote{result.votes !== 1 ? 's' : ''}</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-300">{result.votes} vote{result.votes !== 1 ? 's' : ''}</p>
                 </div>
               );
             })}
@@ -175,7 +175,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-slate-700/30">
+      <div className="flex items-center justify-between pt-6 border-t border-purple-50">
         <div className="flex items-center gap-2 text-xs text-slate-400">
           <span>{poll.total_votes} vote{poll.total_votes !== 1 ? 's' : ''}</span>
           {poll.hide_results_until_voted && !poll.has_voted && (
@@ -196,7 +196,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onVote, onDelete }) => {
 
           <button
             onClick={() => setShowReport(!showReport)}
-            className="p-1.5 hover:bg-red-500/20 rounded text-red-400 transition"
+            className="p-2 hover:bg-rose-50 rounded-xl text-rose-400 transition-colors"
             title="Report poll"
           >
             <Flag className="w-4 h-4" />

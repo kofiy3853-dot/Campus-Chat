@@ -59,7 +59,7 @@ const StudyGroupsPage = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-[#6d28d9] flex items-center justify-center text-white">
               <BookOpen className="w-5 h-5" />
             </div>
             <h2 className="text-3xl font-black text-slate-800 tracking-tight">Study Groups</h2>
@@ -70,7 +70,7 @@ const StudyGroupsPage = () => {
         <button 
           onClick={() => setIsModalOpen(true)}
           aria-label="Open study group creation modal"
-          className="bg-indigo-600 hover:bg-black text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center gap-3 shadow-xl shadow-indigo-200"
+          className="bg-[#6d28d9] hover:bg-[#5b21b6] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center gap-3 shadow-xl shadow-purple-200 active:scale-95"
         >
           <Plus className="w-5 h-5" />
           Create Study Group
@@ -83,14 +83,14 @@ const StudyGroupsPage = () => {
           <input 
             type="text" 
             placeholder="Search by subject (e.g. CS302, Calculus)..."
-            className="w-full bg-white border-2 border-slate-100 rounded-[2rem] py-5 px-8 pr-16 text-slate-700 font-medium shadow-sm outline-none focus:border-indigo-500 focus:ring-8 focus:ring-indigo-500/5 transition-all"
+            className="w-full bg-white border border-[#f5eeff] rounded-[2rem] py-5 px-8 pr-16 text-slate-700 font-bold shadow-sm outline-none focus:border-purple-200 focus:ring-8 focus:ring-purple-500/5 transition-all"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button 
             type="submit"
             aria-label="Search study groups"
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-3 bg-indigo-500 text-white rounded-full hover:bg-black transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-3 bg-[#6d28d9] text-white rounded-full hover:bg-[#5b21b6] transition-colors"
           >
             <Search className="w-5 h-5" />
           </button>
@@ -122,11 +122,11 @@ const StudyGroupsPage = () => {
 
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 transition-colors group-hover:bg-indigo-500 group-hover:text-white">
+                  <div className="w-12 h-12 rounded-2xl bg-[#f5eeff] flex items-center justify-center text-[#6d28d9] transition-colors group-hover:bg-[#6d28d9] group-hover:text-white border border-purple-50">
                     <BookOpen className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-black text-slate-800 text-lg group-hover:text-indigo-600 transition-colors line-clamp-1">{group.group_name}</h3>
+                    <h3 className="font-black text-slate-800 text-lg group-hover:text-[#6d28d9] transition-colors line-clamp-1">{group.group_name}</h3>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{group.subject || 'Lobby'}</span>
                     </div>
@@ -143,7 +143,7 @@ const StudyGroupsPage = () => {
                     {group.members.length}/{group.max_members || 50}
                   </div>
                   {group.schedule && (
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-400 bg-indigo-50 px-3 py-1 rounded-full">
+                    <div className="flex items-center gap-1.5 text-xs font-black text-[#6d28d9] bg-[#f5eeff] px-3 py-1 rounded-full uppercase tracking-widest text-[9px]">
                       <Calendar className="w-3 h-3" />
                       {group.schedule}
                     </div>
@@ -153,7 +153,7 @@ const StudyGroupsPage = () => {
 
               <button 
                 onClick={() => joinGroup(group._id)}
-                className="w-full bg-slate-50 border border-slate-100 text-slate-600 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 hover:shadow-lg hover:shadow-indigo-200 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-3"
+                className="w-full bg-[#fdfaff] border border-purple-50 text-slate-600 hover:bg-[#6d28d9] hover:text-white hover:border-[#6d28d9] hover:shadow-lg hover:shadow-purple-200 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center justify-center gap-3 active:scale-95"
               >
                 Assemble with Peers
                 <ArrowRight className="w-4 h-4" />
@@ -171,7 +171,7 @@ const StudyGroupsPage = () => {
             </div>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="text-indigo-500 font-black uppercase text-xs tracking-widest hover:text-indigo-600 transition-colors"
+              className="text-[#6d28d9] font-black uppercase text-xs tracking-widest hover:text-[#5b21b6] transition-colors"
             >
               + Launch New Lab
             </button>

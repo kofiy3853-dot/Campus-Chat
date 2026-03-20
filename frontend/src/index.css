@@ -11,27 +11,28 @@ h2 { @apply text-xl font-black tracking-tight; }
 h3 { @apply text-lg font-bold tracking-tight; }
 
 :root {
-  /* Core Colors */
-  --primary: #5b21b6;
+  /* Core Colors - Deep Violet Theme */
+  --primary: #6d28d9;
   --primary-dim: #4c1d95;
+  --primary-bright: #8b5cf6;
   --on-primary: #ffffff;
   
-  /* Surface Hierarchy */
-  --surface: #fff7fe;
-  --surface-container-low: #fcf0ff;
+  /* Surface Hierarchy - Clean White with subtle violet tints */
+  --surface: #ffffff;
+  --surface-container-low: #fdfaff;
   --surface-container-lowest: #ffffff;
-  --surface-container-high: #f5e8ff;
-  --surface-container-highest: #f0dbff;
-  --surface-bright: #fff7fe;
+  --surface-container-high: #f8f2ff;
+  --surface-container-highest: #f3e8ff;
+  --surface-bright: #ffffff;
   
   /* Text Colors */
-  --on-surface: #3e2a51;
-  --on-surface-variant: #6c5680;
+  --on-surface: #1e1b4b;
+  --on-surface-variant: #4338ca;
   
   /* Accents */
-  --outline-variant: #c2a8d7;
-  --secondary-container: #dafad2;
-  --on-secondary-container: #466143;
+  --outline-variant: #e0d7f2;
+  --secondary-container: #ede9fe;
+  --on-secondary-container: #4c1d95;
 
   /* Typography */
   --font-display: 'Plus Jakarta Sans', sans-serif;

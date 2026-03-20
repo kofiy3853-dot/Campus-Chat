@@ -133,23 +133,23 @@ const MarketplacePage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#FCFAFF] dark:bg-slate-900 relative">
+    <div className="flex flex-col h-full bg-slate-50 relative">
       {/* Header */}
-      <header className="sticky top-0 bg-[#FCFAFF]/95 dark:bg-slate-900/90 backdrop-blur-xl border-b border-[#F3E8FF] dark:border-slate-800 px-4 py-4 md:px-6 md:py-6 z-30">
+      <header className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-purple-50 px-4 py-4 md:px-6 md:py-6 z-30">
         <div className="max-w-6xl mx-auto w-full">
           {/* Top Bar */}
           <div className="flex items-center justify-between mb-4 md:mb-6">
-            <h1 className="text-xl md:text-2xl font-black text-[#4F23C0] dark:text-purple-400 tracking-tight flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 text-[#4F23C0] dark:text-purple-400 fill-[#4F23C0] dark:fill-purple-400" /> 
+            <h1 className="text-xl md:text-2xl font-black text-[#6d28d9] tracking-tight flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5 md:w-6 md:h-6 text-[#6d28d9] fill-[#6d28d9]" /> 
               CampusMarket
             </h1>
             <div className="flex items-center gap-4">
-              <button className="text-slate-400 hover:text-[#4F23C0] transition-colors p-1" aria-label="Search">
+              <button className="text-slate-400 hover:text-[#6d28d9] transition-colors p-1" aria-label="Search">
                  <Search className="w-5 h-5" />
               </button>
-              <button className="relative text-[#4F23C0] hover:text-[#6A35FF] transition-colors p-1" aria-label="Cart">
+              <button className="relative text-[#6d28d9] hover:text-[#5b21b6] transition-colors p-1" aria-label="Cart">
                  <ShoppingBag className="w-5 h-5" />
-                 <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-[#6A35FF] rounded-full border-2 border-white dark:border-slate-900"></span>
+                 <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-[#6d28d9] rounded-full border-2 border-white"></span>
               </button>
             </div>
           </div>
@@ -157,12 +157,12 @@ const MarketplacePage: React.FC = () => {
           <div className="flex flex-col gap-4">
             {/* Search Bar */}
             <div className="relative group">
-              <div className="relative flex items-center bg-[#F3E8FF] dark:bg-slate-800/50 rounded-full px-5 py-3 shadow-inner group-focus-within:ring-2 ring-[#6A35FF]/20 transition-all duration-300">
-                <Search className="w-4 h-4 mr-3 text-[#B092FA]" />
+              <div className="relative flex items-center bg-[#f5eeff] rounded-full px-5 py-3 shadow-inner group-focus-within:ring-2 ring-purple-500/20 transition-all duration-300">
+                <Search className="w-4 h-4 mr-3 text-[#a78bfa]" />
                 <input 
                   type="text" 
                   placeholder="what are you looking for today?"
-                  className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-[#4F23C0] dark:text-purple-300 placeholder:text-[#B092FA]"
+                  className="flex-1 bg-transparent border-none outline-none text-sm font-bold text-[#6d28d9] placeholder:text-[#a78bfa]"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -170,22 +170,20 @@ const MarketplacePage: React.FC = () => {
             </div>
 
             {/* Category Pills (Unified Mobile & Desktop) */}
-            <div className="flex overflow-x-auto gap-2 [&::-webkit-scrollbar]:hidden pb-1">
               {CATEGORIES.map(cat => (
                  <button
                    key={cat}
                    onClick={() => setActiveCategory(cat)}
                    className={clsx(
-                     "px-5 py-2 rounded-full text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all duration-300",
+                     "px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest whitespace-nowrap transition-all duration-300 border",
                      activeCategory === cat 
-                      ? "bg-[#6A35FF] text-white shadow-md shadow-[#6A35FF]/30" 
-                      : "bg-[#FFFFFF] dark:bg-slate-800 text-[#6A35FF] dark:text-purple-400 border border-[#F3E8FF] dark:border-slate-700 hover:bg-[#F3E8FF] dark:hover:bg-slate-700"
+                      ? "bg-[#6d28d9] border-[#6d28d9] text-white shadow-lg shadow-purple-200/50" 
+                      : "bg-white text-[#6d28d9] border-purple-100 hover:bg-[#f5eeff]"
                    )}
                  >
                    {cat === 'All' ? 'All Items' : cat}
                  </button>
               ))}
-            </div>
           </div>
         </div>
       </header>

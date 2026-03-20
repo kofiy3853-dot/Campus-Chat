@@ -27,15 +27,15 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
   const isCreator = user?._id === (post.creator?._id || post.creator);
   const canDelete = isCreator || isAdmin || isKofi;
   const categoryColors: any = {
-    electronics: 'bg-blue-50 text-sky-500',
-    stationery: 'bg-purple-50 text-purple-500',
-    personal: 'bg-pink-50 text-pink-500',
-    miscellaneous: 'bg-gray-50 text-gray-500',
+    electronics: 'bg-blue-50 text-blue-600 border border-blue-100',
+    stationery: 'bg-purple-50 text-[#6d28d9] border border-purple-100',
+    personal: 'bg-rose-50 text-rose-600 border border-rose-100',
+    miscellaneous: 'bg-slate-50 text-slate-500 border border-slate-200',
   };
 
   const statusColors: any = {
-    lost: 'bg-red-50 text-red-500',
-    found: 'bg-green-50 text-green-500',
+    lost: 'bg-rose-50 text-rose-500 border border-rose-100',
+    found: 'bg-emerald-50 text-emerald-500 border border-emerald-100',
   };
 
   const handleResolve = async () => {
@@ -113,7 +113,7 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 mb-4">
+    <div className="bg-white border border-purple-50 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl hover:shadow-purple-500/5 hover:border-purple-100 transition-all duration-300 mb-6">
       {/* Image and Status */}
       <div className="relative h-48 bg-gray-50 overflow-hidden transition-none">
         {post.image_url ? (
@@ -133,22 +133,22 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
         )}
 
         {/* Status Badge */}
-        <div className="absolute top-3 left-3">
-          <span className={clsx('px-3 py-1 rounded-full text-xs font-semibold capitalize', statusColors[post.status])}>
+        <div className="absolute top-4 left-4">
+          <span className={clsx('px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest', statusColors[post.status])}>
             {post.status}
           </span>
         </div>
 
         {/* Resolved Badge */}
         {post.is_resolved && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-semibold shadow-sm transition-none">
+          <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 text-white rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg shadow-emerald-200">
             <CheckCircle className="w-3.5 h-3.5" /> Resolved
           </div>
         )}
 
         {/* Category Badge */}
-        <div className="absolute bottom-3 left-3">
-          <span className={clsx('px-3 py-1 rounded-full text-xs font-semibold capitalize', categoryColors[post.category])}>
+        <div className="absolute bottom-4 left-4">
+          <span className={clsx('px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest', categoryColors[post.category])}>
             {post.category}
           </span>
         </div>
@@ -159,9 +159,9 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
         {/* Header */}
         <div className="flex items-start justify-between mb-3 transition-none">
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-800">{post.title}</h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Posted by <span className="font-bold text-sky-500">{post.creator?.name}</span>
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">{post.title}</h3>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+              Posted by <span className="text-[#6d28d9]">{post.creator?.name}</span>
             </p>
           </div>
 
@@ -178,21 +178,21 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
         </div>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{post.description}</p>
+        <p className="text-slate-500 text-sm font-medium mb-6 line-clamp-2 leading-relaxed">{post.description}</p>
  
         {/* Location and Date */}
-        <div className="space-y-2 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
-          <div className="flex items-start gap-2">
-            <span className="text-gray-400 text-sm font-bold min-w-fit">📍 Location:</span>
-            <span className="text-gray-600 text-sm">
+        <div className="space-y-3 mb-6 p-4 bg-slate-50 rounded-[1.5rem] border border-slate-100">
+          <div className="flex items-center gap-3">
+            <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest min-w-fit">📍 Location:</span>
+            <span className="text-slate-600 text-[10px] font-black uppercase tracking-widest">
               {post.location.building}
               {post.location.room && ` - ${post.location.room}`}
             </span>
           </div>
-          <div className="flex items-start gap-2">
-            <Clock className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
-            <span className="text-gray-600 text-sm font-medium">
-              {new Date(post.date).toLocaleDateString()} {new Date(post.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          <div className="flex items-center gap-3">
+            <Clock className="w-4 h-4 text-[#6d28d9] shrink-0" />
+            <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">
+              {new Date(post.date).toLocaleDateString()} at {new Date(post.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
         </div>
@@ -208,9 +208,9 @@ const LostFoundCard: React.FC<LostFoundCardProps> = ({ post, onDelete, onResolve
             <button
               onClick={handleContact}
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-sky-400 hover:bg-sky-500 disabled:opacity-50 text-white font-bold rounded-lg transition-none text-sm shadow-sm"
+              className="flex-1 flex items-center justify-center gap-3 px-5 py-4 bg-[#6d28d9] hover:bg-[#5b21b6] disabled:opacity-50 text-white font-black uppercase tracking-widest rounded-2xl transition-all text-[10px] shadow-lg shadow-purple-200 active:scale-95"
             >
-              <MessageSquare className="w-4 h-4" /> Contact Poster
+              <MessageSquare className="w-4 h-4 fill-current" /> Contact Poster
             </button>
           )}
 

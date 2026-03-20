@@ -109,31 +109,31 @@ const AnnouncementList = () => {
   );
 
   return (
-    <div className="flex-1 h-full relative overflow-hidden bg-white">
+    <div className="flex-1 h-full relative overflow-hidden bg-slate-50">
       <div className="h-full overflow-y-auto scrollbar-hide py-5 md:py-8 px-3 md:px-12">
         <div className="max-w-4xl mx-auto">
-          <header className="mb-6 md:mb-8 relative">
-            <div className="absolute -left-12 -top-4 w-24 h-24 bg-sky-500/5 rounded-full blur-3xl"></div>
+          <header className="mb-8 md:mb-12 relative">
+            <div className="absolute -left-12 -top-4 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl"></div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-3">
                 <button 
                   onClick={() => window.history.back()}
-                  className="md:hidden p-1.5 -ml-1 text-gray-400 hover:text-gray-800 hover:bg-gray-50 rounded-xl"
+                  className="md:hidden p-1.5 -ml-1 text-slate-400 hover:text-[#6d28d9] hover:bg-white rounded-xl transition-colors"
                   aria-label="Back"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-amber-50 flex items-center justify-center border border-amber-100">
-                    <Megaphone className="text-amber-500 w-4 h-4 md:w-5 md:h-5" />
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-purple-50 flex items-center justify-center border border-purple-100">
+                    <Megaphone className="text-[#6d28d9] w-4 h-4 md:w-5 md:h-5" />
                 </div>
-                <span className="text-amber-500 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em]">Live Campus Feed</span>
+                <span className="text-[#6d28d9] text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Campus Official</span>
               </div>
             </div>
-            <h2 className="text-xl sm:text-2xl md:text-5xl font-black text-gray-800 tracking-tight leading-tight">
-              Campus <span className="text-sky-500">Announcements</span>
+            <h2 className="text-xl sm:text-2xl md:text-5xl font-black text-[#4c1d95] tracking-tight leading-tight">
+              Campus <span className="text-[#6d28d9]">Announcements</span>
             </h2>
-            <p className="text-gray-500 mt-1.5 text-sm md:text-base max-w-xl leading-relaxed font-medium">
-              Official updates and alerts from around the campus.
+            <p className="text-slate-500 mt-2 text-sm md:text-lg max-w-xl leading-relaxed font-bold uppercase tracking-wide opacity-60">
+              Stay ahead with the latest live updates.
             </p>
           </header>
 
@@ -147,16 +147,16 @@ const AnnouncementList = () => {
               announcements.map((announcement: any) => (
                 <div 
                   key={announcement._id}
-                  className={`bg-white p-4 md:p-8 rounded-2xl md:rounded-[2.5rem] border ${announcement.pinned ? 'border-amber-200 shadow-amber-500/5' : 'border-gray-100'} group relative overflow-hidden shadow-sm`}
+                  className={`bg-white p-6 md:p-10 rounded-[2.5rem] border ${announcement.pinned ? 'border-purple-200 shadow-purple-500/5' : 'border-purple-50'} group relative overflow-hidden shadow-sm hover:shadow-xl hover:shadow-purple-500/5 hover:border-purple-200 transition-all duration-300`}
                 >
                   {announcement.pinned && (
-                     <div className="absolute top-6 right-8 flex items-center gap-1.5 text-amber-500 bg-amber-50 px-3 py-1 rounded-full border border-amber-100 z-20">
-                       <Pin className="w-3 h-3 fill-amber-500" />
+                     <div className="absolute top-8 right-10 flex items-center gap-1.5 text-[#6d28d9] bg-purple-50 px-3 py-1.5 rounded-full border border-purple-100 z-20">
+                       <Pin className="w-3.5 h-3.5 fill-[#6d28d9]" />
                        <span className="text-[10px] font-black uppercase tracking-widest">Pinned</span>
                      </div>
                   )}
                   
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full blur-[60px] translate-x-1/2 -translate-y-1/2"></div>
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/5 rounded-full blur-[80px] translate-x-1/2 -translate-y-1/2"></div>
                   
                   <div className="flex items-center justify-between mb-4 md:mb-6 relative z-10">
                     <div className="flex items-center gap-2.5 md:gap-3">
@@ -168,18 +168,18 @@ const AnnouncementList = () => {
                           />
                       </div>
                       <div className="transition-none">
-                        <h4 className="text-xs md:text-sm font-bold text-gray-800 tracking-tight">{announcement.posted_by?.name}</h4>
-                        <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">
+                        <h4 className="text-xs md:text-sm font-black text-slate-800 tracking-tight">{announcement.posted_by?.name}</h4>
+                        <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">
                           <Calendar className="w-2.5 h-2.5 md:w-3 md:h-3" />
-                          {new Date(announcement.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {new Date(announcement.createdAt).toLocaleDateString()}
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       {!announcement.pinned && (
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 md:py-1 bg-amber-50 rounded-full border border-amber-100">
-                          <Award className="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-500" />
-                          <span className="text-amber-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest">Verified</span>
+                        <div className="flex items-center gap-1.5 px-3 py-1 bg-purple-50 rounded-full border border-purple-100">
+                          <Award className="w-2.5 h-2.5 md:w-3 md:h-3 text-[#6d28d9]" />
+                          <span className="text-[#6d28d9] text-[9px] font-black uppercase tracking-widest">Verified</span>
                         </div>
                       )}
                       {(user?.role === 'admin' || user?._id === (announcement.posted_by?._id || announcement.posted_by) || user?.email === 'nharnahyhaw19@gmail.com') && (
@@ -195,8 +195,8 @@ const AnnouncementList = () => {
                   </div>
 
                   <div className="relative z-10">
-                      <h3 className="text-base md:text-2xl font-black text-gray-800 mb-2 md:mb-3 leading-tight uppercase tracking-tight">{announcement.title}</h3>
-                      <p className="text-gray-600 leading-relaxed text-xs md:text-[16px] mb-4 md:mb-6 font-medium whitespace-pre-wrap">{announcement.content}</p>
+                      <h3 className="text-lg md:text-3xl font-black text-[#4c1d95] mb-3 md:mb-5 leading-tight tracking-tight">{announcement.title}</h3>
+                      <p className="text-slate-600 leading-relaxed text-sm md:text-lg mb-6 md:mb-8 font-medium whitespace-pre-wrap">{announcement.content}</p>
                       
                       {announcement.image && (
                         <div className="mb-6 rounded-2xl md:rounded-[2rem] overflow-hidden border border-gray-100 aspect-video md:aspect-[21/9]">

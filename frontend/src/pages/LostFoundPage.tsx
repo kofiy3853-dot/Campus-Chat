@@ -128,18 +128,18 @@ const LostFoundPage: React.FC = () => {
             <div className="flex items-center gap-2.5">
               <button 
                 onClick={() => window.history.back()}
-                className="md:hidden p-1.5 -ml-1 text-gray-400 hover:text-sky-500 hover:bg-gray-50 rounded-xl transition-none"
+                className="md:hidden p-1.5 -ml-1 text-slate-400 hover:text-[#6d28d9] hover:bg-slate-50 rounded-xl transition-none"
                 aria-label="Back"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <h1 className="text-xl md:text-3xl font-black text-gray-800 tracking-tight">Lost & Found</h1>
+              <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight">Lost & Found</h1>
             </div>
             <button
               onClick={() => setIsComposeOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2 bg-sky-400 hover:bg-sky-500 text-white text-[10px] md:text-sm font-bold uppercase tracking-wider rounded-xl md:rounded-lg shadow-sm transition-none"
+              className="flex items-center gap-1.5 px-3 py-2 md:px-5 md:py-3 bg-[#6d28d9] hover:bg-[#5b21b6] text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl md:rounded-2xl shadow-lg shadow-purple-200 active:scale-95 transition-all"
             >
-              <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <Plus className="w-3.5 h-3.5 md:w-5 md:h-5" />
               <span className="hidden xs:inline">Post Item</span>
               <span className="xs:hidden">Post</span>
             </button>
@@ -147,13 +147,13 @@ const LostFoundPage: React.FC = () => {
 
           {/* Search Bar */}
           <div className="relative mb-4 md:mb-5 transition-none">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search items, locations..."
-              className="w-full pl-9 pr-4 py-2 md:py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-gray-800 text-xs md:text-sm placeholder-gray-400 focus:outline-none focus:border-sky-400/50 transition-none"
+              className="w-full pl-11 pr-4 py-3 md:py-4 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-slate-800 text-xs md:text-sm font-bold placeholder-slate-300 focus:outline-none focus:border-purple-200 focus:ring-8 focus:ring-purple-500/5 transition-all"
             />
           </div>
 
@@ -170,8 +170,8 @@ const LostFoundPage: React.FC = () => {
                 onClick={() => setStatus(status === 'lost' ? '' : 'lost')}
                 className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-none ${
                   status === 'lost'
-                    ? 'bg-red-50 text-red-500'
-                    : 'bg-gray-50 text-gray-400 hover:text-sky-500'
+                    ? 'bg-rose-50 text-rose-500 border border-rose-100'
+                    : 'bg-white text-slate-400 hover:text-[#6d28d9] border border-slate-100'
                 }`}
               >
                 🔍 Lost
@@ -181,8 +181,8 @@ const LostFoundPage: React.FC = () => {
                 onClick={() => setStatus(status === 'found' ? '' : 'found')}
                 className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-none ${
                   status === 'found'
-                    ? 'bg-green-50 text-green-500'
-                    : 'bg-gray-50 text-gray-400 hover:text-sky-500'
+                    ? 'bg-emerald-50 text-emerald-500 border border-emerald-100'
+                    : 'bg-white text-slate-400 hover:text-[#6d28d9] border border-slate-100'
                 }`}
               >
                 ✅ Found
@@ -193,7 +193,7 @@ const LostFoundPage: React.FC = () => {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 aria-label="Filter by category"
-                className="px-2.5 py-0.5 bg-gray-50 text-gray-400 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-gray-100 focus:outline-none focus:border-sky-400 transition-none"
+                className="px-3 py-1.5 bg-white text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100 focus:outline-none focus:border-purple-200 transition-all cursor-pointer"
               >
                 <option value="">All Categories</option>
                 <option value="electronics">Laptop/Phones</option>
@@ -218,7 +218,7 @@ const LostFoundPage: React.FC = () => {
             <p className="text-gray-400 text-lg mb-4">No items found</p>
             <button
               onClick={() => setIsComposeOpen(true)}
-              className="px-6 py-2 bg-sky-400 hover:bg-sky-500 text-white font-medium rounded-lg transition-none"
+              className="px-8 py-3 bg-[#6d28d9] hover:bg-[#5b21b6] text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg shadow-purple-200 active:scale-95 transition-all"
             >
               Post an Item
             </button>
@@ -240,9 +240,9 @@ const LostFoundPage: React.FC = () => {
                 <button
                   onClick={handleLoadMore}
                   disabled={loadingMore}
-                  className="px-6 py-2 bg-gray-50 hover:bg-gray-100 disabled:opacity-50 text-gray-500 font-medium rounded-lg transition-none"
+                  className="px-8 py-3 bg-white hover:bg-slate-50 disabled:opacity-50 text-slate-500 font-black uppercase tracking-widest text-[10px] rounded-2xl border border-slate-100 transition-all active:scale-95"
                 >
-                  {loadingMore ? 'Loading...' : 'Load More'}
+                  {loadingMore ? 'Loading Labs...' : 'Load More Results'}
                 </button>
               </div>
             )}

@@ -125,12 +125,12 @@ const ConfessionsPage: React.FC = () => {
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-purple-50 flex items-center justify-center border border-purple-100 shrink-0">
-              <Ghost className="w-4 h-4 md:w-5 md:h-5 text-purple-400" />
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-[#f5eeff] flex items-center justify-center border border-purple-100 shrink-0">
+              <Ghost className="w-4 h-4 md:w-5 md:h-5 text-[#6d28d9]" />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">Campus Confessions</h1>
-              <p className="text-[9px] md:text-[10px] text-gray-400 font-medium">Safe space for anonymous thoughts</p>
+              <h1 className="text-lg md:text-xl font-black text-[#4c1d95] tracking-tight">Campus Confessions</h1>
+              <p className="text-[9px] md:text-[10px] text-slate-400 font-medium uppercase tracking-widest">Safe space for anonymous thoughts</p>
             </div>
           </div>
         </div>
@@ -145,17 +145,17 @@ const ConfessionsPage: React.FC = () => {
 
         {/* Sort + Compose */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex bg-gray-50 border border-gray-100 rounded-xl md:rounded-2xl p-0.5 md:p-1 gap-0.5">
+          <div className="flex bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl p-0.5 md:p-1 gap-0.5">
             <button
               onClick={() => setSort('newest')}
-              className={`flex items-center gap-1 py-1.5 px-2.5 md:px-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-none ${sort === 'newest' ? 'bg-white text-sky-500 shadow-sm' : 'text-gray-400 hover:text-sky-500'}`}
+              className={`flex items-center gap-1 py-1.5 px-2.5 md:px-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-all ${sort === 'newest' ? 'bg-white text-[#6d28d9] shadow-sm' : 'text-slate-400 hover:text-[#6d28d9]'}`}
             >
               <Clock className="w-3 h-3" />
               Newest
             </button>
             <button
               onClick={() => setSort('top')}
-              className={`flex items-center gap-1 py-1.5 px-2.5 md:px-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-none ${sort === 'top' ? 'bg-white text-sky-500 shadow-sm' : 'text-gray-400 hover:text-sky-500'}`}
+              className={`flex items-center gap-1 py-1.5 px-2.5 md:px-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-all ${sort === 'top' ? 'bg-white text-[#6d28d9] shadow-sm' : 'text-slate-400 hover:text-[#6d28d9]'}`}
             >
               <TrendingUp className="w-3 h-3" />
               Top
@@ -164,7 +164,7 @@ const ConfessionsPage: React.FC = () => {
 
           <button
             onClick={() => setShowCompose(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white text-[10px] md:text-xs font-black uppercase tracking-wider rounded-xl shadow-sm transition-none"
+            className="flex items-center gap-1.5 px-3 py-2 bg-[#6d28d9] hover:bg-[#5b21b6] text-white text-[10px] md:text-xs font-black uppercase tracking-widest rounded-xl shadow-md shadow-purple-200/50 transition-all active:scale-95"
           >
             <PenLine className="w-3 h-3 md:w-3.5 md:h-3.5" />
             <span className="hidden xs:inline">Post Confession</span>

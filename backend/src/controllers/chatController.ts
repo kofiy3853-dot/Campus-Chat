@@ -8,6 +8,7 @@ import Notification from '../models/Notification';
 import { io } from '../server';
 import { createNotification } from './notificationController';
 import { logDetailedError } from '../utils/logger';
+import { getAIConversation, handleAIResponse, ensureAIUser } from '../services/aiChatService';
 
 export const getConversations = async (req: AuthRequest, res: Response) => {
   try {
@@ -62,9 +63,12 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
 };
 
 export const getMessages = async (req: AuthRequest, res: Response) => {
-  const { conversationId } = req.params;
+  let { conversationId } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
+  if (conversationId === 'ai') {
+    const aiConversation = await getAIConversation(req.user.id);
+    conversationId = (aiConversation._id as any).toString();
+  } else if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
     return res.status(400).json({ message: 'Invalid conversation ID format' });
   }
 
@@ -147,6 +151,15 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 
     conversation.last_message = message._id as any;
     conversation.last_message_time = new Date();
+
+    // TRIGGER AI RESPONSE IF RECIPIENT IS AI ASSISTANT
+    const aiUser = await ensureAIUser();
+    if (recipientId.toString() === aiUser._id.toString()) {
+      // Don't await, run in background
+      handleAIResponse(conversation._id.toString(), message_text, req.user.id).catch(err => {
+        console.error('[AI Chat] Error in handleAIResponse:', err);
+      });
+    }
     
     // Clear participants from hidden_for if they were there (so chat reappears)
     const senderIdStr = req.user._id.toString();
@@ -226,7 +239,12 @@ export const createConversation = async (req: AuthRequest, res: Response) => {
 };
 
 export const getConversationById = async (req: AuthRequest, res: Response) => {
-  const { conversationId } = req.params;
+  let { conversationId } = req.params;
+
+  if (conversationId === 'ai') {
+    const aiConversation = await getAIConversation(req.user.id);
+    return res.json(aiConversation);
+  }
 
   if (!mongoose.Types.ObjectId.isValid(conversationId as string)) {
     return res.status(400).json({ message: 'Invalid conversation ID format' });
@@ -500,10 +518,13 @@ export const getBlockedUsers = async (req: any, res: Response) => {
 
 // Mark messages as read
 export const markMessagesAsRead = async (req: AuthRequest, res: Response) => {
-  const { conversationId } = req.params;
+  let { conversationId } = req.params;
 
   try {
-    if (!mongoose.isValidObjectId(conversationId)) {
+    if (conversationId === 'ai') {
+      const aiConversation = await getAIConversation(req.user.id);
+      conversationId = (aiConversation._id as any).toString();
+    } else if (!mongoose.isValidObjectId(conversationId)) {
       console.error(`[ChatController] Invalid conversationId: ${conversationId}`);
       return res.status(400).json({ message: 'Invalid conversation ID' });
     }

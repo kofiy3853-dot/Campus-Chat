@@ -68,3 +68,17 @@ export const deleteAnnouncement = async (req: AuthRequest, res: Response) => {
   }
 };
 
+export const getLatestHero = async (req: Request, res: Response) => {
+  try {
+    const announcement = await Announcement.findOne({
+      priority: 'high',
+      is_auto_generated: true
+    })
+    .populate('posted_by', 'name profile_picture')
+    .sort({ createdAt: -1 });
+
+    res.json(announcement);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
