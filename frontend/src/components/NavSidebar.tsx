@@ -39,15 +39,7 @@ const NavSidebar: React.FC<NavSidebarProps> = ({ className }) => {
       "md:relative md:w-20 md:border-r md:border-t-0 md:flex-col md:py-6 md:h-full md:px-0 md:justify-start",
       className
     )}>
-      {/* Logo Section */}
-      <div className="flex flex-col items-center py-8 gap-8">
-        <Link 
-          to="/dashboard"
-          className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform duration-300 cursor-pointer"
-        >
-          <span className="text-2xl font-black text-indigo-600">C</span>
-        </Link>
-      </div>
+      {/* Logo Section removed as per user request */}
 
       {/* Nav Items */}
       <nav className="flex-1 flex flex-row md:flex-col items-center justify-around md:justify-start w-full px-2 md:px-0 gap-2 md:gap-6">
