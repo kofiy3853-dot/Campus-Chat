@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../types/express';
 import User from '../models/User';
 import mongoose from 'mongoose';
+import { createDailyAnnouncement } from '../services/announcementEngine';
 
 export const getAllUsers = async (req: AuthRequest, res: Response) => {
   try {
@@ -99,5 +100,28 @@ export const getStats = async (_req: AuthRequest, res: Response) => {
     res.json({ totalUsers, bannedUsers, adminUsers });
   } catch {
     res.status(500).json({ message: 'Failed to fetch stats' });
+  }
+};
+
+export const triggerAnnouncement = async (req: AuthRequest, res: Response) => {
+  try {
+    const { type = 'engagement' } = req.body;
+    
+    if (!['engagement', 'marketplace', 'social'].includes(type)) {
+      return res.status(400).json({ message: 'Invalid announcement type' });
+    }
+
+    const announcement = await createDailyAnnouncement(type as any);
+    
+    if (!announcement) {
+      return res.status(500).json({ message: 'Failed to generate announcement (AI providers might be down)' });
+    }
+
+    res.json({ 
+      message: `Manual ${type} announcement triggered successfully`,
+      announcement 
+    });
+  } catch (err: any) {
+    res.status(500).json({ message: 'Error triggering announcement', error: err.message });
   }
 };

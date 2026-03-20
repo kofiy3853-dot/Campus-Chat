@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import axios from 'axios';
 import Announcement from '../models/Announcement';
 import User from '../models/User';
-import { io } from '../server';
+import User from '../models/User';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -116,7 +116,19 @@ async function generateAIAnnouncement(type: 'engagement' | 'marketplace' | 'soci
     }
     
     if (rawContent) {
-      return JSON.parse(rawContent);
+      try {
+        return JSON.parse(rawContent);
+      } catch (parseError) {
+        console.error('[Announcement Engine] JSON Parse Error, using raw content as title:', parseError);
+        // If it's not JSON, try to use it as a title at least
+        return {
+           title: rawContent.substring(0, 50),
+           message: rawContent,
+           type: type,
+           priority: 'high',
+           cta: 'View'
+        };
+      }
     }
 
     // High-quality fallbacks
@@ -181,8 +193,10 @@ export async function createDailyAnnouncement(type: 'engagement' | 'marketplace'
     const populatedAnnouncement = await Announcement.findById(announcement._id)
       .populate('posted_by', 'name profile_picture');
 
-    // Real-time Distribution
+    // Real-time Distribution (Late import to avoid circular dependency)
+    const { io } = require('../server');
     if (io) {
+      console.log(`[Announcement Engine] Broadcasting new announcement: ${announcement._id}`);
       io.emit('new_announcement', populatedAnnouncement);
     }
 

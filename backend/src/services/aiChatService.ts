@@ -132,6 +132,7 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
     // 2. Fallback to Gemini
     if (process.env.GEMINI_API_KEY) {
         try {
+            console.log('[AI Service] Attempting Gemini fallback...');
             const chat = geminiModel.startChat({
                 history: history.map(m => ({
                     role: m.sender_id.toString() === AI_ASSISTANT_EMAIL ? "model" : "user",
@@ -141,10 +142,13 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
             const result = await chat.sendMessage(userMessage);
             const response = await result.response;
             return response.text();
-        } catch (err) {
-            console.error('[AI Service] Gemini Error:', err);
+        } catch (err: any) {
+            console.error('[AI Service] Gemini Error:', err.message);
         }
     }
+
+    // Final fallback if all else fails
+    console.warn('[AI Service] ALL AI providers failed. Check API keys and limits.');
 
     return "I'm currently having some trouble connecting to my brain. Please try again in a moment!";
 }
