@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import NavSidebar from '../components/NavSidebar';
 import ChatListPanel from '../components/ChatListPanel';
+import BrandedLoading from '../components/BrandedLoading';
 
 // Lazy load components and pages
 import ChatWindow from '../components/ChatWindow';
@@ -60,7 +61,7 @@ const Dashboard = () => {
         "flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-slate-900",
         (isListView && !isLanding && !isProfileOrNotifications && !isAnnouncements) ? 'hidden md:flex' : 'flex w-full'
       )}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<BrandedLoading />}>
           <Routes>
             <Route path="chat/:id" element={<ChatWindow />} />
             <Route path="groups/:id" element={<GroupWindow />} />

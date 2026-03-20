@@ -16,6 +16,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { App as CapApp } from '@capacitor/app';
 import { preWarmServer } from './services/api';
+import BrandedLoading from './components/BrandedLoading';
 import './App.css';
 
 function App() {
@@ -57,7 +58,7 @@ function App() {
                 <ChatProvider>
                   <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-primary-500/30">
                     <OfflineBanner />
-                    <Suspense fallback={null}>
+                    <Suspense fallback={<BrandedLoading />}>
                       <Routes>
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />

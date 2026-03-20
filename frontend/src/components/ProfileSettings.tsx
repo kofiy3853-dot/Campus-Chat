@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { 
   User, 
@@ -26,18 +26,40 @@ const ProfileSettings = () => {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Mock data for the dashboard (as per mockup)
-  const stats = [
-    { label: 'CREDITS', value: '92', icon: BookOpen },
-    { label: 'CLUBS', value: '4', icon: Users },
-    { label: 'PERCENTILE', value: 'Rank 12', icon: Trophy },
-  ];
+  const [stats, setStats] = useState({
+    credits: '-',
+    clubs: '-',
+    rank: '-'
+  });
+  const settingsRef = useRef<HTMLDivElement>(null);
 
-  const courses = [
-    { name: 'Advanced UI Algorithms', grade: 'A+', color: 'bg-green-50 text-green-600' },
-    { name: 'Systems Architecture', grade: 'B', color: 'bg-purple-50 text-purple-600' },
-    { name: 'Human-Computer Interaction', grade: 'A', color: 'bg-green-50 text-green-600' },
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch Clubs
+        const { data: myClubs } = await api.get('/api/clubs/my-clubs');
+        
+        // Fetch Leaderboard for points and rank
+        const { data: lbData } = await api.get('/api/leaderboard');
+        const myLBEntry = lbData.allTime?.find((e: any) => (e.user?._id || e.user) === user?._id);
+        const myRank = lbData.allTime?.findIndex((e: any) => (e.user?._id || e.user) === user?._id);
+
+        setStats({
+          credits: myLBEntry?.totalPoints?.toString() || '0',
+          clubs: myClubs.length.toString(),
+          rank: myRank !== -1 ? `Rank ${myRank + 1}` : 'N/A'
+        });
+      } catch (err) {
+        console.error('Failed to fetch profile stats:', err);
+      }
+    };
+
+    if (user) fetchStats();
+  }, [user]);
+
+  const scrollToSettings = () => {
+    settingsRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -77,6 +99,7 @@ const ProfileSettings = () => {
         </button>
         <h1 className="text-xl font-bold text-[#44337a]">Profile</h1>
         <button 
+          onClick={scrollToSettings}
           className="p-2 text-slate-800 hover:bg-purple-50 rounded-xl transition-colors"
           title="Settings"
           aria-label="Settings"
@@ -130,24 +153,29 @@ const ProfileSettings = () => {
           <div className="mt-4 flex items-center gap-4 text-slate-400 text-sm font-semibold">
             <span className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-[#8444e2]" />
-              Paris Campus
+              Campus Network
             </span>
             <span className="text-slate-200">•</span>
             <span className="flex items-center gap-1.5">
               <GraduationCap className="w-4 h-4 text-[#8444e2]" />
-              Class of 2025
+              Level {user?.level || '100'}
             </span>
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
-          {stats.map((stat, i) => (
-            <div key={i} className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default">
-              <span className="text-2xl font-black text-[#8444e2] mb-1">{stat.value}</span>
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</span>
-            </div>
-          ))}
+          <div className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default">
+            <span className="text-2xl font-black text-[#8444e2] mb-1">{stats.credits}</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-wrap">POINTS & CREDITS</span>
+          </div>
+          <div className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default">
+            <span className="text-2xl font-black text-[#8444e2] mb-1">{stats.clubs}</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-wrap">CLUBS JOINED</span>
+          </div>
+          <div className="bg-white p-5 rounded-[2rem] border border-purple-50/50 shadow-sm flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-transform cursor-default col-span-2">
+            <span className="text-2xl font-black text-[#8444e2] mb-1">{stats.rank}</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-wrap">CAMPUS RANKING</span>
+          </div>
         </div>
 
         {/* Academic Progress */}
@@ -167,15 +195,10 @@ const ProfileSettings = () => {
             </div>
 
             <div className="mt-8 space-y-3">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Current Semester</span>
-              {courses.map((course, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-purple-50/50 shadow-sm">
-                  <span className="text-sm font-bold text-[#44337a]">{course.name}</span>
-                  <span className={clsx("px-3 py-1 rounded-lg text-xs font-black", course.color)}>
-                    {course.grade}
-                  </span>
-                </div>
-              ))}
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Current Enrollment</span>
+              <div className="p-4 bg-white rounded-2xl border border-purple-50/50 shadow-sm">
+                <span className="text-sm font-bold text-[#44337a] uppercase tracking-tight">{user?.department || 'General Studies'}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -192,24 +215,24 @@ const ProfileSettings = () => {
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12 blur-xl" />
 
-            <div className="relative flex justify-between items-start mb-8">
+            <div className="relative flex justify-between items-start mb-8 transition-none">
               <div>
                 <p className="text-[10px] font-black text-purple-100 uppercase tracking-widest opacity-80">Student ID Number</p>
-                <p className="text-2xl font-black mt-1">VC-2022-8941</p>
+                <p className="text-2xl font-black mt-1 uppercase tracking-tighter">{user?.student_id || 'VC-XXXX-XXXX'}</p>
               </div>
               <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
                 <CreditCard className="w-6 h-6" />
               </div>
             </div>
 
-            <div className="relative grid grid-cols-2 gap-4 mt-auto">
+            <div className="relative grid grid-cols-2 gap-4 mt-auto transition-none">
               <div>
                 <p className="text-[10px] font-black text-purple-100 uppercase tracking-widest opacity-80">Year of Study</p>
-                <p className="text-sm font-bold mt-1">3rd Year (Junior)</p>
+                <p className="text-sm font-bold mt-1">Level {user?.level || '100'}</p>
               </div>
               <div>
                 <p className="text-[10px] font-black text-purple-100 uppercase tracking-widest opacity-80">Validation</p>
-                <p className="text-sm font-bold mt-1">Expires Aug 2025</p>
+                <p className="text-sm font-bold mt-1">Active Account</p>
               </div>
             </div>
             
@@ -219,7 +242,7 @@ const ProfileSettings = () => {
         </div>
 
         {/* Account & Settings */}
-        <div className="space-y-4 pt-4">
+        <div ref={settingsRef} className="space-y-4 pt-4">
           <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Account & Settings</h3>
           
           <div className="bg-white rounded-[2.5rem] overflow-hidden border border-purple-50/50 shadow-sm">

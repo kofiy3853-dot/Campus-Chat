@@ -13,7 +13,16 @@ export default defineConfig({
   },
   build: {
     target: 'es2015',
-    cssTarget: 'safari12', // Specifically target older Safari CSS
+    cssTarget: 'safari12',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-utils': ['axios', 'clsx', 'lucide-react'],
+          'vendor-ui': ['framer-motion', 'react-hot-toast'],
+        },
+      },
+    },
   },
   server: {
     host: true,

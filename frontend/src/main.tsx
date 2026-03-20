@@ -35,7 +35,6 @@ const handleChunkError = (error: any) => {
 window.addEventListener('error', (event) => handleChunkError(event), true);
 window.addEventListener('unhandledrejection', (event) => handleChunkError(event));
 
-/*
 // Register Service Workers
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -60,4 +59,3 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
-*/
