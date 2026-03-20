@@ -9,7 +9,10 @@ import {
   MessageSquare,
   Megaphone,
   ChevronRight,
-  Plus
+  Plus,
+  Briefcase,
+  Trophy,
+  Award
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
@@ -91,6 +94,36 @@ const ExplorerPage: React.FC = () => {
       iconBg: 'bg-indigo-50',
       to: '/dashboard/confessions',
       hasBorder: true // Representing the purple vertical bar in mockup
+    },
+    { 
+      id: 'internships',
+      title: 'Internships', 
+      desc: 'Career opportunities', 
+      icon: Briefcase, 
+      color: 'text-orange-500', 
+      bgColor: 'bg-white',
+      iconBg: 'bg-orange-50',
+      to: '/dashboard/internships'
+    },
+    { 
+      id: 'clubs',
+      title: 'Clubs', 
+      desc: 'Join communities', 
+      icon: Users2, 
+      color: 'text-rose-500', 
+      bgColor: 'bg-white',
+      iconBg: 'bg-rose-50',
+      to: '/dashboard/clubs'
+    },
+    { 
+      id: 'leaderboard',
+      title: 'Leaderboard', 
+      desc: 'Top contributors', 
+      icon: Trophy, 
+      color: 'text-amber-500', 
+      bgColor: 'bg-white',
+      iconBg: 'bg-amber-50',
+      to: '/dashboard/leaderboard'
     }
   ];
 
