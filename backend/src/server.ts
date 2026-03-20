@@ -1,3 +1,4 @@
+require('newrelic');
 import * as Sentry from "@sentry/node";
 import dotenv from 'dotenv';
 import dns from 'dns';

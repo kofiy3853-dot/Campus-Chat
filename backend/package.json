@@ -38,6 +38,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^9.3.0",
     "multer": "^1.4.5-lts.1",
+    "newrelic": "^13.17.0",
     "node-cron": "^4.2.1",
     "redis": "^5.11.0",
     "socket.io": "^4.8.1"
