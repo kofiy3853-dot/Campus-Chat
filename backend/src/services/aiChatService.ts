@@ -137,7 +137,6 @@ async function fetchAIResponse(userMessage: string, history: any[], aiUserId: st
         try {
             console.log('[AI Service] Attempting Gemini fallback...');
             
-            // Gemini requires strictly alternating roles (user, model, user, model...)
             const normalizedHistory: any[] = [];
             let lastRole = '';
             
@@ -150,6 +149,12 @@ async function fetchAIResponse(userMessage: string, history: any[], aiUserId: st
                     });
                     lastRole = role;
                 }
+            }
+
+            // Gemini strictly requires the first message in history to be from "user".
+            // If the first message is the AI's greeting ("model"), we must remove it.
+            if (normalizedHistory.length > 0 && normalizedHistory[0].role === 'model') {
+                normalizedHistory.shift();
             }
 
             // History must end with "model" before sending a new "user" message
