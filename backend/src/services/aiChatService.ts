@@ -78,7 +78,10 @@ export async function getAIConversation(userId: string) {
   return conversation;
 }
 
-async function fetchAIResponse(userMessage: string, history: any[]) {
+async function fetchAIResponse(userMessage: string, history: any[], aiUserId: string) {
+    // Helper: compare sender_id (ObjectId) to the AI user's real _id
+    const isAISender = (m: any) => m.sender_id.toString() === aiUserId;
+
     // 1. Try OpenAI (Primary)
     if (process.env.OPENAI_API_KEY) {
         try {
@@ -87,7 +90,7 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
                 messages: [
                     { role: "system", content: AI_SYSTEM_PROMPT },
                     ...history.map(m => ({ 
-                        role: m.sender_id.toString() === AI_ASSISTANT_EMAIL ? "assistant" : "user", 
+                        role: isAISender(m) ? "assistant" : "user", 
                         content: m.message_text 
                     })),
                     { role: "user", content: userMessage }
@@ -99,8 +102,8 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
                 }
             });
             return response.data.choices[0].message.content;
-        } catch (err) {
-            console.error('[AI Service] OpenAI Error:', err);
+        } catch (err: any) {
+            console.error('[AI Service] OpenAI Error:', err?.response?.data || err?.message);
         }
     }
 
@@ -112,7 +115,7 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
                 messages: [
                     { role: "system", content: AI_SYSTEM_PROMPT },
                     ...history.map(m => ({ 
-                        role: m.sender_id.toString() === AI_ASSISTANT_EMAIL ? "assistant" : "user", 
+                        role: isAISender(m) ? "assistant" : "user", 
                         content: m.message_text 
                     })),
                     { role: "user", content: userMessage }
@@ -124,8 +127,8 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
                 }
             });
             return response.data.choices[0].message.content;
-        } catch (err) {
-            console.error('[AI Service] DeepSeek Error:', err);
+        } catch (err: any) {
+            console.error('[AI Service] DeepSeek Error:', err?.response?.data || err?.message);
         }
     }
 
@@ -134,13 +137,12 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
         try {
             console.log('[AI Service] Attempting Gemini fallback...');
             
-            // Gemini requires alternating roles (user, model, user, model)
-            // We'll filter the history to ensure this.
+            // Gemini requires strictly alternating roles (user, model, user, model...)
             const normalizedHistory: any[] = [];
             let lastRole = '';
             
             for (const m of history) {
-                const role = m.sender_id.toString() === AI_ASSISTANT_EMAIL ? "model" : "user";
+                const role = isAISender(m) ? "model" : "user";
                 if (role !== lastRole) {
                     normalizedHistory.push({
                         role: role,
@@ -150,28 +152,23 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
                 }
             }
 
-            // Ensure the last message in history is from a DIFFERENT role than the new user message
-            // Since User message is always "user", history must end with "model" or be empty.
+            // History must end with "model" before sending a new "user" message
             if (normalizedHistory.length > 0 && normalizedHistory[normalizedHistory.length - 1].role === 'user') {
                 normalizedHistory.pop();
             }
 
-            const chat = geminiModel.startChat({
-                history: normalizedHistory
-            });
-
+            const chat = geminiModel.startChat({ history: normalizedHistory });
             const result = await chat.sendMessage(userMessage);
             const response = await result.response;
             return response.text();
         } catch (err: any) {
-            console.error('[AI Service] Gemini Error Detail:', err);
-            if (err.response) console.error('[AI Service] Gemini Response Data:', err.response.data);
+            console.error('[AI Service] Gemini Error:', err?.message);
+            if (err?.response) console.error('[AI Service] Gemini Response Data:', err.response.data);
         }
     }
 
-    // Final fallback if all else fails
+    // Final fallback
     console.warn('[AI Service] ALL AI providers failed. Check API keys and limits.');
-
     return "I'm currently having some trouble connecting to my brain. Please try again in a moment!";
 }
 
@@ -189,7 +186,7 @@ export async function handleAIResponse(conversationId: string, userMessage: stri
     
     console.log(`[AI Chat] Fetched ${history.length} messages for context`);
     
-    const aiText = await fetchAIResponse(userMessage, history.reverse());
+    const aiText = await fetchAIResponse(userMessage, history.reverse(), aiUser._id.toString());
     console.log(`[AI Chat] AI generated response: ${aiText.substring(0, 50)}...`);
 
     const message = await Message.create({
