@@ -5,6 +5,7 @@ export interface IConversation extends Document {
   last_message?: mongoose.Types.ObjectId;
   last_message_time: Date;
   hidden_for?: mongoose.Types.ObjectId[];
+  cleared_history?: { userId: mongoose.Types.ObjectId; clearedAt: Date }[];
 }
 
 const ConversationSchema: Schema = new Schema({
@@ -12,6 +13,10 @@ const ConversationSchema: Schema = new Schema({
   last_message: { type: Schema.Types.ObjectId, ref: 'Message' },
   last_message_time: { type: Date, default: Date.now },
   hidden_for: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  cleared_history: [{
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    clearedAt: { type: Date, default: Date.now }
+  }]
 }, { timestamps: true });
 
 export default mongoose.model<IConversation>('Conversation', ConversationSchema);

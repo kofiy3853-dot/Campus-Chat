@@ -184,8 +184,21 @@ export async function handleAIResponse(conversationId: string, userMessage: stri
     console.log(`[AI Chat] Handling AI response for conversation: ${conversationId}`);
     const aiUser = await ensureAIUser();
     
+    // Fetch conversation to check cleared_history
+    const conversation = await Conversation.findById(conversationId);
+    let filterQuery: any = { conversation_id: conversationId };
+    
+    if (conversation) {
+        const clearRecord = (conversation as any).cleared_history?.find(
+            (h: any) => h.userId.toString() === userId.toString()
+        );
+        if (clearRecord && clearRecord.clearedAt) {
+            filterQuery.timestamp = { $gte: clearRecord.clearedAt };
+        }
+    }
+
     // Fetch recent history
-    const history = await Message.find({ conversation_id: conversationId })
+    const history = await Message.find(filterQuery)
         .sort({ timestamp: -1 })
         .limit(10);
     

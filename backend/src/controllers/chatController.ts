@@ -49,6 +49,18 @@ export const getConversations = async (req: AuthRequest, res: Response) => {
         (u) => String(u._id) === String(convObj._id)
       );
       
+      // If the user cleared this conversation after the last message was sent, hide the last_message
+      const clearRecord = (convObj as any).cleared_history?.find(
+        (h: any) => h.userId.toString() === userId.toString()
+      );
+      if (clearRecord && clearRecord.clearedAt && convObj.last_message) {
+        const lastMsgTime = new Date((convObj.last_message as any).timestamp).getTime();
+        const clearTime = new Date(clearRecord.clearedAt).getTime();
+        if (lastMsgTime < clearTime) {
+          convObj.last_message = undefined as any;
+        }
+      }
+      
       return {
         ...convObj,
         unread_count: unreadMatch ? unreadMatch.unread_count : 0
@@ -87,9 +99,17 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const skip = (page - 1) * limit;
 
-    const messages = await Message.find({ 
-      conversation_id: conversationId,
-    })
+    // Check if the user has cleared history for this conversation
+    let filterQuery: any = { conversation_id: conversationId };
+    const clearRecord = conversation.cleared_history?.find(
+      h => h.userId.toString() === req.user.id.toString()
+    );
+
+    if (clearRecord && clearRecord.clearedAt) {
+      filterQuery.timestamp = { $gte: clearRecord.clearedAt };
+    }
+
+    const messages = await Message.find(filterQuery)
       .populate('sender_id', 'name profile_picture')
       .populate({
         path: 'reply_to',
@@ -297,6 +317,13 @@ export const searchMessages = async (req: AuthRequest, res: Response) => {
       conversation_id: conversationId,
     };
 
+    const clearRecord = conversation.cleared_history?.find(
+      h => h.userId.toString() === req.user.id.toString()
+    );
+    if (clearRecord && clearRecord.clearedAt) {
+      searchFilter.timestamp = { $gte: clearRecord.clearedAt };
+    }
+
     if (query) {
       searchFilter.message_text = { $regex: query, $options: 'i' };
     }
@@ -403,12 +430,47 @@ export const deleteConversation = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'You are not a participant in this conversation' });
     }
 
-    // Add user to hidden_for if not already there
+    // 1. Hide the conversation from the chat list
     if (!conversation.hidden_for?.some(id => id.toString() === userId.toString())) {
       if (!conversation.hidden_for) conversation.hidden_for = [];
       conversation.hidden_for.push(userId);
-      await conversation.save();
     }
+
+    // 2. Clear history timeline: any message before NOW is hidden for this user
+    if (!conversation.cleared_history) {
+      conversation.cleared_history = [];
+    }
+    const existingClearIndex = conversation.cleared_history.findIndex(
+      h => h.userId.toString() === userId.toString()
+    );
+    
+    if (existingClearIndex >= 0) {
+      conversation.cleared_history[existingClearIndex].clearedAt = new Date();
+    } else {
+      conversation.cleared_history.push({ userId, clearedAt: new Date() } as any);
+    }
+
+    // 3. Mark existing messages as read to avoid phantom unread badges
+    await Message.updateMany(
+      {
+        conversation_id: conversation._id,
+        $or: [{ receiver: userId }, { recipient_id: userId }],
+        read: false
+      },
+      { read: true, delivery_status: 'read' }
+    );
+
+    // Also clear notifications for this conversation
+    await Notification.updateMany(
+      {
+        user_id: userId,
+        'data.conversation_id': conversationId.toString(),
+        read: false,
+      },
+      { read: true }
+    );
+
+    await conversation.save();
 
     res.json({ success: true, message: 'Conversation deleted successfully' });
   } catch (error: any) {
