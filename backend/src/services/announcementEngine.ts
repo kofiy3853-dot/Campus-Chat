@@ -3,7 +3,6 @@ import cron from 'node-cron';
 import axios from 'axios';
 import Announcement from '../models/Announcement';
 import User from '../models/User';
-import User from '../models/User';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });

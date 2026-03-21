@@ -1,1 +1,0 @@
-src/controllers/marketplaceController.ts(28,24): error TS2488: Type '{ [fieldname: string]: File[]; } | File[]' must have a '[Symbol.iterator]()' method that returns an iterator.

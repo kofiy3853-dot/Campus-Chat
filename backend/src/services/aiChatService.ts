@@ -129,21 +129,43 @@ async function fetchAIResponse(userMessage: string, history: any[]) {
         }
     }
 
-    // 2. Fallback to Gemini
+    // 3. Fallback to Gemini
     if (process.env.GEMINI_API_KEY) {
         try {
             console.log('[AI Service] Attempting Gemini fallback...');
+            
+            // Gemini requires alternating roles (user, model, user, model)
+            // We'll filter the history to ensure this.
+            const normalizedHistory: any[] = [];
+            let lastRole = '';
+            
+            for (const m of history) {
+                const role = m.sender_id.toString() === AI_ASSISTANT_EMAIL ? "model" : "user";
+                if (role !== lastRole) {
+                    normalizedHistory.push({
+                        role: role,
+                        parts: [{ text: m.message_text }]
+                    });
+                    lastRole = role;
+                }
+            }
+
+            // Ensure the last message in history is from a DIFFERENT role than the new user message
+            // Since User message is always "user", history must end with "model" or be empty.
+            if (normalizedHistory.length > 0 && normalizedHistory[normalizedHistory.length - 1].role === 'user') {
+                normalizedHistory.pop();
+            }
+
             const chat = geminiModel.startChat({
-                history: history.map(m => ({
-                    role: m.sender_id.toString() === AI_ASSISTANT_EMAIL ? "model" : "user",
-                    parts: [{ text: m.message_text }]
-                }))
+                history: normalizedHistory
             });
+
             const result = await chat.sendMessage(userMessage);
             const response = await result.response;
             return response.text();
         } catch (err: any) {
-            console.error('[AI Service] Gemini Error:', err.message);
+            console.error('[AI Service] Gemini Error Detail:', err);
+            if (err.response) console.error('[AI Service] Gemini Response Data:', err.response.data);
         }
     }
 

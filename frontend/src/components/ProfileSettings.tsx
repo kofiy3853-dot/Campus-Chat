@@ -289,16 +289,6 @@ const ProfileSettings = () => {
             
             <div className="h-px bg-purple-50 mx-5" />
 
-            <button 
-              onClick={() => { throw new Error("Sentry Frontend Test Error"); }}
-              className="w-full flex items-center gap-4 p-5 hover:bg-purple-50 transition-colors group"
-            >
-              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-slate-400 group-hover:text-white transition-colors">
-                <Settings className="w-5 h-5" />
-              </div>
-              <span className="flex-1 text-left font-bold text-slate-400 italic">Debug: Trigger Sentry Error</span>
-              <ChevronRight className="w-5 h-5 text-slate-200" />
-            </button>
           </div>
         </div>
       </div>

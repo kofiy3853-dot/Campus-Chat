@@ -7,13 +7,13 @@ import BrandedLoading from '../components/BrandedLoading';
 // Lazy load components and pages
 import ChatWindow from '../components/ChatWindow';
 import GroupWindow from '../components/GroupWindow';
-const AnnouncementList = lazy(() => import('../components/AnnouncementList'));
-const ProfileSettings = lazy(() => import('../components/ProfileSettings'));
+import AnnouncementList from '../components/AnnouncementList';
+import ProfileSettings from '../components/ProfileSettings';
+import LandingDashboard from '../components/LandingDashboard';
+import EventsPage from '../pages/EventsPage';
+import PollsPage from '../pages/PollsPage';
+import LostFoundPage from '../pages/LostFoundPage';
 const ConfessionsPage = lazy(() => import('../pages/ConfessionsPage'));
-const EventsPage = lazy(() => import('../pages/EventsPage'));
-const PollsPage = lazy(() => import('../pages/PollsPage'));
-const LostFoundPage = lazy(() => import('../pages/LostFoundPage'));
-const LandingDashboard = lazy(() => import('../components/LandingDashboard'));
 const NotificationsPage = lazy(() => import('../pages/NotificationsPage'));
 const DiscoverPage = lazy(() => import('../pages/DiscoverPage'));
 const MarketplacePage = lazy(() => import('../pages/MarketplacePage'));
@@ -61,7 +61,12 @@ const Dashboard = () => {
         "flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-slate-900",
         (isListView && !isLanding && !isProfileOrNotifications && !isAnnouncements) ? 'hidden md:flex' : 'flex w-full'
       )}>
-        <Suspense fallback={<BrandedLoading />}>
+        <Suspense fallback={
+          <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-900 animate-pulse">
+            <div className="w-8 h-8 border-4 border-purple-600/20 border-t-purple-600 rounded-full animate-spin mb-4" />
+            <p className="text-xs font-black text-slate-300 uppercase tracking-[0.2em]">Updating Campus...</p>
+          </div>
+        }>
           <Routes>
             <Route path="chat/:id" element={<ChatWindow />} />
             <Route path="groups/:id" element={<GroupWindow />} />

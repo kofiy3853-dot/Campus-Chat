@@ -1,6 +1,0 @@
-﻿src/controllers/pollController.ts(128,57): error TS2304: Cannot find name 'Types'.
-src/controllers/pollController.ts(184,61): error TS2304: Cannot find name 'Types'.
-src/controllers/pollController.ts(191,17): error TS2304: Cannot find name 'Types'.
-src/controllers/pollController.ts(235,57): error TS2304: Cannot find name 'Types'.
-src/controllers/pollController.ts(271,65): error TS2304: Cannot find name 'Types'.
-src/controllers/pollController.ts(277,17): error TS2304: Cannot find name 'Types'.
