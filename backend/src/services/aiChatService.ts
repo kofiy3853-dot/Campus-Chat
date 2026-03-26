@@ -3,6 +3,8 @@ import Conversation from '../models/Conversation';
 import Message from '../models/Message';
 import mongoose from 'mongoose';
 import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 // import { io } from '../server'; // Removed to avoid circular dependency
 
@@ -79,27 +81,109 @@ export async function getAIConversation(userId: string) {
 }
 
 async function fetchAIResponse(userMessage: string, history: any[], aiUserId: string) {
+    console.log(`[AI Service] fetchAIResponse called for userMessage: "${userMessage.substring(0, 20)}..."`);
     // Helper: compare sender_id (ObjectId) to the AI user's real _id
     const isAISender = (m: any) => m.sender_id.toString() === aiUserId;
 
-    // 1. Try OpenAI (Primary)
+    // 1. Try OpenRouter (User Requested) - Primary
+    if (process.env.OPENROUTER_API_KEY) {
+        try {
+            console.log('[AI Service] Attempting OpenRouter...');
+            
+            // Normalize history: Filter out errors and ensure role alternation
+            const messages: any[] = [{ role: "system", content: AI_SYSTEM_PROMPT }];
+            let lastRole: string | null = "system";
+
+            for (const m of history) {
+                // Skip error messages from history
+                if (m.message_text.includes("trouble connecting to my brain")) continue;
+
+                const role = isAISender(m) ? "assistant" : "user";
+                if (role !== lastRole) {
+                    messages.push({ role, content: m.message_text });
+                    lastRole = role;
+                } else {
+                    // Merge same-role messages
+                    messages[messages.length - 1].content += "\n" + m.message_text;
+                }
+            }
+
+            // Finally add user message
+            if (lastRole === "user") {
+                messages[messages.length - 1].content += "\n" + userMessage;
+            } else {
+                messages.push({ role: "user", content: userMessage });
+            }
+
+            const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
+                model: "google/gemini-2.0-flash-exp:free", // High speed, low latency
+                messages,
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': 'https://campus-chat.com',
+                    'X-Title': 'Campus Chat Assistant'
+                },
+                timeout: 10000 // 10 second timeout
+            });
+            
+            if (response.data?.choices?.[0]?.message?.content) {
+                return response.data.choices[0].message.content;
+            }
+        } catch (err: any) {
+            const errorDetails = {
+                message: err.message,
+                data: err.response?.data,
+                status: err.response?.status
+            };
+            console.error('[AI Service] OpenRouter Error DETAILS:', errorDetails);
+            
+            // Log to dedicated file for persistent debugging
+            const logPath = path.resolve(__dirname, '../../error_diagnostics.log');
+            fs.appendFileSync(logPath, `[${new Date().toISOString()}] [AI_OPENROUTER_ERROR] ${JSON.stringify(errorDetails)}\n`);
+        }
+    }
+
+    // 2. Try OpenAI (Secondary)
     if (process.env.OPENAI_API_KEY) {
         try {
+            console.log('[AI Service] Falling back to OpenAI...');
+            
+            // Normalize history: Filter out errors and ensure role alternation
+            const messages: any[] = [{ role: "system", content: AI_SYSTEM_PROMPT }];
+            let lastRole: string | null = "system";
+
+            for (const m of history) {
+                // Skip error messages from history
+                if (m.message_text.includes("trouble connecting to my brain")) continue;
+
+                const role = isAISender(m) ? "assistant" : "user";
+                if (role !== lastRole) {
+                    messages.push({ role, content: m.message_text });
+                    lastRole = role;
+                } else {
+                    // Merge same-role messages
+                    messages[messages.length - 1].content += "\n" + m.message_text;
+                }
+            }
+
+            // Finally add user message
+            if (lastRole === "user") {
+                messages[messages.length - 1].content += "\n" + userMessage;
+            } else {
+                messages.push({ role: "user", content: userMessage });
+            }
+
             const response = await axios.post('https://api.openai.com/v1/chat/completions', {
                 model: "gpt-4o-mini",
-                messages: [
-                    { role: "system", content: AI_SYSTEM_PROMPT },
-                    ...history.map(m => ({ 
-                        role: isAISender(m) ? "assistant" : "user", 
-                        content: m.message_text 
-                    })),
-                    { role: "user", content: userMessage }
-                ]
+                messages,
             }, {
                 headers: {
                     'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                timeout: 10000
             });
             return response.data.choices[0].message.content;
         } catch (err: any) {
@@ -107,24 +191,45 @@ async function fetchAIResponse(userMessage: string, history: any[], aiUserId: st
         }
     }
 
-    // 2. Try DeepSeek (Secondary)
+    // 3. Try DeepSeek (Tertiary)
     if (process.env.DEEPSEEK_API_KEY) {
         try {
+            console.log('[AI Service] Falling back to DeepSeek...');
+            
+            // Normalize history: Filter out errors and ensure role alternation
+            const messages: any[] = [{ role: "system", content: AI_SYSTEM_PROMPT }];
+            let lastRole: string | null = "system";
+
+            for (const m of history) {
+                // Skip error messages from history
+                if (m.message_text.includes("trouble connecting to my brain")) continue;
+
+                const role = isAISender(m) ? "assistant" : "user";
+                if (role !== lastRole) {
+                    messages.push({ role, content: m.message_text });
+                    lastRole = role;
+                } else {
+                    // Merge same-role messages
+                    messages[messages.length - 1].content += "\n" + m.message_text;
+                }
+            }
+
+            // Finally add user message
+            if (lastRole === "user") {
+                messages[messages.length - 1].content += "\n" + userMessage;
+            } else {
+                messages.push({ role: "user", content: userMessage });
+            }
+
             const response = await axios.post('https://api.deepseek.com/chat/completions', {
                 model: "deepseek-chat",
-                messages: [
-                    { role: "system", content: AI_SYSTEM_PROMPT },
-                    ...history.map(m => ({ 
-                        role: isAISender(m) ? "assistant" : "user", 
-                        content: m.message_text 
-                    })),
-                    { role: "user", content: userMessage }
-                ]
+                messages,
             }, {
                 headers: {
                     'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                timeout: 10000
             });
             return response.data.choices[0].message.content;
         } catch (err: any) {

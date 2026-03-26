@@ -30,6 +30,33 @@ Constraints:
 }
 `;
 
+async function generateWithOpenRouter(type: string) {
+  if (!process.env.OPENROUTER_API_KEY) return null;
+  
+  try {
+    const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
+      model: "google/gemini-2.0-flash-exp:free",
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: `Generate a ${type} announcement.` }
+      ],
+      response_format: { type: "json_object" }
+    }, {
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://campus-chat.com',
+        'X-Title': 'Campus Chat Announcement Engine'
+      },
+      timeout: 10000
+    });
+    return response.data.choices[0].message.content;
+  } catch (err) {
+    console.error('[Announcement Engine] OpenRouter Error:', err);
+    return null;
+  }
+}
+
 async function generateWithOpenAI(type: string) {
   if (!process.env.OPENAI_API_KEY) return null;
   
@@ -45,7 +72,8 @@ async function generateWithOpenAI(type: string) {
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 10000
     });
     return response.data.choices[0].message.content;
   } catch (err) {
@@ -69,7 +97,8 @@ async function generateWithDeepSeek(type: string) {
       headers: {
         'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 10000
     });
 
     return response.data.choices[0].message.content;
@@ -99,16 +128,22 @@ async function generateAIAnnouncement(type: 'engagement' | 'marketplace' | 'soci
   
     let rawContent: string | null = null;
   
-    // 1. Try OpenAI (Primary)
-    rawContent = await generateWithOpenAI(type);
+    // 1. Try OpenRouter (User Requested - Primary)
+    rawContent = await generateWithOpenRouter(type);
 
-    // 2. Try DeepSeek (Secondary)
+    // 2. Try OpenAI (Secondary)
+    if (!rawContent) {
+      console.log(`[Announcement Engine] OpenRouter unavailable, falling back to OpenAI...`);
+      rawContent = await generateWithOpenAI(type);
+    }
+
+    // 3. Try DeepSeek (Tertiary)
     if (!rawContent) {
       console.log(`[Announcement Engine] OpenAI unavailable, falling back to DeepSeek...`);
       rawContent = await generateWithDeepSeek(type);
     }
 
-    // 3. Try Gemini (Fallback)
+    // 4. Try Gemini (Fallback)
     if (!rawContent) {
       console.log(`[Announcement Engine] DeepSeek unavailable, falling back to Gemini...`);
       rawContent = await generateWithGemini(type);

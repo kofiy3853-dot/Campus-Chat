@@ -237,7 +237,9 @@ const ChatWindow = () => {
         return;
       }
 
-      const otherParticipant = conversation.participants.find((p: any) => p._id !== user?._id);
+      if (!conversation) return; // Prevent crash if conversation is null
+      const participants = conversation.participants;
+      const otherParticipant = participants.find((p: any) => p._id !== user?._id);
       if (!otherParticipant) return;
 
       const tempId = `temp-${Date.now()}`;
