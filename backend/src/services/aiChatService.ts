@@ -116,7 +116,7 @@ async function fetchAIResponse(userMessage: string, history: any[], aiUserId: st
             }
 
             const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
-                model: "google/gemini-2.0-flash-exp:free", // High speed, low latency
+                model: "google/gemini-2.0-flash-001", // Faster and supported
                 messages,
             }, {
                 headers: {
